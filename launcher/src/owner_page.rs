@@ -145,10 +145,19 @@ impl Launcher {
             Shown::Starting(what) => body.child(raised().child(
                 shell::text(theme::night::UI, shell::c(n.ink_soft)).child(tr(what).to_string()),
             )),
-            Shown::Error(e) => body.child(
-                raised()
-                    .child(shell::text(theme::night::UI, shell::c(n.danger)).child(e.to_string())),
-            ),
+            Shown::Error(e) => {
+                let msg = if e.contains("HORIZON_MSA_CLIENT_ID") || e.contains("not configured") {
+                    "Microsoft OAuth yapılandırması eksik. Kurulum rehberini kontrol edin."
+                } else if e == "Sign-in cancelled." {
+                    "Giriş iptal edildi."
+                } else {
+                    "Microsoft hesabı bağlantısı kurulamadı. Lütfen tekrar deneyin."
+                };
+                body.child(
+                    raised()
+                        .child(shell::text(theme::night::UI, shell::c(n.danger)).child(msg)),
+                )
+            }
             Shown::Idle => body,
         };
         let main = match state {

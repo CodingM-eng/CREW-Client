@@ -202,10 +202,10 @@ fn the_official_server_is_put_on_top_once() {
     // Already there under the player's own name and spelling: not duplicated.
     let home = scratch("official-present");
     let mut list = List::load(&home);
-    list.add("SMP", "Play.PlayHorizon.dev:25565").unwrap();
+    list.add("SMP", &format!("{}:25565", OFFICIAL_ADDRESS)).unwrap();
     list.save(&home).unwrap();
     add_official_default(&home).unwrap();
-    assert_eq!(ips(&home), ["Play.PlayHorizon.dev:25565"]);
+    assert_eq!(ips(&home), [format!("{}:25565", OFFICIAL_ADDRESS)]);
     // A list that can't be read is left alone, and offered again once it can be.
     let home = scratch("official-broken");
     fs::write(home.join(FILE), b"not nbt").unwrap();
@@ -277,7 +277,7 @@ fn a_moved_official_server_moves_the_players_entry_once() {
         &home,
         &[
             ("Old", "horizon.bunchy7s.dev"),
-            ("New", "play.playhorizon.dev"),
+            ("New", OFFICIAL_ADDRESS),
         ],
         "horizon.bunchy7s.dev",
     );
@@ -327,8 +327,8 @@ fn a_moved_official_server_moves_the_players_entry_once() {
 fn the_official_address_comes_from_links_json() {
     // The defaults: the new host, and the old one to move from.
     let defaults = Links::default();
-    assert_eq!(defaults.official_server, "play.playhorizon.dev");
-    assert_eq!(defaults.official_server_previous, ["horizon.bunchy7s.dev"]);
+    assert_eq!(defaults.official_server, OFFICIAL_ADDRESS);
+    assert_eq!(defaults.official_server_previous, OFFICIAL_PREVIOUS);
     // The file on main says the same.
     let file = Links::parse(include_str!("../../links.json"));
     assert_eq!(file, defaults);

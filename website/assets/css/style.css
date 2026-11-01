@@ -669,6 +669,103 @@ a {
   gap: 1rem;
 }
 
+/* YouTube Section */
+.youtube-section-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.youtube-empty-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+  transition: var(--transition);
+}
+
+.youtube-empty-card:hover {
+  border-color: var(--border-active);
+  transform: translateY(-2px);
+}
+
+.youtube-empty-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 43, 79, 0.25);
+}
+
+.youtube-empty-content {
+  flex: 1;
+}
+
+.youtube-empty-content h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+
+.youtube-empty-content p {
+  color: var(--text-soft);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.youtube-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.youtube-video-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-col: column;
+  transition: var(--transition);
+}
+
+.youtube-video-card:hover {
+  border-color: var(--border-active);
+  transform: translateY(-4px);
+}
+
+.youtube-video-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #000;
+}
+
+.youtube-video-info {
+  padding: 1rem;
+}
+
+.youtube-video-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.youtube-video-date {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
 /* Responsive */
 @media (max-width: 900px) {
   .nav-links, .nav-cta-group {
@@ -688,5 +785,13 @@ a {
   }
   .footer-container {
     grid-template-columns: 1fr;
+  }
+  .youtube-empty-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.25rem;
+  }
+  .youtube-empty-icon {
+    margin: 0 auto;
   }
 }

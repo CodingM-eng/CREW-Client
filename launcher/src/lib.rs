@@ -43,3 +43,4 @@ pub mod tailscale;
 pub mod telemetry;
 pub mod themes;
 pub mod worlds;
+pub mod youtube;

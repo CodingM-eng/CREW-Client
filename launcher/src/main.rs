@@ -369,6 +369,9 @@ struct Launcher {
     sky_wake: Option<(Instant, gpui::Task<()>)>,
     /// The window's scale, as of its last frame, for art drawn outside `render`'s reach.
     scale: f32,
+    youtube_videos: Vec<horizon_launcher::youtube::YouTubeVideo>,
+    youtube_loading: bool,
+    youtube_error: Option<String>,
 }
 
 impl Launcher {
@@ -577,8 +580,26 @@ impl Launcher {
             sky: sky::Sky::default(),
             sky_wake: None,
             scale: window.scale_factor(),
+            youtube_videos: Vec::new(),
+            youtube_loading: true,
+            youtube_error: None,
         };
         this.reload_instances();
+        cx.spawn(async move |this, cx| {
+            let videos = cx
+                .background_executor()
+                .spawn(async move { horizon_launcher::youtube::fetch_latest_videos() })
+                .await;
+            let _ = this.update(cx, |this, cx| {
+                match videos {
+                    Ok(list) => this.youtube_videos = list,
+                    Err(e) => this.youtube_error = Some(e),
+                }
+                this.youtube_loading = false;
+                cx.notify();
+            });
+        })
+        .detach();
         if this.bench.is_some() {
             this.perf.keep_local_log(false);
         }
@@ -2529,6 +2550,14 @@ impl Launcher {
                 self.links.discord.clone(),
             ));
         }
+        if !self.links.youtube.is_empty() {
+            foot = foot.child(link(
+                "youtube",
+                "YouTube",
+                "play",
+                self.links.youtube.clone(),
+            ));
+        }
         if !self.links.website.is_empty() {
             foot = foot.child(link(
                 "website",
@@ -2949,6 +2978,7 @@ impl Launcher {
                 ));
             }
         }
+        rows = rows.child(self.youtube_section(cx));
 
         // The banner: the hero and the Play row over the sky (`sky.rs`), or over the player's
         // own picture under a veil of the page colour. It reaches the content's edges and the top
@@ -3795,7 +3825,16 @@ impl Launcher {
             Some(SignInState::Done(Ok(a))) => {
                 div().child(trf("Signed in as {name}.", &[("name", &a.name)]))
             }
-            Some(SignInState::Done(Err(e))) => div().text_color(t.danger).child(e.clone()),
+            Some(SignInState::Done(Err(e))) => {
+                let msg = if e.contains("HORIZON_MSA_CLIENT_ID") || e.contains("not configured") {
+                    "Microsoft OAuth yapılandırması eksik. Kurulum rehberini kontrol edin."
+                } else if e == "Sign-in cancelled." {
+                    "Giriş iptal edildi."
+                } else {
+                    "Microsoft hesabı bağlantısı kurulamadı. Lütfen tekrar deneyin."
+                };
+                div().text_color(t.danger).child(msg)
+            }
             None if self.accounts.accounts.is_empty() => div().child(tr(
                 "Horizon needs a Microsoft account that owns Minecraft: Java Edition, like other launchers. It also plays online servers with your name and skin.",
             )),

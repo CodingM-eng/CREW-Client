@@ -35,12 +35,31 @@ const SIGN_IN_AGAIN: &str = "Your Microsoft sign-in expired. Sign in again.";
 /// The Minecraft token is renewed when it has less than this left.
 const RENEW_BEFORE: u64 = 3600;
 
-/// The configured Azure app, if any: the run-time variable wins over the build-time one, and an
-/// empty value means none.
+/// The configured Azure app, if any: `CREW_MSA_CLIENT_ID` or `HORIZON_MSA_CLIENT_ID`
+/// at run time or build time, or from a local configuration file (`msa_client_id.txt` / `auth.json`).
 pub fn client_id() -> Option<String> {
-    std::env::var("HORIZON_MSA_CLIENT_ID")
+    std::env::var("CREW_MSA_CLIENT_ID")
         .ok()
+        .or_else(|| std::env::var("HORIZON_MSA_CLIENT_ID").ok())
+        .or_else(|| option_env!("CREW_MSA_CLIENT_ID").map(str::to_owned))
         .or_else(|| option_env!("HORIZON_MSA_CLIENT_ID").map(str::to_owned))
+        .or_else(|| {
+            let data_file = crate::backend::data_dir().join("msa_client_id.txt");
+            if data_file.is_file() {
+                std::fs::read_to_string(data_file).ok()
+            } else {
+                let auth_file = crate::backend::data_dir().join("auth.json");
+                if auth_file.is_file() {
+                    std::fs::read_to_string(auth_file).ok().and_then(|text| {
+                        serde_json::from_str::<serde_json::Value>(&text)
+                            .ok()
+                            .and_then(|v| v.get("client_id").and_then(|c| c.as_str()).map(str::to_owned))
+                    })
+                } else {
+                    None
+                }
+            }
+        })
         .map(|id| id.trim().to_owned())
         .filter(|id| !id.is_empty())
 }
@@ -79,7 +98,7 @@ fn request_to(method: &str, url: &str) -> ureq::Request {
     crate::proxy::agent(
         ureq::AgentBuilder::new()
             .timeout(Duration::from_secs(20))
-            .user_agent(&format!("horizon-launcher/{}", crate::backend::VERSION)),
+            .user_agent(&format!("crew-client/{}", crate::backend::VERSION)),
         url,
     )
     .build()

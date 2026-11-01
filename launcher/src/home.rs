@@ -531,6 +531,155 @@ impl Launcher {
                     .children(play.then(|| pill("Play", std::cmp::Ordering::Greater))),
             )
     }
+
+    pub(super) fn youtube_section(&self, _cx: &mut Context<Self>) -> Div {
+        let t = self.theme;
+        let n = t.night;
+        let channel_url = horizon_launcher::youtube::CHANNEL_URL;
+
+        let header = div()
+            .flex()
+            .items_center()
+            .justify_between()
+            .mb(px(12.))
+            .child(
+                div()
+                    .flex()
+                    .items_center()
+                    .gap(px(8.))
+                    .child(blocks::icon("play", 18., t.danger))
+                    .child(
+                        shell::text(night::TITLE, shell::c(n.ink))
+                            .font_family(theme::DISPLAY_FONT)
+                            .child("CREW Network Videoları"),
+                    ),
+            )
+            .child(
+                div()
+                    .id("yt-channel-link")
+                    .cursor_pointer()
+                    .hover(move |s| s.text_color(shell::c(n.ink)))
+                    .child(
+                        shell::text(night::CAPTION, shell::c(n.ink_soft))
+                            .child("@CREWNW"),
+                    )
+                    .on_click(move |_: &ClickEvent, _, cx| cx.open_url(channel_url)),
+            );
+
+        if self.youtube_videos.is_empty() {
+            let empty_card = div()
+                .p(px(20.))
+                .rounded(px(night::RADIUS_CONTROL))
+                .bg(plate::alpha(n.card_hi, n.card_hi_alpha))
+                .border_1()
+                .border_color(plate::alpha(n.stroke, n.stroke_alpha))
+                .flex()
+                .flex_col()
+                .gap(px(14.))
+                .child(
+                    div()
+                        .flex()
+                        .items_center()
+                        .gap(px(14.))
+                        .child(
+                            div()
+                                .flex()
+                                .flex_none()
+                                .items_center()
+                                .justify_center()
+                                .size(px(44.))
+                                .rounded(px(night::RADIUS_CONTROL))
+                                .bg(plate::alpha(n.card_hi, 0.4))
+                                .child(blocks::icon("play", 24., t.danger)),
+                        )
+                        .child(
+                            div()
+                                .flex()
+                                .flex_col()
+                                .gap(px(4.))
+                                .child(
+                                    shell::text(night::UI, shell::c(n.ink))
+                                        .font_weight(FontWeight::SEMIBOLD)
+                                        .child("Henüz yayınlanmış video bulunmuyor."),
+                                )
+                                .child(
+                                    shell::text(night::CAPTION, shell::c(n.ink_soft))
+                                        .child("Yeni videolar, rehberler ve etkinlik duyuruları için resmi YouTube kanalımızı takip edin."),
+                                ),
+                        ),
+                )
+                .child(
+                    div()
+                        .flex()
+                        .child(
+                            button("yt-channel-btn", "YouTube Kanalına Git", Kind::Primary, &t)
+                                .on_click(move |_: &ClickEvent, _, cx| cx.open_url(channel_url)),
+                        ),
+                );
+
+            div()
+                .flex()
+                .flex_col()
+                .mt(px(20.))
+                .child(header)
+                .child(empty_card)
+        } else {
+            let cards = self.youtube_videos.iter().map(|v| {
+                let url = v.video_url.clone();
+                let title = v.title.clone();
+                let published = if v.published.len() >= 10 {
+                    &v.published[..10]
+                } else {
+                    &v.published
+                }
+                .to_string();
+
+                div()
+                    .flex_1()
+                    .min_w(px(260.))
+                    .max_w(px(340.))
+                    .p(px(14.))
+                    .rounded(px(night::RADIUS_CONTROL))
+                    .bg(plate::alpha(n.card_hi, n.card_hi_alpha))
+                    .border_1()
+                    .border_color(plate::alpha(n.stroke, n.stroke_alpha))
+                    .flex()
+                    .flex_col()
+                    .justify_between()
+                    .gap(px(10.))
+                    .child(
+                        div()
+                            .flex()
+                            .flex_col()
+                            .gap(px(6.))
+                            .child(
+                                shell::text(night::CAPTION, shell::c(n.muted))
+                                    .child(published),
+                            )
+                            .child(
+                                shell::text(night::UI, shell::c(n.ink))
+                                    .font_weight(FontWeight::SEMIBOLD)
+                                    .child(title),
+                            ),
+                    )
+                    .child(
+                        div()
+                            .flex()
+                            .child(
+                                button(format!("watch-{}", v.id), "İzle", Kind::Secondary, &t)
+                                    .on_click(move |_: &ClickEvent, _, cx| cx.open_url(&url)),
+                            ),
+                    )
+            });
+
+            div()
+                .flex()
+                .flex_col()
+                .mt(px(20.))
+                .child(header)
+                .child(div().flex().flex_wrap().gap(px(12.)).children(cards))
+        }
+    }
 }
 
 /// `HORIZON_LAUNCHER_PAGE=getting-ready` opens Home as if Play had been pressed on a version that
