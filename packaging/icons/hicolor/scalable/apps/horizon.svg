@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+  <title>CREW Client</title>
+  <clipPath id="tile"><rect width="16" height="16" rx="3.5"/></clipPath>
+  <g clip-path="url(#tile)">
+    <rect width="16" height="16" fill="#0d0e16"/>
+    <!-- Outer C -->
+    <path d="M 3 2 L 13 2 L 13 4.5 L 6 4.5 L 6 11.5 L 13 11.5 L 13 14 L 3 14 Z" fill="#e2e8f0"/>
+    <!-- Accent Winglets -->
+    <rect x="11" y="4.5" width="2" height="2" fill="#ff2247"/>
+    <rect x="11" y="9.5" width="2" height="2" fill="#ff2247"/>
+    <!-- Velocity Arrow -->
+    <polygon points="7,5.5 11,8 7,10.5 7,9 9.5,8 7,7" fill="#ff2247"/>
+  </g>
+</svg>

@@ -1,0 +1,8 @@
+name = "crew-client"
+compatibility_date = "2024-09-23"
+pages_build_output_dir = "."
+
+[vars]
+SITE_TITLE = "CREW Client — Resmi Web Sitesi"
+OFFICIAL_DOMAIN = "client.crewnetwork.space"
+ENVIRONMENT = "production"

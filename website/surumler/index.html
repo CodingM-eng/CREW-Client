@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sürümler & Güncellemeler — CREW Client</title>
+  <meta name="description" content="CREW Client sürüm geçmişi, Türkçe sürüm notları, yeni özellikler ve güvenlik iyileştirmeleri.">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/crew-logo-transparent.svg">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+  <div class="bg-glow-top"></div>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="brand-link">
+        <img src="../assets/img/crew-logo-transparent.svg" alt="CREW Client" class="brand-logo">
+        <span>CREW Client</span>
+      </a>
+
+      <button class="mobile-toggle" aria-label="Menüyü Aç">☰</button>
+
+      <ul class="nav-links">
+        <li><a href="../index.html">Ana Sayfa</a></li>
+        <li><a href="../index.html#ozellikler">Özellikler</a></li>
+        <li><a href="../indir/index.html">İndir</a></li>
+        <li><a href="index.html" class="active">Sürümler</a></li>
+        <li><a href="../dokumanlar/index.html">Dokümantasyon</a></li>
+        <li><a href="../index.html#topluluk">Topluluk</a></li>
+      </ul>
+
+      <div class="nav-cta-group">
+        <a href="https://github.com/CodingM-eng/CREW-Client" target="_blank" rel="noopener" class="btn-github">GitHub</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="section" style="max-width: 900px; padding-top: 4rem;">
+    <div class="section-header">
+      <span class="section-tag">Değişiklik Günlüğü</span>
+      <h1 class="section-title">Sürümler ve Güncellemeler</h1>
+      <p class="section-desc">CREW Client ekosisteminde yayınlanan tüm kararlı sürümler ve teknik sürüm notları.</p>
+    </div>
+
+    <!-- Release Item: v2.1.0 -->
+    <article style="background: var(--bg-secondary); border: 1px solid var(--border-active); border-radius: var(--radius-md); padding: 2.5rem; margin-bottom: 2.5rem;">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1.25rem;">
+        <div>
+          <span style="background: var(--accent); color: #fff; font-size: 0.8rem; font-weight: 700; padding: 0.25rem 0.7rem; border-radius: 999px;">En Son Kararlı Sürüm</span>
+          <h2 style="font-size: 1.8rem; font-weight: 800; color: #fff; margin-top: 0.5rem;">v2.1.0 — Tam Rebrand & Fabric 1.21.11</h2>
+          <span style="color: var(--text-muted); font-size: 0.88rem;">1 Kasım 2026 · Horizon Motoru: v2026.10.13 · Minecraft: 1.21.11 / 26.3</span>
+        </div>
+        <a href="../indir/index.html" class="btn-primary">İndir (Windows x64)</a>
+      </div>
+
+      <div style="color: var(--text-soft); line-height: 1.8;">
+        <h4 style="color: #fff; margin-top: 1rem; margin-bottom: 0.5rem;">🚀 Yeni Özellikler</h4>
+        <ul style="padding-left: 1.5rem; margin-bottom: 1.25rem;">
+          <li><strong>Eksiksiz CREW Client Kimliği:</strong> Pencere başlığı, açılış harf animasyonu, kenar çubuğu ve menüler tamamen CREW Client olarak yapılandırıldı.</li>
+          <li><strong>Orijinal CREW Client Logo Sistemi:</strong> Yeni geometrik logo, yüksek çözünürlüklü uygulama simgeleri ve multi-res Windows ICO desteği entegre edildi.</li>
+          <li><strong>%100 Türkçe Yerelleştirme:</strong> Başlatıcı arayüzü, hata pencereleri ve bildirimler eksiksiz Türkçeye uyarlandı.</li>
+          <li><strong>Resmi CREW Network Sunucusu:</strong> <code>oyna.crewnetwork.space</code> sunucusu varsayılan sunucu listesine 1. sıradan eklendi.</li>
+        </ul>
+
+        <h4 style="color: #fff; margin-top: 1rem; margin-bottom: 0.5rem;">⚡ Performans ve Mimari</h4>
+        <ul style="padding-left: 1.5rem; margin-bottom: 1.25rem;">
+          <li>Fabric Loader 0.20.1+ ve Minecraft 1.21.11 desteği doğrudan Fabric Meta API üzerinden doğrulandı.</li>
+          <li>Opt-level 3 ve strip optimizasyonlarıyla derlenen hafif Windows ikilisi kullanıma sunuldu.</li>
+        </ul>
+
+        <h4 style="color: #fff; margin-top: 1rem; margin-bottom: 0.5rem;">🛡️ Güvenlik ve Kararlılık</h4>
+        <ul style="padding-left: 1.5rem;">
+          <li>Microsoft OAuth2 ve Windows Kimlik Bilgisi Yöneticisi güvenli oturum akışı sağlandı.</li>
+          <li>Üst kaynak Horizon deposu için otomatik senkronizasyon ve güvenlik kontrol motoru eklendi.</li>
+        </ul>
+      </div>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-bottom" style="border: none; padding-top: 0;">
+      <span>© 2026 CREW Network. Tüm hakları saklıdır.</span>
+      <span>client.crewnetwork.space</span>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

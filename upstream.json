@@ -1,0 +1,10 @@
+{
+  "crew_client_version": "2.1.0",
+  "upstream_repository": "horizon-rust/horizon",
+  "tracked_engine_version": "v2026.10.13",
+  "tracked_engine_commit": "0c02067",
+  "minecraft_target_version": "1.21.11 / 26.3",
+  "update_endpoint": "https://client.crewnetwork.space/api/releases/latest.json",
+  "github_releases_url": "https://github.com/CodingM-eng/CREW-Client/releases",
+  "last_synced": "2026-11-01T22:50:00Z"
+}

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dokümantasyon — CREW Client</title>
+  <meta name="description" content="CREW Client kurulum, Microsoft hesabı ekleme, mod yönetimi (Fabric vs Native), sistem gereksinimleri ve sorun giderme kılavuzları.">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/crew-logo-transparent.svg">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .troubleshoot-item {
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .troubleshoot-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ff4d6d;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .troubleshoot-fix {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed var(--border);
+      color: var(--text-main);
+    }
+    .req-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    .req-table th, .req-table td {
+      border: 1px solid var(--border);
+      padding: 0.85rem 1rem;
+      text-align: left;
+    }
+    .req-table th {
+      background: var(--bg-dark);
+      color: #fff;
+      font-weight: 700;
+    }
+    .req-table tr:nth-child(even) td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .faq-box {
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 0;
+    }
+    .faq-box:last-child {
+      border-bottom: none;
+    }
+    .faq-q {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    .callout {
+      border-left: 4px solid var(--accent);
+      background: var(--accent-soft);
+      padding: 1rem 1.25rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    .callout.callout-info {
+      border-left-color: #3b82f6;
+      background: rgba(59, 130, 246, 0.1);
+    }
+    .callout.callout-warning {
+      border-left-color: #f59e0b;
+      background: rgba(245, 158, 11, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow-top"></div>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="brand-link">
+        <img src="../assets/img/crew-logo-transparent.svg" alt="CREW Client" class="brand-logo">
+        <span>CREW Client</span>
+      </a>
+
+      <button class="mobile-toggle" aria-label="Menüyü Aç">☰</button>
+
+      <ul class="nav-links">
+        <li><a href="../index.html">Ana Sayfa</a></li>
+        <li><a href="../index.html#ozellikler">Özellikler</a></li>
+        <li><a href="../indir/index.html">İndir</a></li>
+        <li><a href="../surumler/index.html">Sürümler</a></li>
+        <li><a href="index.html" class="active">Dokümantasyon</a></li>
+        <li><a href="../index.html#topluluk">Topluluk</a></li>
+      </ul>
+
+      <div class="nav-cta-group">
+        <a href="https://github.com/CodingM-eng/CREW-Client" target="_blank" rel="noopener" class="btn-github">GitHub</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="section" style="padding-top: 4rem;">
+    <div class="section-header">
+      <span class="section-tag">Bilgi Merkezi</span>
+      <h1 class="section-title">Dokümantasyon & Rehberler</h1>
+      <p class="section-desc">CREW Client kurulumu, hesap güvenliği, mod mimarisi ve sorun giderme yönergeleri.</p>
+    </div>
+
+    <div class="docs-layout">
+      <!-- Sidebar Navigation -->
+      <aside class="docs-nav">
+        <button class="docs-nav-btn active" data-target="kurulum">1. Kurulum Rehberi</button>
+        <button class="docs-nav-btn" data-target="hesap">2. Microsoft Hesabı Ekleme</button>
+        <button class="docs-nav-btn" data-target="modlar">3. Mod Kurulumu & Yönetimi</button>
+        <button class="docs-nav-btn" data-target="guncelleme">4. Güncelleme & Doğrulama</button>
+        <button class="docs-nav-btn" data-target="sorunlar">5. Sık Karşılaşılan Hatalar</button>
+        <button class="docs-nav-btn" data-target="gereksinimler">6. Sistem Gereksinimleri</button>
+        <button class="docs-nav-btn" data-target="sss">7. Sıkça Sorulan Sorular (SSS)</button>
+      </aside>
+
+      <!-- Content Area -->
+      <section class="docs-content-box">
+        <!-- 1. Kurulum Rehberi -->
+        <article class="doc-article active" id="kurulum">
+          <h2>1. Kurulum Rehberi</h2>
+          <p>CREW Client, Windows 10 ve Windows 11 64-bit sistemler için optimize edilmiş, taşınabilir (portable) ve yüksek performanslı bir Minecraft başlatıcısıdır.</p>
+          
+          <div class="callout callout-info">
+            <strong>Taşınabilir Yapı:</strong> CREW Client geleneksel karmaşık kurulum sihirbazları gerektirmez. Tek bir <code>crew-client.exe</code> dosyasını istediğiniz klasöre taşıyarak doğrudan çalıştırabilirsiniz.
+          </div>
+
+          <h3 style="color: #fff; margin-top: 2rem; margin-bottom: 0.75rem;">Adım Adım Kurulum</h3>
+          <ul>
+            <li><strong>1. İndirme:</strong> <a href="../indir/index.html" style="color: var(--accent); text-decoration: underline;">İndirme sayfasından</a> en güncel <code>crew-client.exe</code> ikili dosyasını indirin.</li>
+            <li><strong>2. Klasör Konumu:</strong> İndirilen dosyayı tercihen <code>C:\Oyunlar\CREW-Client\</code> veya kullanıcı ana dizininiz gibi yazma iznine sahip olduğunuz güvenli bir dizine yerleştirin.</li>
+            <li><strong>3. Ön Koşullar:</strong> Başlatıcının gömülü web bileşenleri için Windows 10/11 ile birlikte gelen standart <strong>Microsoft Edge WebView2 Runtime</strong> bileşeni gereklidir (güncel sistemlerde varsayılan olarak mevcuttur).</li>
+            <li><strong>4. Başlatma:</strong> Dosyaya çift tıklayarak CREW Client'ı başlatın. İlk açılışta gerekli yapılandırma dosyaları yerel olarak <code>%APPDATA%\.crew</code> dizininde oluşturulur.</li>
+          </ul>
+
+          <h3 style="color: #fff; margin-top: 2rem; margin-bottom: 0.75rem;">Windows SmartScreen Uyarısı Hakkında</h3>
+          <p>Yeni bir sürüm yayınlandığında Windows SmartScreen <em>"Windows bilgisayarınızı korudu"</em> uyarısı gösterebilir. Bu durum, açık kaynaklı yeni sürümlerin Microsoft güven veritabanında henüz yeterli indirme hacmine ulaşmamış olmasından kaynaklanır.</p>
+          <div class="callout callout-warning">
+            <strong>Nasıl Geçilir?</strong> Ekranda çıkan <strong>"Ek Bilgi" (More Info)</strong> bağlantısına tıklayın ve ardından <strong>"Yine de çalıştır" (Run anyway)</strong> butonuna basın. CREW Client'ın kaynak kodları tamamen açık olup SHA-256 sağlama toplamı ile doğrulanabilir.
+          </div>
+        </article>
+
+        <!-- 2. Microsoft Hesabı Ekleme -->
+        <article class="doc-article" id="hesap">
+          <h2>2. Microsoft Hesabı Ekleme & Güvenlik</h2>
+          <p>CREW Client, resmi Minecraft Java Edition sunucularına bağlanabilmeniz için Microsoft OAuth 2.0 protokolünü kullanır.</p>
+
+          <h3 style="color: #fff; margin-top: 1.5rem; margin-bottom: 0.75rem;">Oturum Açma Adımları</h3>
+          <ul>
+            <li>Başlatıcı arayüzünde sol menünün alt kısmında yer alan <strong>"Hesap Ekle"</strong> veya <strong>"Microsoft ile Giriş Yap"</strong> butonuna tıklayın.</li>
+            <li>Açılan resmi Microsoft oturum penceresinde Minecraft Java Edition lisansına sahip Microsoft hesabınızın e-posta ve şifresini girin.</li>
+            <li>İki adımlı doğrulama (2FA) kullanıyorsanız telefonunuza gelen onay kodunu girin.</li>
+            <li>Oturum açma tamamlandığında oyuncu adınız ve karakter görünümünüz (skin) başlatıcı arayüzünde otomatik olarak görünecektir.</li>
+          </ul>
+
+          <div class="callout callout-info">
+            <strong>%100 Hesap Güvenliği:</strong>
+            <ul style="margin: 0.5rem 0 0 1.25rem;">
+              <li>Şifreniz CREW Client, CREW Network veya herhangi bir üçüncü taraf sunucu tarafından <strong>asla görülmez, kaydedilmez ve iletilmez</strong>.</li>
+              <li>Oturum açma işlemi doğrudan Microsoft'un resmi <code>login.live.com</code> sunucuları üzerinde gerçekleşir.</li>
+              <li>Oturum belirteçleri (refresh tokens) yerel bilgisayarınızda Windows DPAPI (Data Protection API) ve güvenli anahtarlık mekanizmalarıyla şifrelenmiş olarak saklanır.</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- 3. Mod Kurulumu & Yönetimi -->
+        <article class="doc-article" id="modlar">
+          <h2>3. Mod Kurulumu & Yönetimi (Fabric vs Native)</h2>
+          <p>CREW Client, oyunculara hem mod ekosisteminin zenginliğini hem de yerel motorun maksimum performansını sunan iki farklı mimari yaklaşımı destekler.</p>
+
+          <div class="callout callout-warning">
+            <strong>Önemli Mimari Ayrımı:</strong> CREW Client içerisindeki <strong>Minecraft Java Fabric</strong> ortamı ile <strong>CREW Native Engine</strong> birbirinin alternatifi değil, farklı amaçlara hizmet eden iki ayrı teknolojidir.
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+            <div style="background: var(--bg-dark); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.5rem;">
+              <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 0.5rem;">☕ Java Edition (Fabric Loader)</h3>
+              <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">Minecraft 1.21.11 / 26.3 sürümleri için standart Java Sanal Makinesi (JVM) ortamı.</p>
+              <ul style="font-size: 0.88rem; padding-left: 1.2rem; color: var(--text-soft);">
+                <li>Sodium, Iris Shaders, Lithium gibi popüler Java modlarını (<code>.jar</code>) tam destekler.</li>
+                <li>Mod Menüsü ve profil yöneticisi ile uyumludur.</li>
+                <li>Geniş mod ekosistemi ve özel shader paketleri için idealdir.</li>
+              </ul>
+            </div>
+
+            <div style="background: var(--bg-dark); border: 1px solid var(--border-active); border-radius: var(--radius-sm); padding: 1.5rem;">
+              <h3 style="color: var(--accent); font-size: 1.2rem; margin-bottom: 0.5rem;">⚡ CREW Native Engine (Rust)</h3>
+              <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">Açık kaynak Horizon tabanlı, doğrudan makine koduna derlenen yerel motor.</p>
+              <ul style="font-size: 0.88rem; padding-left: 1.2rem; color: var(--text-soft);">
+                <li>Sıfır Java Sanal Makinesi yükü ve sıfır GC (Garbage Collection) takılması.</li>
+                <li>Mikrosaniye seviyesinde giriş gecikmesi ve ultra-yüksek kare hızı.</li>
+                <li><strong>Önemli:</strong> Doğrudan Java <code>.jar</code> modlarını çalıştırmaz; yerel Rust/C++ eklentilerini kullanır.</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3 style="color: #fff; margin-top: 1.5rem; margin-bottom: 0.75rem;">Fabric Ortamına Mod Ekleme</h3>
+          <ol style="padding-left: 1.5rem; color: var(--text-soft); line-height: 1.8;">
+            <li>İstediğiniz Fabric uyumlu modu (örneğin Sodium veya Mod Menu <code>.jar</code>) Modrinth veya CurseForge üzerinden indirin.</li>
+            <li>CREW Client arayüzünde profil detaylarına gidin ve <strong>"Mod Klasörünü Aç"</strong> butonuna tıklayın (veya doğrudan <code>%APPDATA%\.crew\instances\&lt;profil&gt;\mods</code> klasörüne gidin).</li>
+            <li>İndirdiğiniz <code>.jar</code> dosyalarını bu klasöre yapıştırın.</li>
+            <li>Oyunu başlattığınızda modlar otomatik olarak yüklenecektir.</li>
+          </ol>
+        </article>
+
+        <!-- 4. Güncelleme Sistemi & Doğrulama -->
+        <article class="doc-article" id="guncelleme">
+          <h2>4. Güncelleme Sistemi & Bütünlük Doğrulama</h2>
+          <p>CREW Client, kullanıcı deneyimini ve sistem kararlılığını korumak için çok katmanlı bir güncelleme ve bütünlük denetim mimarisi uygular.</p>
+
+          <h3 style="color: #fff; margin-top: 1.5rem; margin-bottom: 0.75rem;">Upstream Horizon Senkronizasyonu</h3>
+          <p>CREW Client, temel aldığı açık kaynak <code>horizon-rust/horizon</code> projesinin güncellemelerini arka planda sürekli olarak takip eder. Ancak sistem kararlılığı için upstream kodları ham olarak istemciye doğrudan yazılmaz; CREW mühendislik ekibi tarafından otomatik testlerden geçirilir, Türkçeleştirilir ve doğrulanmış sürüm olarak yayınlanır.</p>
+
+          <h3 style="color: #fff; margin-top: 1.5rem; margin-bottom: 0.75rem;">SHA-256 Sağlama Toplamı Doğrulama</h3>
+          <p>İndirdiğiniz dosyanın orijinal CREW yayını olduğunu ve araya hiçbir yabancı kod girmediğini Windows üzerinde kolayca doğrulayabilirsiniz:</p>
+          
+          <p><strong>PowerShell ile:</strong></p>
+          <pre style="background: var(--bg-dark); padding: 1rem; border-radius: 6px; border: 1px solid var(--border); overflow-x: auto;"><code style="color: #38bdf8; border: none; padding: 0;">Get-FileHash .\crew-client.exe -Algorithm SHA256</code></pre>
+
+          <p style="margin-top: 1rem;"><strong>Komut İstemi (CMD) ile:</strong></p>
+          <pre style="background: var(--bg-dark); padding: 1rem; border-radius: 6px; border: 1px solid var(--border); overflow-x: auto;"><code style="color: #38bdf8; border: none; padding: 0;">certutil -hashfile crew-client.exe SHA256</code></pre>
+
+          <p style="margin-top: 1rem;">Çıkan özet değerinin resmi indirme sayfamızdaki SHA-256 hash değeri ile birebir eşleştiğini teyit edin.</p>
+        </article>
+
+        <!-- 5. Sık Karşılaşılan Hatalar -->
+        <article class="doc-article" id="sorunlar">
+          <h2>5. Sık Karşılaşılan Hatalar & Çözümleri</h2>
+          <p>Oyun sırasında veya başlatıcı açılışında karşılaşabileceğiniz sorunlar ve adım adım çözüm yöntemleri:</p>
+
+          <div class="troubleshoot-item">
+            <div class="troubleshoot-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              EXCEPTION_ACCESS_VIOLATION veya OpenGL Sürücü Çökmesi
+            </div>
+            <p>Özellikle NVIDIA GeForce / GTX serisi ekran kartlarında oyun açılırken veya hibrit ardışık düzen başlatılırken çökme yaşanıyorsa:</p>
+            <div class="troubleshoot-fix">
+              <strong>Çözüm:</strong>
+              <ol style="padding-left: 1.25rem; margin-top: 0.5rem; font-size: 0.92rem; color: var(--text-soft);">
+                <li>NVIDIA Denetim Masası'nı açın -> 3D Ayarlarının Yönetilmesi -> Program Ayarları sekmesinden <code>crew-client.exe</code> ve <code>javaw.exe</code> dosyalarını ekleyin.</li>
+                <li>Tercih edilen grafik işlemciyi <strong>"Yüksek Performanslı NVIDIA İşlemcisi"</strong> olarak ayarlayın.</li>
+                <li>GeForce Experience veya NVIDIA web sitesi üzerinden en güncel Game Ready grafik sürücüsünü yükleyin.</li>
+                <li>Başlatıcı ayarlarından "Güvenli Render Modu" (Vanilla Fallback) seçeneğini aktif hale getirin.</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="troubleshoot-item">
+            <div class="troubleshoot-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Java Runtime Environment (JRE) Bulunamadı
+            </div>
+            <p>Minecraft Java profili başlatılırken Java 21 çalışma zamanı bulunamadı uyarısı alınıyorsa:</p>
+            <div class="troubleshoot-fix">
+              <strong>Çözüm:</strong> Minecraft 1.21.11 sürümü <strong>Java 21 (64-bit)</strong> gerektirir. <a href="https://adoptium.net/temurin/releases/?version=21" target="_blank" rel="noopener" style="color: var(--accent); text-decoration: underline;">Eclipse Temurin 21</a> veya Microsoft OpenJDK 21 yükleyin. Sistem ortam değişkenlerinde <code>JAVA_HOME</code> değerinin tanımlı olduğundan emin olun.
+            </div>
+          </div>
+
+          <div class="troubleshoot-item">
+            <div class="troubleshoot-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Microsoft Giriş Penceresi Açılmıyor / Beyaz Ekran
+            </div>
+            <p>Giriş butonuna tıklandığında kimlik doğrulama penceresi boş veya tepkisiz kalıyorsa:</p>
+            <div class="troubleshoot-fix">
+              <strong>Çözüm:</strong> Bilgisayarınızda Microsoft Edge WebView2 çalışma zamanı eksik veya hasarlı olabilir. Resmi Microsoft web sitesinden <em>WebView2 Evergreen Bootstrapper</em> indirip yeniden kurun ve Windows'u yeniden başlatın.
+            </div>
+          </div>
+
+          <div class="troubleshoot-item">
+            <div class="troubleshoot-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Eksik DLL Hatası (VCRUNTIME140.dll veya MSVCP140.dll)
+            </div>
+            <p>Başlatıcı açılırken sistemde Visual C++ kütüphanelerinin eksik olduğunu belirten bir Windows iletişim kutusu açılıyorsa:</p>
+            <div class="troubleshoot-fix">
+              <strong>Çözüm:</strong> Microsoft'un resmi sitesinden <strong>Visual C++ Redistributable 2015-2022 (x64)</strong> paketini indirip kurun.
+            </div>
+          </div>
+        </article>
+
+        <!-- 6. Sistem Gereksinimleri -->
+        <article class="doc-article" id="gereksinimler">
+          <h2>6. Sistem Gereksinimleri</h2>
+          <p>CREW Client, düşük sistemli dizüstü bilgisayarlardan üst düzey espor sistemlerine kadar geniş bir yelpazede yüksek kararlılıkla çalışacak şekilde optimize edilmiştir.</p>
+
+          <table class="req-table">
+            <thead>
+              <tr>
+                <th>Bileşen</th>
+                <th>Minimum Gereksinim</th>
+                <th>Önerilen (PvP & 144Hz+)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>İşletim Sistemi</strong></td>
+                <td>Windows 10 64-bit (Sürüm 1909+)</td>
+                <td>Windows 11 64-bit (En son güncelleme)</td>
+              </tr>
+              <tr>
+                <td><strong>İşlemci (CPU)</strong></td>
+                <td>Intel Core i3 4. Nesil / AMD FX Serisi</td>
+                <td>Intel Core i5 10. Nesil+ / AMD Ryzen 5 3600+</td>
+              </tr>
+              <tr>
+                <td><strong>Bellek (RAM)</strong></td>
+                <td>4 GB RAM</td>
+                <td>16 GB DDR4/DDR5 RAM (8 GB ayrılmış)</td>
+              </tr>
+              <tr>
+                <td><strong>Ekran Kartı (GPU)</strong></td>
+                <td>Intel HD Graphics 4000 / NVIDIA GT 730</td>
+                <td>NVIDIA GeForce GTX 1650 / RTX Serisi</td>
+              </tr>
+              <tr>
+                <td><strong>Depolama</strong></td>
+                <td>2 GB boş alan (Standart HDD)</td>
+                <td>5 GB boş alan (Yüksek hızlı NVMe SSD)</td>
+              </tr>
+              <tr>
+                <td><strong>Yazılım Gereksinimi</strong></td>
+                <td>Java 21 64-bit & WebView2 Runtime</td>
+                <td>Eclipse Temurin Java 21 & En güncel GPU sürücüsü</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+
+        <!-- 7. Sıkça Sorulan Sorular -->
+        <article class="doc-article" id="sss">
+          <h2>7. Sıkça Sorulan Sorular (SSS)</h2>
+          
+          <div class="faq-box">
+            <div class="faq-q">CREW Client tamamen ücretsiz mi?</div>
+            <p>Evet. CREW Client açık kaynaklıdır ve tüm oyuncular için tamamen ücretsiz olarak sunulur. Hiçbir gizli ücret, abonelik veya oyun içi mikro ödeme içermez.</p>
+          </div>
+
+          <div class="faq-box">
+            <div class="faq-q">CREW Client kullanmak sunucularda ban sebebi midir?</div>
+            <p>Kesinlikle hayır. CREW Client hile (cheat/hack), makro veya haksız avantaj sağlayan yazılımlar içermez. Sunuculara resmi Minecraft protokolüyle bağlanır ve önde gelen PvP sunucularının kurallarına tam uyumludur.</p>
+          </div>
+
+          <div class="faq-box">
+            <div class="faq-q">Microsoft hesap bilgilerim güvende mi?</div>
+            <p>Evet, %100 güvendedir. Kimlik doğrulama doğrudan Microsoft'un resmi OAuth 2.0 sunucuları üzerinden yapılır. Şifreniz asla istemci veya sunucularımız tarafından okunamaz ve saklanamaz.</p>
+          </div>
+
+          <div class="faq-box">
+            <div class="faq-q">CREW Client ile Horizon projesi arasındaki ilişki nedir?</div>
+            <p>CREW Client, açık kaynaklı Horizon projesinin (Ludovic Marie ve topluluk katkıcıları) yenilikçi Rust altyapısını temel alır. CREW Network ekibi tarafından Türk oyuncu topluluğu için Türkçeleştirilmiş, optimize edilmiş, kararlı hale getirilmiş ve özel sunucu entegrasyonuyla zenginleştirilmiş bağımsız ve resmi bir türevidir. Orijinal yazarların açık kaynak lisanslarına (GPL/MIT) tam saygı gösterilir.</p>
+          </div>
+
+          <div class="faq-box">
+            <div class="faq-q">Gerçekten FPS artışı ve düşük gecikme sağlar mı?</div>
+            <p>Evet. Başlatıcı arayüzü Electron gibi ağır web motorları yerine saf Rust ve GPUI kullanır, bu sayede sistem kaynaklarını tüketmez. Java profilindeki optimize edilmiş mod paketi (Sodium, Lithium vb.) ve deneysel CREW Native Engine sayesinde belirgin FPS artışı ve stabil kare süreleri (frametime) elde edilir.</p>
+          </div>
+        </article>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <img src="../assets/img/crew-logo-transparent.svg" alt="CREW" style="height: 32px;">
+          <span style="font-weight: 800; font-size: 1.2rem; color: #fff;">CREW Client</span>
+        </div>
+        <p>Açık kaynak Horizon altyapısıyla geliştirilmiş, ultra düşük gecikmeli yeni nesil Minecraft Java başlatıcısı.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Bağlantılar</h4>
+        <ul>
+          <li><a href="../index.html">Ana Sayfa</a></li>
+          <li><a href="../indir/index.html">İndir</a></li>
+          <li><a href="../surumler/index.html">Sürüm Notları</a></li>
+          <li><a href="index.html">Dokümantasyon</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Topluluk</h4>
+        <ul>
+          <li><a href="https://discord.gg/crewnetwork" target="_blank" rel="noopener">Discord Sunucusu</a></li>
+          <li><a href="https://github.com/CodingM-eng/CREW-Client" target="_blank" rel="noopener">GitHub Kaynak Kodu</a></li>
+          <li><a href="../index.html#topluluk">Sunucu: oyna.crewnetwork.space</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Yasal & Lisans</h4>
+        <ul>
+          <li><a href="https://github.com/horizon-rust/horizon/blob/main/LICENSE" target="_blank" rel="noopener">Horizon Lisansı (GPL-3.0)</a></li>
+          <li><a href="https://github.com/CodingM-eng/CREW-Client/blob/main/LICENSE" target="_blank" rel="noopener">CREW Client Lisansı</a></li>
+          <li><span>Minecraft, Mojang AB'nin tescilli ticari markasıdır.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 CREW Network. Tüm hakları saklıdır.</span>
+      <span>client.crewnetwork.space</span>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    // URL Hash handling for direct links (e.g. dokumanlar/#modlar)
+    window.addEventListener('DOMContentLoaded', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        const targetBtn = document.querySelector(`.docs-nav-btn[data-target="${hash}"]`);
+        if (targetBtn) {
+          targetBtn.click();
+        }
+      }
+    });
+  </script>
+</body>
+</html>

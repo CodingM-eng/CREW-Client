@@ -1,0 +1,29 @@
+name: CREW Client Upstream Monitor
+
+on:
+  schedule:
+    - cron: '0 6 * * *' # Daily at 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  check-upstream:
+    name: Check Upstream Horizon Updates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout CREW Client
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Upstream Sync Checker
+        id: sync
+        run: |
+          python3 scripts/upstream_sync.py
