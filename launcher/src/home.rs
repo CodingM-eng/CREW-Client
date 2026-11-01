@@ -532,10 +532,11 @@ impl Launcher {
             )
     }
 
-    pub(super) fn youtube_section(&self, _cx: &mut Context<Self>) -> Div {
+    pub(super) fn youtube_section(&self, cx: &mut Context<Self>) -> Div {
         let t = self.theme;
         let n = t.night;
         let channel_url = horizon_launcher::youtube::CHANNEL_URL;
+        let is_loading = self.youtube_loading;
 
         let header = div()
             .flex()
@@ -556,17 +557,67 @@ impl Launcher {
             )
             .child(
                 div()
-                    .id("yt-channel-link")
-                    .cursor_pointer()
-                    .hover(move |s| s.text_color(shell::c(n.ink)))
+                    .flex()
+                    .items_center()
+                    .gap(px(12.))
                     .child(
-                        shell::text(night::CAPTION, shell::c(n.ink_soft))
-                            .child("@CREWNW"),
+                        div()
+                            .id("yt-refresh-action")
+                            .cursor_pointer()
+                            .hover(move |s| s.text_color(shell::c(n.ink)))
+                            .child(
+                                shell::text(night::CAPTION, shell::c(n.ink_soft))
+                                    .child(if is_loading { "Yenileniyor..." } else { "⟳ Yenile" }),
+                            )
+                            .on_click(cx.listener(|this, _: &ClickEvent, _, cx| {
+                                this.refresh_youtube(cx);
+                            })),
                     )
-                    .on_click(move |_: &ClickEvent, _, cx| cx.open_url(channel_url)),
+                    .child(
+                        div()
+                            .id("yt-channel-link")
+                            .cursor_pointer()
+                            .hover(move |s| s.text_color(shell::c(n.ink)))
+                            .child(
+                                shell::text(night::CAPTION, shell::c(n.ink_soft))
+                                    .child("@CREWNW"),
+                            )
+                            .on_click(move |_: &ClickEvent, _, cx| cx.open_url(channel_url)),
+                    ),
             );
 
         if self.youtube_videos.is_empty() {
+            let (status_title, status_sub) = if self.youtube_error.is_some() {
+                (
+                    "Videolar yüklenirken bağlantı kurulamadı.",
+                    "Lütfen internet bağlantınızı kontrol edin veya doğrudan kanalımızı ziyaret edin.",
+                )
+            } else if is_loading {
+                (
+                    "Videolar yükleniyor...",
+                    "En yeni CREW Network videoları getiriliyor.",
+                )
+            } else {
+                (
+                    "Henüz yayınlanmış video bulunmuyor.",
+                    "Yeni videolar, rehberler ve etkinlik duyuruları için resmi YouTube kanalımızı takip edin.",
+                )
+            };
+
+            let mut actions = div().flex().items_center().gap(px(10.));
+            if self.youtube_error.is_some() {
+                actions = actions.child(
+                    button("yt-retry-btn", "Tekrar Dene", Kind::Secondary, &t)
+                        .on_click(cx.listener(|this, _: &ClickEvent, _, cx| {
+                            this.refresh_youtube(cx);
+                        })),
+                );
+            }
+            actions = actions.child(
+                button("yt-channel-btn", "YouTube Kanalına Git", Kind::Primary, &t)
+                    .on_click(move |_: &ClickEvent, _, cx| cx.open_url(channel_url)),
+            );
+
             let empty_card = div()
                 .p(px(20.))
                 .rounded(px(night::RADIUS_CONTROL))
@@ -600,22 +651,15 @@ impl Launcher {
                                 .child(
                                     shell::text(night::UI, shell::c(n.ink))
                                         .font_weight(FontWeight::SEMIBOLD)
-                                        .child("Henüz yayınlanmış video bulunmuyor."),
+                                        .child(status_title),
                                 )
                                 .child(
                                     shell::text(night::CAPTION, shell::c(n.ink_soft))
-                                        .child("Yeni videolar, rehberler ve etkinlik duyuruları için resmi YouTube kanalımızı takip edin."),
+                                        .child(status_sub),
                                 ),
                         ),
                 )
-                .child(
-                    div()
-                        .flex()
-                        .child(
-                            button("yt-channel-btn", "YouTube Kanalına Git", Kind::Primary, &t)
-                                .on_click(move |_: &ClickEvent, _, cx| cx.open_url(channel_url)),
-                        ),
-                );
+                .child(actions);
 
             div()
                 .flex()

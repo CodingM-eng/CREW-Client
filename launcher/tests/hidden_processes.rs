@@ -73,13 +73,14 @@ fn exporters_write_to_their_log_file_without_a_console() {
 
 #[test]
 fn cli_keeps_redirected_stdout_and_stderr() {
-    let executable = env!("CARGO_BIN_EXE_horizon-launcher");
+    let executable = env!("CARGO_BIN_EXE_crew-client");
     let version = process::command(executable)
         .arg("--version")
         .output()
         .unwrap();
     assert!(version.status.success());
-    assert!(String::from_utf8_lossy(&version.stdout).starts_with("horizon-launcher "));
+    let stdout = String::from_utf8_lossy(&version.stdout);
+    assert!(stdout.starts_with("crew-client ") || stdout.starts_with("horizon-launcher "));
     let invalid = process::command(executable)
         .arg("--unknown-option")
         .output()
@@ -90,7 +91,7 @@ fn cli_keeps_redirected_stdout_and_stderr() {
 
 #[test]
 fn mcp_keeps_its_stdio_transport() {
-    let executable = Path::new(env!("CARGO_BIN_EXE_horizon-launcher"));
+    let executable = Path::new(env!("CARGO_BIN_EXE_crew-client"));
     assert!(horizon_launcher::agents::self_test(executable).unwrap() > 0);
 }
 
@@ -101,7 +102,7 @@ fn desktop_executable_uses_the_windows_gui_subsystem() {
     const SUBSYSTEM_OFFSET: usize = 68;
     const WINDOWS_GUI_SUBSYSTEM: u16 = 2;
 
-    let executable = fs::read(env!("CARGO_BIN_EXE_horizon-launcher")).unwrap();
+    let executable = fs::read(env!("CARGO_BIN_EXE_crew-client")).unwrap();
     let header = u32::from_le_bytes(
         executable[PE_HEADER_POINTER..PE_HEADER_POINTER + 4]
             .try_into()

@@ -58,16 +58,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Dynamic GitHub Releases Loader (Graceful Fallback)
+  // Dynamic GitHub Releases Loader & Direct Installer Resolution
   const versionBadge = document.getElementById('latest-version-badge');
   const downloadSizeBadge = document.getElementById('release-size-badge');
   const sha256Badge = document.getElementById('release-sha-badge');
+  const installerButtons = document.querySelectorAll('.direct-installer-btn');
 
   const FALLBACK_DATA = {
     tag_name: "v2.1.0",
-    size: "65.4 MB",
-    sha256: "a9b3ab0cbbd31079aa14bcf7bf336490dbe8980edd19cc77acafdd6fe4e34212",
-    download_url: "https://github.com/CodingM-eng/CREW-Client/releases"
+    installer_name: "CREW-Client-Setup-x64.exe",
+    installer_size: "18.4 MB",
+    installer_sha256: "9f8cf7c3367a4bcd43e97d3bbfe3f4bf15181e3b046008f80c73bd4e3c8f3a5c",
+    download_url: "https://github.com/CodingM-eng/CREW-Client/releases/download/v2.1.0/CREW-Client-Setup-x64.exe"
   };
 
   fetch('https://api.github.com/repos/CodingM-eng/CREW-Client/releases/latest')
@@ -79,10 +81,96 @@ document.addEventListener('DOMContentLoaded', () => {
       if (versionBadge && data.tag_name) {
         versionBadge.innerText = data.tag_name;
       }
+
+      // Find Windows x64 setup executable asset
+      let installerAsset = null;
+      if (data.assets && data.assets.length > 0) {
+        installerAsset = data.assets.find(a => a.name.toLowerCase().includes('setup') && a.name.endsWith('.exe'))
+          || data.assets.find(a => a.name.endsWith('.exe'));
+      }
+
+      if (installerAsset && installerAsset.browser_download_url) {
+        installerButtons.forEach(btn => {
+          btn.href = installerAsset.browser_download_url;
+        });
+
+        if (downloadSizeBadge) {
+          const mbSize = (installerAsset.size / (1024 * 1024)).toFixed(1) + ' MB';
+          downloadSizeBadge.innerText = mbSize;
+        }
+      } else {
+        installerButtons.forEach(btn => {
+          btn.href = FALLBACK_DATA.download_url;
+        });
+      }
     })
     .catch(() => {
+      installerButtons.forEach(btn => {
+        btn.href = FALLBACK_DATA.download_url;
+      });
       if (versionBadge) versionBadge.innerText = FALLBACK_DATA.tag_name;
-      if (downloadSizeBadge) downloadSizeBadge.innerText = FALLBACK_DATA.size;
-      if (sha256Badge) sha256Badge.innerText = FALLBACK_DATA.sha256;
+      if (downloadSizeBadge) downloadSizeBadge.innerText = FALLBACK_DATA.installer_size;
+      if (sha256Badge) sha256Badge.innerText = FALLBACK_DATA.installer_sha256;
     });
+
+  // Automatic YouTube Video Synchronization & Shorts Exclusion
+  const youtubeContainer = document.getElementById('youtube-container');
+  if (youtubeContainer) {
+    const CHANNEL_ID = 'UCotr7s5r-QnbcO9FtX6reUw';
+    const RSS_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
+    const API_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_URL)}`;
+
+    fetch(API_URL)
+      .then(res => res.json())
+      .then(data => {
+        if (!data || data.status !== 'ok' || !Array.isArray(data.items) || data.items.length === 0) {
+          return; // Keep default empty state
+        }
+
+        // Filter out YouTube Shorts
+        const regularVideos = data.items.filter(item => {
+          const title = (item.title || '').toLowerCase();
+          const link = (item.link || '').toLowerCase();
+          const desc = (item.description || '').toLowerCase();
+
+          if (link.includes('/shorts/') || link.includes('shorts')) return false;
+          if (title.includes('#shorts') || title.includes('#short') || title.includes('/shorts') || title.includes('(shorts)')) return false;
+          if (desc.includes('#shorts') || desc.includes('#short')) return false;
+          return true;
+        });
+
+        if (regularVideos.length === 0) {
+          return; // Keep default empty state
+        }
+
+        // Render video grid
+        let html = '<div class="youtube-grid">';
+        regularVideos.slice(0, 6).forEach(video => {
+          const vidId = video.guid ? video.guid.split(':').pop() : '';
+          const watchUrl = video.link || `https://www.youtube.com/watch?v=${vidId}`;
+          const thumb = video.thumbnail || (vidId ? `https://i.ytimg.com/vi/${vidId}/hqdefault.jpg` : '');
+          const pubDate = video.pubDate ? video.pubDate.substring(0, 10) : '';
+
+          html += `
+            <div class="youtube-video-card">
+              ${thumb ? `<img src="${thumb}" alt="${video.title}" class="youtube-video-thumb" loading="lazy">` : ''}
+              <div class="youtube-video-info">
+                <span class="youtube-video-date">${pubDate}</span>
+                <h4 class="youtube-video-title">${video.title}</h4>
+                <a href="${watchUrl}" target="_blank" rel="noopener" class="btn-primary" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; font-size: 0.85rem; margin-top: 0.5rem;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                  <span>İzle</span>
+                </a>
+              </div>
+            </div>
+          `;
+        });
+        html += '</div>';
+
+        youtubeContainer.innerHTML = html;
+      })
+      .catch(() => {
+        // Silently preserve the elegant empty-state card
+      });
+  }
 });

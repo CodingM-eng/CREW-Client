@@ -807,6 +807,30 @@ impl Launcher {
         });
     }
 
+    pub(crate) fn refresh_youtube(&mut self, cx: &mut Context<Self>) {
+        self.youtube_loading = true;
+        self.youtube_error = None;
+        cx.notify();
+        cx.spawn(async move |this, cx| {
+            let videos = cx
+                .background_executor()
+                .spawn(async move { horizon_launcher::youtube::fetch_latest_videos() })
+                .await;
+            let _ = this.update(cx, |this, cx| {
+                match videos {
+                    Ok(list) => {
+                        this.youtube_videos = list;
+                        this.youtube_error = None;
+                    }
+                    Err(e) => this.youtube_error = Some(e),
+                }
+                this.youtube_loading = false;
+                cx.notify();
+            });
+        })
+        .detach();
+    }
+
     fn drain(&mut self, cx: &mut Context<Self>) {
         let mut changed = false;
         self.perf.tick();
