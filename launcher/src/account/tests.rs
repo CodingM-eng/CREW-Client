@@ -992,10 +992,7 @@ fn client_id_is_configuration() {
         Some("00000000-1111-2222-3333-444444444444")
     );
     // CREW_MSA_CLIENT_ID takes precedence
-    std::env::set_var(
-        "CREW_MSA_CLIENT_ID",
-        "crew-client-id-5555",
-    );
+    std::env::set_var("CREW_MSA_CLIENT_ID", "crew-client-id-5555");
     assert_eq!(client_id().as_deref(), Some("crew-client-id-5555"));
     std::env::remove_var("CREW_MSA_CLIENT_ID");
     std::env::remove_var("HORIZON_MSA_CLIENT_ID");

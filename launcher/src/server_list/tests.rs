@@ -202,7 +202,8 @@ fn the_official_server_is_put_on_top_once() {
     // Already there under the player's own name and spelling: not duplicated.
     let home = scratch("official-present");
     let mut list = List::load(&home);
-    list.add("SMP", &format!("{}:25565", OFFICIAL_ADDRESS)).unwrap();
+    list.add("SMP", &format!("{}:25565", OFFICIAL_ADDRESS))
+        .unwrap();
     list.save(&home).unwrap();
     add_official_default(&home).unwrap();
     assert_eq!(ips(&home), [format!("{}:25565", OFFICIAL_ADDRESS)]);
@@ -275,10 +276,7 @@ fn a_moved_official_server_moves_the_players_entry_once() {
     let home = scratch("moved-present");
     offered_at(
         &home,
-        &[
-            ("Old", "horizon.bunchy7s.dev"),
-            ("New", OFFICIAL_ADDRESS),
-        ],
+        &[("Old", "horizon.bunchy7s.dev"), ("New", OFFICIAL_ADDRESS)],
         "horizon.bunchy7s.dev",
     );
     add_official_default(&home).unwrap();

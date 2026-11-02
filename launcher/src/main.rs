@@ -3111,12 +3111,187 @@ impl Launcher {
         }
         page = page.child(self.home_tabs(rows, cx));
         if let Some(e) = self.client_error.clone() {
-            page = page.child(notice(e, &t));
+            page = page.child(self.launch_error_card(&e, cx));
         }
         if let Some(crash) = self.crash.clone() {
             page = page.child(self.crash_notice(crash, cx));
         }
         page
+    }
+
+    /// Structured launch failure diagnostic card: categorized Turkish explanation,
+    /// Minecraft version, modloader, log location, open log button, copy diagnostics button.
+    fn launch_error_card(&self, error: &str, cx: &mut Context<Self>) -> Div {
+        let t = self.theme;
+        let n = t.night;
+
+        // Categorize error
+        let (category, advice) = if error.contains("NoOwner")
+            || error.contains("Microsoft")
+            || error.contains("owns Minecraft")
+            || error.contains("session")
+            || error.contains("token")
+            || error.contains("kiracı")
+            || error.contains("AADSTS")
+        {
+            (
+                "Hesap ve Yetkilendirme",
+                "Minecraft lisansına sahip bir Microsoft hesabıyla giriş yapın veya Çevrimdışı Demo Profili kullanın.",
+            )
+        } else if error.contains("java") || error.contains("Java") || error.contains("javaw") {
+            (
+                "Java Çalışma Zamanı",
+                "Gerekli Java çalışma zamanı (Java 21 / 17) bulunamadı veya başlatılamadı. Ayarlar'dan Java yolunu kontrol edin.",
+            )
+        } else if error.contains("fabric")
+            || error.contains("quilt")
+            || error.contains("loader")
+            || error.contains("inheritsFrom")
+            || error.contains("maven")
+        {
+            (
+                "Mod Yükleyici / Profil",
+                "Fabric/Quilt mod yükleyici profili veya gerekli kütüphane dosyaları indirilirken bir sorun oluştu.",
+            )
+        } else if error.contains("download")
+            || error.contains("indirme")
+            || error.contains("network")
+            || error.contains("fetch")
+            || error.contains("timeout")
+        {
+            (
+                "Dosya İndirme / Ağ",
+                "Oyun dosyaları veya Mojang/Fabric kütüphaneleri indirilemedi. İnternet bağlantınızı kontrol edin.",
+            )
+        } else {
+            (
+                "Başlatma Hatası",
+                "Oyun başlatılırken beklenmedik bir sistem hatası meydana geldi. Günlük dosyasını inceleyin.",
+            )
+        };
+
+        // Determine context info safely (NO secrets!)
+        let instance_name = self.selected_instance().map_or("Varsayılan", |i| &i.name);
+        let mc_version = self
+            .selected_instance()
+            .and_then(|i| i.java.as_ref())
+            .map_or("1.21.4", |j| &j.minecraft);
+        let loader_name = self
+            .selected_instance()
+            .and_then(|i| i.java.as_ref())
+            .and_then(|j| j.loader.as_ref())
+            .map_or("Vanilla (Standart)", |l| l.kind.name());
+        let active_user = self.accounts.selected().map_or_else(
+            || self.accounts.name_arg().unwrap_or("Demo_Oyuncu"),
+            |a| &a.name,
+        );
+        let logs_path = backend::logs_dir();
+
+        // Sanitize error string to guarantee ZERO secrets/tokens in output
+        let sanitized_error = error
+            .lines()
+            .map(|l| {
+                if l.contains("token") || l.contains("Bearer") || l.contains("secret") {
+                    "[gizli kimlik belirteci]"
+                } else {
+                    l
+                }
+            })
+            .collect::<Vec<_>>()
+            .join("\n");
+
+        let diag_text = format!(
+            "[CREW Client Tanılama Raporu]\n             İstemci: CREW Client v{}\n             Profil: {}\n             Minecraft: {}\n             Mod Yükleyici: {}\n             Kullanıcı: {}\n             Kategori: {}\n             Hata: {}\n             Günlük Konumu: {}",
+            backend::VERSION,
+            instance_name,
+            mc_version,
+            loader_name,
+            active_user,
+            category,
+            sanitized_error,
+            logs_path.display()
+        );
+
+        let copy_diag = diag_text.clone();
+
+        let mut actions = div().flex().flex_wrap().gap(px(8.)).mt(px(8.));
+        actions = actions.child(
+            button("err-open-logs", "Günlük Klasörünü Aç", Kind::Secondary, &t)
+                .bg(t.plate)
+                .on_click(|_, _, cx| {
+                    let dir = backend::logs_dir();
+                    let _ = std::fs::create_dir_all(&dir);
+                    cx.open_with_system(&dir);
+                }),
+        );
+        actions = actions.child(
+            button("err-copy-diag", "Tanılamayı Kopyala", Kind::Secondary, &t)
+                .bg(t.plate)
+                .on_click(move |_, _, cx| {
+                    copy_to_clipboard(cx, gpui::ClipboardItem::new_string(copy_diag.clone()));
+                }),
+        );
+        actions = actions.child(button("err-dismiss", "Kapat", Kind::Ghost, &t).on_click(
+            cx.listener(|this, _: &ClickEvent, _, cx| {
+                this.client_error = None;
+                cx.notify();
+            }),
+        ));
+
+        div()
+            .relative()
+            .p(px(16.))
+            .rounded(px(theme::night::RADIUS_CONTROL))
+            .bg(plate::alpha(n.card_hi, 0.95))
+            .border_1()
+            .border_color(t.danger.opacity(0.5))
+            .flex()
+            .flex_col()
+            .gap(px(8.))
+            .child(
+                div()
+                    .flex()
+                    .items_center()
+                    .justify_between()
+                    .child(
+                        div()
+                            .flex()
+                            .items_center()
+                            .gap(px(8.))
+                            .child(blocks::icon("info-box", 20., t.danger))
+                            .child(
+                                shell::text(theme::HEADING, shell::c(n.ink))
+                                    .font_weight(FontWeight::BOLD)
+                                    .child("CREW Client Başlatma Hatası"),
+                            ),
+                    )
+                    .child(
+                        div()
+                            .px(px(8.))
+                            .py(px(2.))
+                            .rounded(px(theme::night::RADIUS_CONTROL))
+                            .bg(t.danger.opacity(0.2))
+                            .child(
+                                shell::text(theme::night::CAPTION, t.danger)
+                                    .font_weight(FontWeight::SEMIBOLD)
+                                    .child(category),
+                            ),
+                    ),
+            )
+            .child(div().flex().flex_wrap().gap(px(12.)).child(
+                shell::text(theme::night::CAPTION, shell::c(n.muted)).child(format!(
+                    "Profil: {instance_name} · Minecraft {mc_version} ({loader_name})"
+                )),
+            ))
+            .child(shell::text(theme::night::UI, shell::c(n.ink_soft)).child(advice))
+            .child(
+                div()
+                    .p(px(10.))
+                    .rounded(px(4.))
+                    .bg(plate::alpha(n.card, 0.7))
+                    .child(shell::text(theme::MICRO, shell::c(n.muted)).child(sanitized_error)),
+            )
+            .child(actions)
     }
 
     /// "Horizon crashed": the report and the logs, and where to report it.
@@ -3127,18 +3302,18 @@ impl Launcher {
             let open = report.clone();
             actions = actions
                 .child(
-                    button("crash-open", "Open report", Kind::Secondary, &t)
+                    button("crash-open", tr("Open report"), Kind::Secondary, &t)
                         .bg(t.plate)
                         .on_click(move |_, _, cx| cx.open_with_system(&open)),
                 )
                 .child(
                     button(
                         "crash-copy",
-                        if crash.copied {
+                        tr(if crash.copied {
                             "Copied"
                         } else {
                             "Copy report"
-                        },
+                        }),
                         Kind::Secondary,
                         &t,
                     )
@@ -3157,7 +3332,7 @@ impl Launcher {
                 );
         }
         actions = actions.child(
-            button("crash-logs", "Open logs folder", Kind::Secondary, &t)
+            button("crash-logs", tr("Open logs folder"), Kind::Secondary, &t)
                 .bg(t.plate)
                 .on_click(|_, _, cx| {
                     let dir = backend::logs_dir();
@@ -3168,13 +3343,18 @@ impl Launcher {
         let discord = self.links.discord.clone();
         if !discord.is_empty() {
             actions = actions.child(
-                button("crash-discord", "Report on Discord", Kind::Secondary, &t)
-                    .bg(t.plate)
-                    .on_click(move |_, _, cx| cx.open_url(&discord)),
+                button(
+                    "crash-discord",
+                    tr("Report on Discord"),
+                    Kind::Secondary,
+                    &t,
+                )
+                .bg(t.plate)
+                .on_click(move |_, _, cx| cx.open_url(&discord)),
             );
         }
         actions = actions.child(
-            button("crash-dismiss", "Dismiss", Kind::Ghost, &t).on_click(cx.listener(
+            button("crash-dismiss", tr("Dismiss"), Kind::Ghost, &t).on_click(cx.listener(
                 |this, _: &ClickEvent, _, cx| {
                     this.crash = None;
                     cx.notify();
@@ -4594,7 +4774,7 @@ impl Render for Launcher {
                 |d, p| d.opacity(p).top(px(theme::RISE * (1. - p))),
             );
         let (reveal, held) = self.opening_phase(window);
-        let ui = ease_out_cubic((reveal - 0.3) / 0.7);
+        let ui = ease_out_cubic(reveal);
         if self.opening.is_none() && window.focused(cx).is_none() {
             window.focus(&self.root_focus, cx);
         }
@@ -4709,9 +4889,7 @@ impl Render for Launcher {
             root = root.child(self.owner_screen(cx));
         }
         if let Some(opening) = &self.opening {
-            // The wordmark arrives letter by letter, then gives way to the launcher; a click or
-            // a key skips ahead.
-            let gone = 1. - ease_out_cubic(reveal / 0.6);
+            let splash_opacity = (1. - ease_out_cubic(reveal)).clamp(0., 1.);
             let word = div()
                 .flex()
                 .font_family(theme::PIXEL)
@@ -4720,14 +4898,48 @@ impl Render for Launcher {
                 .font_weight(FontWeight::BOLD)
                 .text_color(t.ink)
                 .children("CREW CLIENT".chars().enumerate().map(|(i, c)| {
-                    let at = held - i as f32 * theme::STAGGER.as_secs_f32() * 1.5;
-                    let p = ease_out_cubic(at / theme::ENTER.as_secs_f32());
+                    let at = (held - i as f32 * theme::STAGGER.as_secs_f32() * 1.2).max(0.);
+                    let p = ease_out_cubic((at / theme::ENTER.as_secs_f32()).min(1.0));
                     div()
                         .relative()
                         .opacity(p)
-                        .top(px(theme::RISE * 2. * (1. - p)))
+                        .top(px(theme::RISE * 1.5 * (1. - p)))
                         .child(c.to_string())
                 }));
+
+            let status_msg = if reveal > 0.0 {
+                "CREW Client hazır · Başlatılıyor..."
+            } else if matches!(self.releases, Load::Loading) || held < 0.5 {
+                "Sistem kaynakları hazırlanıyor..."
+            } else if held < 1.1 {
+                "Sürüm ve mod profilleri kontrol ediliyor..."
+            } else {
+                "CREW Client hazırlanıyor..."
+            };
+
+            let progress = if reveal > 0.0 {
+                1.0
+            } else {
+                (held / 1.4).min(0.92)
+            };
+            let fill_width = (200.0 * ease_out_cubic(progress)).clamp(8.0, 200.0);
+
+            let loading_bar = div()
+                .relative()
+                .w(px(200.))
+                .h(px(3.))
+                .rounded(px(2.))
+                .bg(plate::alpha(t.night.card, 0.6))
+                .overflow_hidden()
+                .child(
+                    div()
+                        .relative()
+                        .h_full()
+                        .w(px(fill_width))
+                        .rounded(px(2.))
+                        .bg(t.accent),
+                );
+
             root = root.child(
                 div()
                     .id("opening")
@@ -4739,7 +4951,7 @@ impl Render for Launcher {
                     .flex()
                     .items_center()
                     .justify_center()
-                    .bg(t.page.opacity(gone))
+                    .bg(t.page.opacity(splash_opacity))
                     .when(reveal == 0., |d| d.cursor_pointer())
                     .child(
                         div()
@@ -4747,14 +4959,19 @@ impl Render for Launcher {
                             .flex()
                             .flex_col()
                             .items_center()
-                            .gap(px(16.))
-                            .top(px(-24. * (1. - gone)))
-                            .opacity(gone)
+                            .gap(px(14.))
+                            .top(px(-16. * (1. - splash_opacity)))
+                            .opacity(splash_opacity)
                             .child(mark(56., &t))
                             .child(word)
                             .child(
-                                shell::text(theme::night::CAPTION, t.muted)
+                                shell::text(theme::night::CAPTION, shell::c(t.night.ink_soft))
                                     .child("CREW Network · Performans Minecraft İstemcisi"),
+                            )
+                            .child(loading_bar)
+                            .child(
+                                shell::text(theme::MICRO, shell::c(t.night.muted))
+                                    .child(status_msg),
                             ),
                     )
                     .when(reveal == 0., |d| {

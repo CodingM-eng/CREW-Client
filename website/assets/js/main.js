@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
     tag_name: "v2.1.0",
     installer_name: "CREW-Client-Setup-x64.exe",
     installer_size: "18.4 MB",
-    installer_sha256: "68435d96281ae6f48cbe4574e13014b20afede8e768ce4b7d032deb561d2ed00",
+    installer_sha256: "c1ccbdf95ff596dbae132814e11b6286a8a267c9344e307f8a91ad005b7f13df",
     download_url: "https://github.com/CodingM-eng/CREW-Client/releases/download/v2.1.0/CREW-Client-Setup-x64.exe"
   };
 

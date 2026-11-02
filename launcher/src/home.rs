@@ -64,7 +64,10 @@ impl Launcher {
                 .id("official-players")
                 .cursor_pointer()
                 .hover(move |s| s.text_color(ink))
-                .child(format!("· oyna.crewnetwork.space: {} oyuncu", thousands(count)))
+                .child(format!(
+                    "· oyna.crewnetwork.space: {} oyuncu",
+                    thousands(count)
+                ))
                 .on_click(cx.listener(|this, _: &ClickEvent, _, cx| {
                     this.go(Page::Servers);
                     cx.notify();
@@ -313,10 +316,11 @@ impl Launcher {
                     shell::text(night::UI, c(n.ink))
                         .relative()
                         .font_weight(FontWeight::BOLD)
-                        .child(
-                            format!("CREW Client {}", horizon_launcher::nightly::label(tag)
-                                .unwrap_or_else(|| tag.trim_start_matches('v').to_string()))
-                        ),
+                        .child(format!(
+                            "CREW Client {}",
+                            horizon_launcher::nightly::label(tag)
+                                .unwrap_or_else(|| tag.trim_start_matches('v').to_string())
+                        )),
                 )
                 .child(
                     shell::text(night::CAPTION, c(n.ink_soft))
@@ -563,10 +567,13 @@ impl Launcher {
                             .id("yt-refresh-action")
                             .cursor_pointer()
                             .hover(move |s| s.text_color(shell::c(n.ink)))
-                            .child(
-                                shell::text(night::CAPTION, shell::c(n.ink_soft))
-                                    .child(if is_loading { "Yenileniyor..." } else { "⟳ Yenile" }),
-                            )
+                            .child(shell::text(night::CAPTION, shell::c(n.ink_soft)).child(
+                                if is_loading {
+                                    "Yenileniyor..."
+                                } else {
+                                    "⟳ Yenile"
+                                },
+                            ))
                             .on_click(cx.listener(|this, _: &ClickEvent, _, cx| {
                                 this.refresh_youtube(cx);
                             })),
@@ -577,8 +584,7 @@ impl Launcher {
                             .cursor_pointer()
                             .hover(move |s| s.text_color(shell::c(n.ink)))
                             .child(
-                                shell::text(night::CAPTION, shell::c(n.ink_soft))
-                                    .child("@CREWNW"),
+                                shell::text(night::CAPTION, shell::c(n.ink_soft)).child("@CREWNW"),
                             )
                             .on_click(move |_: &ClickEvent, _, cx| cx.open_url(channel_url)),
                     ),
@@ -605,10 +611,11 @@ impl Launcher {
             let mut actions = div().flex().items_center().gap(px(10.));
             if self.youtube_error.is_some() {
                 actions = actions.child(
-                    button("yt-retry-btn", "Tekrar Dene", Kind::Secondary, &t)
-                        .on_click(cx.listener(|this, _: &ClickEvent, _, cx| {
+                    button("yt-retry-btn", "Tekrar Dene", Kind::Secondary, &t).on_click(
+                        cx.listener(|this, _: &ClickEvent, _, cx| {
                             this.refresh_youtube(cx);
-                        })),
+                        }),
+                    ),
                 );
             }
             actions = actions.child(
@@ -694,10 +701,7 @@ impl Launcher {
                             .flex()
                             .flex_col()
                             .gap(px(6.))
-                            .child(
-                                shell::text(night::CAPTION, shell::c(n.muted))
-                                    .child(published),
-                            )
+                            .child(shell::text(night::CAPTION, shell::c(n.muted)).child(published))
                             .child(
                                 shell::text(night::UI, shell::c(n.ink))
                                     .font_weight(FontWeight::SEMIBOLD)
@@ -705,12 +709,10 @@ impl Launcher {
                             ),
                     )
                     .child(
-                        div()
-                            .flex()
-                            .child(
-                                button(format!("watch-{}", v.id), "İzle", Kind::Secondary, &t)
-                                    .on_click(move |_: &ClickEvent, _, cx| cx.open_url(&url)),
-                            ),
+                        div().flex().child(
+                            button(format!("watch-{}", v.id), "İzle", Kind::Secondary, &t)
+                                .on_click(move |_: &ClickEvent, _, cx| cx.open_url(&url)),
+                        ),
                     )
             });
 
@@ -759,10 +761,34 @@ impl Launcher {
             );
 
         let presets = [
-            ("Giriş Seviyesi Dizüstü", "i5-8250U · UHD 620", "34 ➔ 78 FPS", "2.29x", "1080p · 8 Chunks · Survival"),
-            ("Orta Seviye Oyuncu", "Ryzen 3600 · GTX 1660S", "125 ➔ 275 FPS", "2.20x", "1080p · 12 Chunks · BedWars"),
-            ("Üst Seviye Masaüstü", "i7-12700K · RTX 3070", "195 ➔ 390 FPS", "2.00x", "1440p · 16 Chunks · Lobi"),
-            ("AMD APU Sistem", "Ryzen 5600G · Vega 7", "52 ➔ 118 FPS", "2.27x", "1080p · 10 Chunks · SMP"),
+            (
+                "Giriş Seviyesi Dizüstü",
+                "i5-8250U · UHD 620",
+                "34 ➔ 78 FPS",
+                "2.29x",
+                "1080p · 8 Chunks · Survival",
+            ),
+            (
+                "Orta Seviye Oyuncu",
+                "Ryzen 3600 · GTX 1660S",
+                "125 ➔ 275 FPS",
+                "2.20x",
+                "1080p · 12 Chunks · BedWars",
+            ),
+            (
+                "Üst Seviye Masaüstü",
+                "i7-12700K · RTX 3070",
+                "195 ➔ 390 FPS",
+                "2.00x",
+                "1440p · 16 Chunks · Lobi",
+            ),
+            (
+                "AMD APU Sistem",
+                "Ryzen 5600G · Vega 7",
+                "52 ➔ 118 FPS",
+                "2.27x",
+                "1080p · 10 Chunks · SMP",
+            ),
         ];
 
         let cards = presets.iter().map(|(name, hw, fps, ratio, cond)| {
@@ -798,15 +824,9 @@ impl Launcher {
                                 .font_weight(FontWeight::BOLD)
                                 .child(*ratio),
                         )
-                        .child(
-                            shell::text(night::UI, shell::c(n.ink_soft))
-                                .child(*fps),
-                        ),
+                        .child(shell::text(night::UI, shell::c(n.ink_soft)).child(*fps)),
                 )
-                .child(
-                    shell::text(night::CAPTION, shell::c(n.ink_soft))
-                        .child(*cond),
-                )
+                .child(shell::text(night::CAPTION, shell::c(n.ink_soft)).child(*cond))
         });
 
         let disclaimer = div()

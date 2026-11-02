@@ -143,7 +143,11 @@ impl Launcher {
             .map(|(kind, label)| {
                 shell::tab(
                     format!("new-kind-{label}"),
-                    if kind == NewKind::Horizon { "CREW Native" } else { tr(label) },
+                    if kind == NewKind::Horizon {
+                        "CREW Native"
+                    } else {
+                        tr(label)
+                    },
                     now == Some(kind),
                     &t,
                 )
@@ -314,7 +318,7 @@ impl Launcher {
                     .child(card(Loader::Quilt)),
             ).child(
                 shell::text(night::CAPTION, c(n.muted)).child(
-                    "Not: Fabric ve Quilt mod yükleyicileri tam olarak desteklenmektedir. Forge ve NeoForge bu sürmde desteklenmemektedir."
+                    "Not: Fabric ve Quilt mod yükleyicileri tam olarak desteklenmektedir. Forge ve NeoForge bu sürümde desteklenmemektedir."
                 ),
             );
         }

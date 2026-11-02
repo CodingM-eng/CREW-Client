@@ -212,19 +212,30 @@ pub fn install(
             .unwrap_or("https://repo1.maven.org/maven2/");
         let url = format!("{}/{path}", repository.trim_end_matches('/'));
         let sha1 = match library["sha1"].as_str() {
-            Some(sha1) => sha1.to_string(),
-            None => String::from_utf8_lossy(&fetch(&format!("{url}.sha1"))?)
-                .split_whitespace()
-                .next()
-                .unwrap_or_default()
-                .to_string(),
+            Some(sha1) => Some(sha1.to_string()),
+            None => fetch(&format!("{url}.sha1"))
+                .ok()
+                .and_then(|bytes| {
+                    let s = String::from_utf8_lossy(&bytes);
+                    s.split_whitespace().next().map(|w| w.to_string())
+                })
+                .filter(|h| h.len() == 40 && h.chars().all(|c| c.is_ascii_hexdigit())),
         };
         let file = dir.join("libraries").join(crate::mojang::relative(&path)?);
-        if sha1_file(&file).as_ref() != Some(&sha1) {
-            let body = fetch_checked(fetch, &url, &sha1).map_err(|e| format!("{url} {e}"))?;
+        let matches_existing = sha1
+            .as_ref()
+            .map_or(false, |h| sha1_file(&file).as_ref() == Some(h));
+        if !matches_existing || !file.is_file() {
+            let body = if let Some(sha1_val) = &sha1 {
+                fetch_checked(fetch, &url, sha1_val).map_err(|e| format!("{url} {e}"))?
+            } else {
+                fetch(&url).map_err(|e| format!("{url} {e}"))?
+            };
             write_file(&file, &body)?;
         }
-        library["downloads"] = json!({"artifact": {"path": path, "url": url, "sha1": sha1}});
+        let computed_sha1 = sha1.or_else(|| sha1_file(&file)).unwrap_or_default();
+        library["downloads"] =
+            json!({"artifact": {"path": path, "url": url, "sha1": computed_sha1}});
     }
     let out = dir
         .join("versions")

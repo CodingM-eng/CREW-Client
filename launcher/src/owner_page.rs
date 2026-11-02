@@ -45,9 +45,17 @@ impl Launcher {
         let demo_name = if accounts.offline.is_empty() {
             "Demo_Oyuncu".to_string()
         } else {
-            accounts.offline.first().cloned().unwrap_or_else(|| "Demo_Oyuncu".to_string())
+            accounts
+                .offline
+                .first()
+                .cloned()
+                .unwrap_or_else(|| "Demo_Oyuncu".to_string())
         };
-        let _ = accounts.play_as_with(account::store(), horizon_launcher::account::Player::Offline(demo_name), true);
+        let _ = accounts.play_as_with(
+            account::store(),
+            horizon_launcher::account::Player::Offline(demo_name),
+            true,
+        );
         let _ = accounts.save();
         self.accounts = accounts;
         self.settings.dev_offline = true;
@@ -94,11 +102,10 @@ impl Launcher {
                         .mt(px(5.))
                         .size(px(4.))
                         .rounded_full()
-                        .bg(shell::c(n.ink_soft))
+                        .bg(shell::c(n.ink_soft)),
                 )
                 .child(
-                    shell::text(theme::night::CAPTION, shell::c(n.ink_soft))
-                        .child(txt.to_string())
+                    shell::text(theme::night::CAPTION, shell::c(n.ink_soft)).child(txt.to_string()),
                 )
         };
 
@@ -223,7 +230,8 @@ impl Launcher {
                         .rounded(px(theme::night::RADIUS_CONTROL))
                         .bg(plate::alpha(n.card, 0.8))
                         .child(
-                            shell::text(theme::night::UI, shell::c(n.ink_soft)).child(tr(what).to_string()),
+                            shell::text(theme::night::UI, shell::c(n.ink_soft))
+                                .child(tr(what).to_string()),
                         ),
                 );
             }
@@ -271,7 +279,8 @@ impl Launcher {
                             cx.stop_propagation();
                             cx.notify();
                         }));
-                    let input_field = line_edit::mouse(input_field, cx, |this| &mut this.client_id_input);
+                    let input_field =
+                        line_edit::mouse(input_field, cx, |this| &mut this.client_id_input);
 
                     ms_card = ms_card
                         .child(
@@ -301,7 +310,10 @@ impl Launcher {
                 } else {
                     let msg = if e == "Sign-in cancelled." {
                         "Giriş kullanıcı tarafından iptal edildi.".to_string()
-                    } else if e.contains("expired_token") || e.contains("timeout") || e.contains("timed out") {
+                    } else if e.contains("expired_token")
+                        || e.contains("timeout")
+                        || e.contains("timed out")
+                    {
                         "Giriş oturumu zaman aşımına uğradı. Lütfen tekrar deneyin.".to_string()
                     } else if e.contains("403") || e.contains("Forbidden") {
                         "Mojang API erişimi reddedildi (403). Azure uygulamasının Mojang onayı ve XboxLive.signin iznine sahip olduğundan emin olun.".to_string()
@@ -309,39 +321,26 @@ impl Launcher {
                         format!("Microsoft kimlik doğrulama hatası: {e}")
                     };
                     ms_card = ms_card
-                        .child(
-                            shell::text(theme::night::CAPTION, shell::c(n.danger)).child(msg),
-                        )
-                        .child(
-                            div()
-                                .flex()
-                                .justify_end()
-                                .child(
-                                    microsoft::sign_in_button("owner-sign-in-retry", &t).on_click(
-                                        cx.listener(|this, _: &ClickEvent, _, cx| {
-                                            this.sign_in_to_play();
-                                            cx.notify();
-                                        }),
-                                    ),
-                                ),
-                        );
+                        .child(shell::text(theme::night::CAPTION, shell::c(n.danger)).child(msg))
+                        .child(div().flex().justify_end().child(
+                            microsoft::sign_in_button("owner-sign-in-retry", &t).on_click(
+                                cx.listener(|this, _: &ClickEvent, _, cx| {
+                                    this.sign_in_to_play();
+                                    cx.notify();
+                                }),
+                            ),
+                        ));
                 }
             }
             Shown::Idle => {
-                ms_card = ms_card.child(
-                    div()
-                        .mt(px(4.))
-                        .flex()
-                        .justify_end()
-                        .child(
-                            microsoft::sign_in_button("owner-sign-in", &t).on_click(cx.listener(
-                                |this, _: &ClickEvent, _, cx| {
-                                    this.sign_in_to_play();
-                                    cx.notify();
-                                },
-                            )),
-                        ),
-                );
+                ms_card = ms_card.child(div().mt(px(4.)).flex().justify_end().child(
+                    microsoft::sign_in_button("owner-sign-in", &t).on_click(cx.listener(
+                        |this, _: &ClickEvent, _, cx| {
+                            this.sign_in_to_play();
+                            cx.notify();
+                        },
+                    )),
+                ));
             }
         }
 
@@ -370,23 +369,27 @@ impl Launcher {
                             ),
                     ),
             )
-            .child(bullet("Microsoft hesabı veya lisans olmadan başlatıcıyı ve oyunu deneyin."))
-            .child(bullet("Yalnızca yerel tek oyunculu dünyalar için geçerlidir."))
-            .child(bullet("Çevrimiçi çok oyunculu (multiplayer) sunucularda çalışmaz."))
-            .child(bullet("Korsan veya crackli hesap değildir; resmi sunucu doğrulamasını atlamaz."))
+            .child(bullet(
+                "Microsoft hesabı veya lisans olmadan başlatıcıyı ve oyunu deneyin.",
+            ))
+            .child(bullet(
+                "Yalnızca yerel tek oyunculu dünyalar için geçerlidir.",
+            ))
+            .child(bullet(
+                "Çevrimiçi çok oyunculu (multiplayer) sunucularda çalışmaz.",
+            ))
+            .child(bullet(
+                "Korsan veya crackli hesap değildir; resmi sunucu doğrulamasını atlamaz.",
+            ))
             .child(
-                div()
-                    .mt(px(4.))
-                    .flex()
-                    .justify_end()
-                    .child(
-                        shell::action("owner-demo", shell::Action::Raised, &t)
-                            .child(shell::label("Yerel Demo Profili ile Başlat"))
-                            .on_click(cx.listener(|this, _: &ClickEvent, _, cx| {
-                                this.start_demo_mode();
-                                cx.notify();
-                            })),
-                    ),
+                div().mt(px(4.)).flex().justify_end().child(
+                    shell::action("owner-demo", shell::Action::Raised, &t)
+                        .child(shell::label("Yerel Demo Profili ile Başlat"))
+                        .on_click(cx.listener(|this, _: &ClickEvent, _, cx| {
+                            this.start_demo_mode();
+                            cx.notify();
+                        })),
+                ),
             );
 
         let waiting = matches!(state, Shown::Code(..)).then(|| {
@@ -400,9 +403,7 @@ impl Launcher {
             .items_center()
             .justify_between()
             .mt(px(8.))
-            .child(
-                div().children(waiting)
-            )
+            .child(div().children(waiting))
             .child(
                 shell::action("owner-later", shell::Action::Quiet, &t)
                     .child(shell::label(tr("Not now").to_string()))

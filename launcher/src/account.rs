@@ -99,7 +99,11 @@ pub fn client_id() -> Option<String> {
         .or_else(|| option_env!("HORIZON_MSA_CLIENT_ID").map(str::to_owned))
         .or_else(|| read_client_id_from_dir(&crate::backend::data_dir()))
         .or_else(|| read_client_id_from_dir(&crate::backend::game_home()))
-        .or_else(|| std::env::current_dir().ok().and_then(|d| read_client_id_from_dir(&d)))
+        .or_else(|| {
+            std::env::current_dir()
+                .ok()
+                .and_then(|d| read_client_id_from_dir(&d))
+        })
         .or_else(|| {
             std::env::current_exe()
                 .ok()
@@ -1782,7 +1786,10 @@ pub(crate) fn offline_uuid(name: &str) -> String {
     let mut hash = sha2::Sha256::digest(format!("OfflinePlayer:{name}").as_bytes());
     hash[6] = (hash[6] & 0x0f) | 0x30;
     hash[8] = (hash[8] & 0x3f) | 0x80;
-    hash[..16].iter().map(|b| format!("{b:02x}")).collect::<String>()
+    hash[..16]
+        .iter()
+        .map(|b| format!("{b:02x}"))
+        .collect::<String>()
 }
 
 fn java_player_with(

@@ -341,7 +341,10 @@ pub(crate) fn parse_releases(
             let is_match = match asset {
                 Some(target) => {
                     name == target
-                        || (target.contains("windows") && (name == "CREW-Client-Setup-x64.exe" || name == "CREW-Client.exe" || name == "CREW-Client-windows-x64.zip"))
+                        || (target.contains("windows")
+                            && (name == "CREW-Client-Setup-x64.exe"
+                                || name == "CREW-Client.exe"
+                                || name == "CREW-Client-windows-x64.zip"))
                 }
                 None => false,
             };
@@ -1534,7 +1537,10 @@ pub fn java_game(
 
         let mut ready = version_json.is_file() && version_jar.is_file();
         if !ready {
-            if let Some(src_mc) = Settings::load().minecraft_dir {
+            if let Some(src_mc) = Settings::load()
+                .minecraft_dir
+                .or_else(default_minecraft_dir)
+            {
                 let src_json = src_mc
                     .join("versions")
                     .join(&game.minecraft)
@@ -1544,7 +1550,9 @@ pub fn java_game(
                     .join(&game.minecraft)
                     .join(format!("{}.jar", game.minecraft));
                 if src_json.is_file() && src_jar.is_file() {
-                    let dest_dir = minecraft.join("versions").join(mojang::relative(&game.minecraft)?);
+                    let dest_dir = minecraft
+                        .join("versions")
+                        .join(mojang::relative(&game.minecraft)?);
                     let _ = fs::create_dir_all(&dest_dir);
                     let _ = fs::copy(&src_json, &version_json);
                     let _ = fs::copy(&src_jar, &version_jar);
@@ -1637,7 +1645,7 @@ fn download_for(
                 sources::Os::Windows => "windows",
             };
             mojang::download(pins, dir, os, 8, fetch, &mojang::CANCEL, log).map_err(|e| {
-                format!("\n  • Horizon tried to download {v} from Mojang for {name}, but: {e}")
+                format!("\n  • CREW Client tried to download {v} from Mojang for {name}, but: {e}")
             })
         }
         // An owner by its last answer, who can't be asked now.
@@ -1647,11 +1655,11 @@ fn download_for(
             pass.offline.unwrap_or_default()
         )),
         Err(_) if signed_in => Err(
-            "\n  • No signed-in account owns Minecraft: Java Edition, so Horizon can't download it."
+            "\n  • No signed-in account owns Minecraft: Java Edition, so CREW Client can't download it."
                 .into(),
         ),
         Err(_) => Err(format!(
-            "\n  • Or sign in with the Microsoft account that owns Minecraft: Horizon then \
+            "\n  • Or sign in with the Microsoft account that owns Minecraft: CREW Client then \
              downloads {v} from Mojang itself."
         )),
     }

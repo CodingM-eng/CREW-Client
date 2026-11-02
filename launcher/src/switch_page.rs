@@ -82,7 +82,9 @@ impl Launcher {
             }
             Player::Offline(name) => (name.clone(), "Yerel Demo Profili", None, false),
             Player::GameName => (
-                self.offline_name.clone().unwrap_or_else(|| "Demo_Oyuncu".to_string()),
+                self.offline_name
+                    .clone()
+                    .unwrap_or_else(|| "Demo_Oyuncu".to_string()),
                 "Yerel Demo Profili",
                 None,
                 false,
@@ -213,17 +215,16 @@ impl Launcher {
                                             .rounded_full()
                                             .bg(plate::alpha(status_color, 0.15))
                                             .child(
-                                                shell::text(theme::night::CAPTION, shell::c(status_color))
-                                                    .font_weight(FontWeight::SEMIBOLD)
-                                                    .child(curr_status),
+                                                shell::text(
+                                                    theme::night::CAPTION,
+                                                    shell::c(status_color),
+                                                )
+                                                .font_weight(FontWeight::SEMIBOLD)
+                                                .child(curr_status),
                                             ),
                                     ),
                             )
-                            .child(
-                                text(theme::CAPTION)
-                                    .text_color(t.muted)
-                                    .child(curr_type),
-                            )
+                            .child(text(theme::CAPTION).text_color(t.muted).child(curr_type))
                             .child(
                                 text(theme::CAPTION)
                                     .font_family(theme::MONO)
@@ -262,11 +263,7 @@ impl Launcher {
                             .flex()
                             .flex_col()
                             .items_end()
-                            .child(
-                                text(theme::CAPTION)
-                                    .text_color(t.muted)
-                                    .child("Minecraft"),
-                            )
+                            .child(text(theme::CAPTION).text_color(t.muted).child("Minecraft"))
                             .child(
                                 text(theme::CAPTION)
                                     .font_weight(FontWeight::SEMIBOLD)
@@ -280,15 +277,12 @@ impl Launcher {
 
         // 2. Profile Switching Section
         menu = menu.child(
-            div()
-                .mt(px(4.))
-                .px(px(4.))
-                .child(
-                    text(theme::CAPTION)
-                        .font_weight(FontWeight::BOLD)
-                        .text_color(t.muted)
-                        .child("Kayıtlı Profiller / Hesap Değiştir"),
-                ),
+            div().mt(px(4.)).px(px(4.)).child(
+                text(theme::CAPTION)
+                    .font_weight(FontWeight::BOLD)
+                    .text_color(t.muted)
+                    .child("Kayıtlı Profiller / Hesap Değiştir"),
+            ),
         );
 
         for (i, (who, name, how)) in self.players().into_iter().enumerate() {
