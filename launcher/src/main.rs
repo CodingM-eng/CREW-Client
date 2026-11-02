@@ -1516,6 +1516,26 @@ impl Launcher {
             .request(&self.accounts.accounts, resources, &self.tx);
     }
 
+    pub(crate) fn sign_out_account(&mut self, uuid: &str) {
+        let Some(generation) = self.begin_auth_job(uuid) else {
+            return;
+        };
+        let (tx, uuid_str) = (self.tx.clone(), uuid.to_string());
+        std::thread::spawn(move || {
+            let mut accounts = Accounts::load();
+            let _ = tx.send(Msg::AccountProgress(
+                uuid_str.clone(),
+                generation,
+                account::session::Phase::SigningOut,
+            ));
+            let result = accounts
+                .remove(account::store(), &uuid_str)
+                .and_then(|()| accounts.save())
+                .map(|()| accounts.has_owner(account::store()));
+            let _ = tx.send(Msg::AccountRemoved(uuid_str, generation, result));
+        });
+    }
+
     fn begin_auth_job(&mut self, uuid: &str) -> Option<u64> {
         if self.auth_busy.contains_key(uuid) {
             return None;

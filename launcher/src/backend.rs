@@ -1526,11 +1526,11 @@ pub fn java_game(
         let version_json = minecraft
             .join("versions")
             .join(mojang::relative(&game.minecraft)?)
-            .join(format!("{}.json", &game.minecraft));
+            .join(format!("{}.json", game.minecraft));
         let version_jar = minecraft
             .join("versions")
             .join(mojang::relative(&game.minecraft)?)
-            .join(format!("{}.jar", &game.minecraft));
+            .join(format!("{}.jar", game.minecraft));
 
         let mut ready = version_json.is_file() && version_jar.is_file();
         if !ready {
@@ -1538,11 +1538,11 @@ pub fn java_game(
                 let src_json = src_mc
                     .join("versions")
                     .join(&game.minecraft)
-                    .join(format!("{}.json", &game.minecraft));
+                    .join(format!("{}.json", game.minecraft));
                 let src_jar = src_mc
                     .join("versions")
                     .join(&game.minecraft)
-                    .join(format!("{}.jar", &game.minecraft));
+                    .join(format!("{}.jar", game.minecraft));
                 if src_json.is_file() && src_jar.is_file() {
                     let dest_dir = minecraft.join("versions").join(mojang::relative(&game.minecraft)?);
                     let _ = fs::create_dir_all(&dest_dir);

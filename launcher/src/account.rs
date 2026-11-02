@@ -63,6 +63,34 @@ fn read_client_id_from_dir(dir: &std::path::Path) -> Option<String> {
     None
 }
 
+/// Reads the Azure authority setting (`consumers`, `common`, etc.) from `auth.json`.
+fn read_authority_from_dir(dir: &std::path::Path) -> Option<String> {
+    let auth_file = dir.join("auth.json");
+    if auth_file.is_file() {
+        if let Ok(text) = std::fs::read_to_string(auth_file) {
+            if let Ok(val) = serde_json::from_str::<serde_json::Value>(&text) {
+                if let Some(auth) = val.get("authority").and_then(|c| c.as_str()) {
+                    let trimmed = auth.trim().to_owned();
+                    if !trimmed.is_empty() {
+                        return Some(trimmed);
+                    }
+                }
+            }
+        }
+    }
+    None
+}
+
+/// The Microsoft OAuth authority (e.g. `consumers` for personal accounts, `common` for multitenant).
+pub fn authority() -> String {
+    std::env::var("CREW_MSA_AUTHORITY")
+        .ok()
+        .or_else(|| std::env::var("HORIZON_MSA_AUTHORITY").ok())
+        .or_else(|| read_authority_from_dir(&crate::backend::data_dir()))
+        .or_else(|| read_authority_from_dir(&crate::backend::game_home()))
+        .unwrap_or_else(|| "consumers".to_string())
+}
+
 pub fn client_id() -> Option<String> {
     std::env::var("CREW_MSA_CLIENT_ID")
         .ok()
@@ -75,28 +103,42 @@ pub fn client_id() -> Option<String> {
         .or_else(|| {
             std::env::current_exe()
                 .ok()
-                .and_then(|p| p.parent().and_then(|d| read_client_id_from_dir(d)))
+                .and_then(|p| p.parent().and_then(read_client_id_from_dir))
         })
         .map(|id| id.trim().to_owned())
         .filter(|id| !id.is_empty())
 }
 
 /// Saves the client ID to auth.json and msa_client_id.txt in the application data directory.
-pub fn save_client_id(id: &str) -> Result<(), std::io::Error> {
-    let trimmed = id.trim();
-    if trimmed.is_empty() {
+/// Saves the client ID and authority to auth.json and msa_client_id.txt in the application data directory.
+pub fn save_client_id_and_authority(id: &str, authority_str: &str) -> Result<(), std::io::Error> {
+    let trimmed_id = id.trim();
+    if trimmed_id.is_empty() {
         return Ok(());
     }
+    let trimmed_auth = authority_str.trim();
+    let auth_val = if trimmed_auth.is_empty() {
+        "consumers"
+    } else {
+        trimmed_auth
+    };
     let dir = crate::backend::data_dir();
     std::fs::create_dir_all(&dir)?;
     let auth_file = dir.join("auth.json");
     let content = serde_json::json!({
-        "client_id": trimmed
+        "client_id": trimmed_id,
+        "authority": auth_val,
     });
     std::fs::write(&auth_file, serde_json::to_string_pretty(&content)?)?;
     let txt_file = dir.join("msa_client_id.txt");
-    let _ = std::fs::write(&txt_file, trimmed);
+    let _ = std::fs::write(&txt_file, trimmed_id);
     Ok(())
+}
+
+/// Saves the client ID to auth.json and msa_client_id.txt in the application data directory.
+pub fn save_client_id(id: &str) -> Result<(), std::io::Error> {
+    let current_auth = authority();
+    save_client_id_and_authority(id, &current_auth)
 }
 
 /// Where the requests go: the real services, or a mock in tests.
@@ -112,12 +154,20 @@ pub struct Endpoints {
 
 impl Endpoints {
     pub fn live() -> Self {
-        // Development builds only: `HORIZON_MSA_MICROSOFT_ENDPOINT` points the device-code and
-        // token requests at a local mock, to see and screenshot the sign-in panel.
-        let microsoft = std::env::var("HORIZON_MSA_MICROSOFT_ENDPOINT")
+        // Development builds only: `CREW_MSA_MICROSOFT_ENDPOINT` or `HORIZON_MSA_MICROSOFT_ENDPOINT`
+        // points the device-code and token requests at a local mock.
+        let auth = authority();
+        let microsoft = std::env::var("CREW_MSA_MICROSOFT_ENDPOINT")
             .ok()
+            .or_else(|| std::env::var("HORIZON_MSA_MICROSOFT_ENDPOINT").ok())
             .filter(|_| cfg!(debug_assertions))
-            .unwrap_or_else(|| "https://login.microsoftonline.com/consumers/oauth2/v2.0".into());
+            .unwrap_or_else(|| {
+                if auth.starts_with("https://") {
+                    auth
+                } else {
+                    format!("https://login.microsoftonline.com/{}/oauth2/v2.0", auth)
+                }
+            });
         Self {
             microsoft,
             xbox_user: "https://user.auth.xboxlive.com/user/authenticate".into(),

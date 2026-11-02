@@ -61,7 +61,6 @@ impl Launcher {
         let t = self.theme;
         let n = t.night;
         let configured = account::client_id().is_some();
-        // The screenshot preview shows a code without asking Microsoft for one.
         let state = match &self.sign_in_state {
             _ if sign_in_preview() => Shown::Code("https://www.microsoft.com/link", "K7Q-4MXR"),
             _ if !configured => Shown::Error(tr(account::NOT_CONFIGURED)),
@@ -71,69 +70,115 @@ impl Launcher {
             Some(SignInState::Done(Err(e))) => Shown::Error(e),
             Some(SignInState::Done(Ok(_))) | None => Shown::Idle,
         };
-        let line = |s: &str, color: u32| {
-            shell::text(theme::night::UI, shell::c(color))
-                .relative()
-                .child(tr(s).to_string())
-        };
-        let mut body = div()
-            .relative()
-            .flex()
-            .flex_col()
-            .gap(px(10.))
-            .child(
-                shell::text(theme::night::CAPTION, shell::c(n.muted))
-                    .font_weight(FontWeight::SEMIBOLD)
-                    .child(tr("Microsoft account").to_string()),
-            )
-            .child(
-                shell::text(theme::night::TITLE, shell::c(n.ink))
-                    .mb(px(4.))
-                    .child(tr("Sign in to play").to_string()),
-            )
-            .child(line(
-                "Horizon needs a Microsoft account that owns Minecraft: Java Edition, like other launchers.",
-                n.ink_soft,
-            ))
-            .child(line(
-                "No Minecraft install needed: Horizon downloads it from Mojang for your account.",
-                n.ink_soft,
-            ))
-            .child(line(
-                "Your worlds, offline names and settings stay where they are.",
-                n.muted,
-            ));
-        let raised = || {
+
+        let card_box = || {
             div()
                 .relative()
-                .mt(px(10.))
-                .p(px(18.))
+                .p(px(14.))
                 .rounded(px(theme::night::RADIUS_CONTROL))
                 .bg(plate::alpha(n.card_hi, n.card_hi_alpha))
                 .border_1()
                 .border_color(plate::alpha(n.stroke, n.stroke_alpha))
+                .flex()
+                .flex_col()
+                .gap(px(8.))
         };
-        body = match state {
+
+        let bullet = |txt: &str| {
+            div()
+                .flex()
+                .items_start()
+                .gap(px(6.))
+                .child(
+                    div()
+                        .mt(px(5.))
+                        .size(px(4.))
+                        .rounded_full()
+                        .bg(shell::c(n.ink_soft))
+                )
+                .child(
+                    shell::text(theme::night::CAPTION, shell::c(n.ink_soft))
+                        .child(txt.to_string())
+                )
+        };
+
+        // Header
+        let header = div()
+            .flex()
+            .flex_col()
+            .gap(px(4.))
+            .child(
+                shell::text(theme::night::CAPTION, shell::c(n.muted))
+                    .font_weight(FontWeight::SEMIBOLD)
+                    .child("CREW CLIENT · HESAP SEÇİMİ"),
+            )
+            .child(
+                shell::text(theme::night::TITLE, shell::c(n.ink))
+                    .child(tr("Sign in to play")),
+            )
+            .child(
+                shell::text(theme::night::UI, shell::c(n.ink_soft))
+                    .child("Resmi lisanslı Microsoft hesabınızla oturum açabilir veya çevrimdışı yerel demo profiliyle devam edebilirsiniz."),
+            );
+
+        // Card 1: Microsoft Hesabı
+        let mut ms_card = card_box()
+            .child(
+                div()
+                    .flex()
+                    .items_center()
+                    .justify_between()
+                    .child(
+                        shell::text(theme::night::UI, shell::c(n.ink))
+                            .font_weight(FontWeight::BOLD)
+                            .child("1. Microsoft Hesabıyla Giriş Yap"),
+                    )
+                    .child(
+                        div()
+                            .px(px(8.))
+                            .py(px(2.))
+                            .rounded(px(theme::night::RADIUS_CONTROL))
+                            .bg(plate::alpha(n.accent, 0.15))
+                            .child(
+                                shell::text(theme::night::CAPTION, shell::c(n.accent))
+                                    .font_weight(FontWeight::SEMIBOLD)
+                                    .child("Önerilen · Çevrimiçi"),
+                            ),
+                    ),
+            )
+            .child(bullet(tr("Horizon needs a Microsoft account that owns Minecraft: Java Edition, like other launchers.")))
+            .child(bullet(tr("No Minecraft install needed: Horizon downloads it from Mojang for your account.")))
+            .child(bullet(tr("Your worlds, offline names and settings stay where they are.")))
+            .child(bullet("oyna.crewnetwork.space ve tüm çok oyunculu sunuculara tam erişim."))
+            .child(bullet("OAuth 2.0 RFC 8628 Device Code güvencesi (Şifreniz asla kaydedilmez)."));
+
+        match state {
             Shown::Code(uri, user_code) => {
                 let copy = user_code.to_string();
-                body.child(
-                    raised()
+                let open_uri = uri.to_string();
+                ms_card = ms_card.child(
+                    div()
+                        .mt(px(6.))
+                        .p(px(12.))
+                        .rounded(px(theme::night::RADIUS_CONTROL))
+                        .bg(plate::alpha(n.card, 0.8))
+                        .border_1()
+                        .border_color(plate::alpha(n.stroke, n.stroke_alpha))
                         .flex()
                         .items_center()
                         .justify_between()
-                        .gap(px(16.))
+                        .gap(px(12.))
                         .child(
                             div()
                                 .flex_1()
                                 .min_w_0()
                                 .flex()
                                 .flex_col()
-                                .gap(px(4.))
+                                .gap(px(2.))
                                 .child(
                                     shell::text(theme::night::CAPTION, shell::c(n.ink_soft)).child(
                                         trf(
                                             "Open {link} in your browser and enter this code:",
-                                            // The page as the player would type it.
                                             &[("link", short_link(uri))],
                                         ),
                                     ),
@@ -142,27 +187,46 @@ impl Launcher {
                                     div()
                                         .font_family(theme::MONO)
                                         .font_weight(FontWeight::BOLD)
-                                        .text_size(px(30.))
-                                        .line_height(px(38.))
+                                        .text_size(px(26.))
+                                        .line_height(px(32.))
                                         .text_color(shell::c(n.ink))
                                         .child(user_code.to_string()),
                                 ),
                         )
                         .child(
-                            shell::action("owner-copy", shell::Action::Raised, &t)
-                                .child(shell::label(tr("Copy code").to_string()))
-                                .on_click(move |_, _, cx| {
-                                    copy_to_clipboard(
-                                        cx,
-                                        gpui::ClipboardItem::new_string(copy.clone()),
-                                    )
-                                }),
+                            div()
+                                .flex()
+                                .gap(px(6.))
+                                .child(
+                                    shell::action("owner-open", shell::Action::Main, &t)
+                                        .child(shell::label("Bağlantıyı Aç"))
+                                        .on_click(move |_, _, cx| cx.open_url(&open_uri)),
+                                )
+                                .child(
+                                    shell::action("owner-copy", shell::Action::Raised, &t)
+                                        .child(shell::label(tr("Copy code").to_string()))
+                                        .on_click(move |_, _, cx| {
+                                            copy_to_clipboard(
+                                                cx,
+                                                gpui::ClipboardItem::new_string(copy.clone()),
+                                            )
+                                        }),
+                                ),
                         ),
-                )
+                );
             }
-            Shown::Starting(what) => body.child(raised().child(
-                shell::text(theme::night::UI, shell::c(n.ink_soft)).child(tr(what).to_string()),
-            )),
+            Shown::Starting(what) => {
+                ms_card = ms_card.child(
+                    div()
+                        .mt(px(4.))
+                        .p(px(10.))
+                        .rounded(px(theme::night::RADIUS_CONTROL))
+                        .bg(plate::alpha(n.card, 0.8))
+                        .child(
+                            shell::text(theme::night::UI, shell::c(n.ink_soft)).child(tr(what).to_string()),
+                        ),
+                );
+            }
             Shown::Error(e) => {
                 let show_config_input = !configured || e.contains("invalid_client");
                 if show_config_input {
@@ -209,34 +273,31 @@ impl Launcher {
                         }));
                     let input_field = line_edit::mouse(input_field, cx, |this| &mut this.client_id_input);
 
-                    body.child(
-                        raised()
-                            .flex()
-                            .flex_col()
-                            .gap(px(8.))
-                            .child(
-                                shell::text(theme::night::UI, shell::c(n.danger))
-                                    .font_weight(FontWeight::BOLD)
-                                    .child("Microsoft İstemci Kimliği (Client ID) Yapılandırması"),
-                            )
-                            .child(
-                                shell::text(theme::night::CAPTION, shell::c(n.ink_soft)).child(
-                                    "Microsoft girişi için Azure Uygulama Kimliği gereklidir:
-                                     1. entra.microsoft.com adresine gidin (Gizli sekme önerilir) > Uygulamalar > Uygulama Kayıtları
-                                     2. Yeni kayıt: 'Herhangi bir kuruluş dizinindeki hesaplar ve kişisel Microsoft hesapları' seçin
-                                     3. Yeniden yönlendirme URI: Mobil ve masaüstü > https://login.microsoftonline.com/common/oauth2/nativeclient
-                                     4. API İzinleri: XboxLive.signin ve offline_access izinlerini ekleyin
-                                     5. Kimlik Doğrulama: 'Genel istemci akışlarına izin ver' seçeneğini 'Evet' yapın
-                                     6. Oluşturulan Uygulama (İstemci) Kimliği'ni aşağıdaki kutucuğa yapıştırın:",
-                                ),
-                            )
-                            .child(input_field)
-                            .child(
-                                shell::text(theme::night::CAPTION, shell::c(n.muted)).child(
-                                    "Girdiğiniz kimlik auth.json dosyasına kaydedilecek ve sonraki açılışlarda hatırlanacaktır.                                      Alternatif olarak aşağıdaki 'Demo / Çevrimdışı İncele' butonuyla yerel profille devam edebilirsiniz.",
-                                ),
+                    ms_card = ms_card
+                        .child(
+                            shell::text(theme::night::CAPTION, shell::c(n.danger))
+                                .font_weight(FontWeight::BOLD)
+                                .child("Azure Uygulama Kimliği (Client ID) Gerekli:"),
+                        )
+                        .child(
+                            shell::text(theme::night::CAPTION, shell::c(n.ink_soft)).child(
+                                "1. entra.microsoft.com adresine gidin > Uygulama Kayıtları > Yeni Kayıt\n2. Desteklenen tür: 'Herhangi bir kuruluş dizini ve kişisel Microsoft hesapları'\n3. Yeniden yönlendirme: Mobil/Masaüstü > https://login.microsoftonline.com/common/oauth2/nativeclient\n4. API İzinleri: XboxLive.signin ve offline_access ekleyin\n5. Kimlik Doğrulama: 'Genel istemci akışlarına izin ver' = Evet\n6. Uygulama Kimliği'ni yapıştırın:",
                             ),
-                    )
+                        )
+                        .child(input_field)
+                        .child(
+                            div()
+                                .flex()
+                                .justify_end()
+                                .child(
+                                    shell::action("owner-save-signin", shell::Action::Main, &t)
+                                        .child(shell::label("Kaydet ve Giriş Yap"))
+                                        .on_click(cx.listener(|this, _: &ClickEvent, _, cx| {
+                                            this.save_client_id_and_sign_in();
+                                            cx.notify();
+                                        })),
+                                ),
+                        );
                 } else {
                     let msg = if e == "Sign-in cancelled." {
                         "Giriş kullanıcı tarafından iptal edildi.".to_string()
@@ -247,77 +308,110 @@ impl Launcher {
                     } else {
                         format!("Microsoft kimlik doğrulama hatası: {e}")
                     };
-                    body.child(
-                        raised()
-                            .child(shell::text(theme::night::UI, shell::c(n.danger)).child(msg)),
-                    )
+                    ms_card = ms_card
+                        .child(
+                            shell::text(theme::night::CAPTION, shell::c(n.danger)).child(msg),
+                        )
+                        .child(
+                            div()
+                                .flex()
+                                .justify_end()
+                                .child(
+                                    microsoft::sign_in_button("owner-sign-in-retry", &t).on_click(
+                                        cx.listener(|this, _: &ClickEvent, _, cx| {
+                                            this.sign_in_to_play();
+                                            cx.notify();
+                                        }),
+                                    ),
+                                ),
+                        );
                 }
             }
-            Shown::Idle => body,
-        };
-        let main = match state {
-            Shown::Code(uri, _) => {
-                let uri = uri.to_string();
-                Some(
-                    shell::action("owner-open", shell::Action::Main, &t)
-                        .child(shell::label(tr("Open link").to_string()))
-                        .on_click(move |_, _, cx| cx.open_url(&uri)),
-                )
+            Shown::Idle => {
+                ms_card = ms_card.child(
+                    div()
+                        .mt(px(4.))
+                        .flex()
+                        .justify_end()
+                        .child(
+                            microsoft::sign_in_button("owner-sign-in", &t).on_click(cx.listener(
+                                |this, _: &ClickEvent, _, cx| {
+                                    this.sign_in_to_play();
+                                    cx.notify();
+                                },
+                            )),
+                        ),
+                );
             }
-            Shown::Starting(_) => None,
-            Shown::Error(_) if !configured => Some(
-                shell::action("owner-save-signin", shell::Action::Main, &t)
-                    .child(shell::label("Kaydet ve Giriş Yap"))
-                    .on_click(cx.listener(|this, _: &ClickEvent, _, cx| {
-                        this.save_client_id_and_sign_in();
-                        cx.notify();
-                    })),
-            ),
-            _ => Some(
-                microsoft::sign_in_button("owner-sign-in", &t).on_click(cx.listener(
-                    |this, _: &ClickEvent, _, cx| {
-                        this.sign_in_to_play();
-                        cx.notify();
-                    },
-                )),
-            ),
-        };
+        }
+
+        // Card 2: Yerel Demo Profili
+        let demo_card = card_box()
+            .child(
+                div()
+                    .flex()
+                    .items_center()
+                    .justify_between()
+                    .child(
+                        shell::text(theme::night::UI, shell::c(n.ink))
+                            .font_weight(FontWeight::BOLD)
+                            .child("2. Yerel Demo Profili"),
+                    )
+                    .child(
+                        div()
+                            .px(px(8.))
+                            .py(px(2.))
+                            .rounded(px(theme::night::RADIUS_CONTROL))
+                            .bg(plate::alpha(n.card, 0.9))
+                            .child(
+                                shell::text(theme::night::CAPTION, shell::c(n.muted))
+                                    .font_weight(FontWeight::SEMIBOLD)
+                                    .child("Çevrimdışı Mod"),
+                            ),
+                    ),
+            )
+            .child(bullet("Microsoft hesabı veya lisans olmadan başlatıcıyı ve oyunu deneyin."))
+            .child(bullet("Yalnızca yerel tek oyunculu dünyalar için geçerlidir."))
+            .child(bullet("Çevrimiçi çok oyunculu (multiplayer) sunucularda çalışmaz."))
+            .child(bullet("Korsan veya crackli hesap değildir; resmi sunucu doğrulamasını atlamaz."))
+            .child(
+                div()
+                    .mt(px(4.))
+                    .flex()
+                    .justify_end()
+                    .child(
+                        shell::action("owner-demo", shell::Action::Raised, &t)
+                            .child(shell::label("Yerel Demo Profili ile Başlat"))
+                            .on_click(cx.listener(|this, _: &ClickEvent, _, cx| {
+                                this.start_demo_mode();
+                                cx.notify();
+                            })),
+                    ),
+            );
+
         let waiting = matches!(state, Shown::Code(..)).then(|| {
             shell::text(theme::night::CAPTION, shell::c(n.muted))
                 .relative()
                 .child(tr("Waiting for Microsoft… the window goes on by itself.").to_string())
         });
-        let mut buttons: Vec<AnyElement> = Vec::new();
-        if let Some(m) = main {
-            buttons.push(m.into_any_element());
-        }
-        buttons.push(
-            shell::action("owner-demo", shell::Action::Raised, &t)
-                .child(shell::label("Demo / Çevrimdışı İncele"))
-                .on_click(cx.listener(|this, _: &ClickEvent, _, cx| {
-                    this.start_demo_mode();
-                    cx.notify();
-                }))
-                .into_any_element(),
-        );
-        buttons.push(
-            shell::action("owner-later", shell::Action::Quiet, &t)
-                .child(shell::label(tr("Not now").to_string()))
-                .on_click(cx.listener(|this, _: &ClickEvent, _, cx| {
-                    this.close_owner_screen();
-                    cx.notify();
-                }))
-                .into_any_element(),
-        );
-        let answers = div()
-            .relative()
+
+        let footer = div()
             .flex()
-            .flex_wrap()
             .items_center()
-            .gap(px(10.))
-            .mt(px(14.))
-            .children(buttons);
-        // Opaque: it sits over the page's content, not over the bare sky.
+            .justify_between()
+            .mt(px(8.))
+            .child(
+                div().children(waiting)
+            )
+            .child(
+                shell::action("owner-later", shell::Action::Quiet, &t)
+                    .child(shell::label(tr("Not now").to_string()))
+                    .on_click(cx.listener(|this, _: &ClickEvent, _, cx| {
+                        this.close_owner_screen();
+                        cx.notify();
+                    })),
+            );
+
         let card = plate::cut(
             theme::night::PIXEL_CORNER,
             2,
@@ -326,15 +420,15 @@ impl Launcher {
         )
         .flex()
         .flex_col()
-        .gap(px(8.))
-        // A set width: text measured at it wraps where it is drawn.
-        .w(px(520.))
+        .gap(px(12.))
+        .w(px(580.))
         .max_w_full()
-        .p(px(32.))
-        .child(body)
-        .child(answers)
-        .children(waiting);
-        // The sky stays behind, dimmed: the sheet is over the launcher, not instead of it.
+        .p(px(28.))
+        .child(header)
+        .child(ms_card)
+        .child(demo_card)
+        .child(footer);
+
         div()
             .id("owner-gate")
             .absolute()

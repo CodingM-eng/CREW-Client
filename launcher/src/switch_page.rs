@@ -68,27 +68,232 @@ impl Launcher {
             return None;
         }
         let t = self.theme;
+        let n = t.night;
         let now = self.accounts.player();
+
+        let (curr_name, curr_type, curr_uuid, is_ms) = match &now {
+            Player::Microsoft(uuid) => {
+                let name = self
+                    .accounts
+                    .find(uuid)
+                    .map(|a| a.name.clone())
+                    .unwrap_or_else(|| "Microsoft Oyuncusu".to_string());
+                (name, "Microsoft Hesabı", Some(uuid.clone()), true)
+            }
+            Player::Offline(name) => (name.clone(), "Yerel Demo Profili", None, false),
+            Player::GameName => (
+                self.offline_name.clone().unwrap_or_else(|| "Demo_Oyuncu".to_string()),
+                "Yerel Demo Profili",
+                None,
+                false,
+            ),
+        };
+
+        let curr_status = if is_ms {
+            let err = curr_uuid
+                .as_ref()
+                .and_then(|u| self.auth_status.get(u))
+                .is_some_and(|s| s.message != s.label());
+            if err {
+                "Yenileme Gerekli"
+            } else {
+                "Bağlı / Hazır"
+            }
+        } else {
+            "Çevrimdışı Mod"
+        };
+
+        let curr_instance = self
+            .selected_instance()
+            .map(|i| i.name.clone())
+            .unwrap_or_else(|| "CREW Client (Varsayılan)".to_string());
+
+        let curr_version = self
+            .selected_instance()
+            .and_then(|i| i.java.as_ref())
+            .map_or_else(
+                || {
+                    self.selected()
+                        .map(|tag| backend::game_version(tag))
+                        .unwrap_or_else(|| "1.21.1".to_string())
+                },
+                |j| j.minecraft.clone(),
+            );
+
+        let uuid_short = match &curr_uuid {
+            Some(u) if u.len() >= 12 => format!("{}...{}", &u[..8], &u[u.len() - 4..]),
+            Some(u) => u.clone(),
+            None => "Yerel (Çevrimdışı)".to_string(),
+        };
+
         let mut menu = div()
             .id("account-menu")
             .absolute()
             .top(px(46.))
             .right_0()
-            .w(px(280.))
-            .p(px(6.))
+            .w(px(320.))
+            .p(px(12.))
             .border_2()
             .border_color(t.outline)
             .bg(t.surface)
+            .rounded(px(theme::RADIUS))
             .flex()
             .flex_col()
+            .gap(px(8.))
             .occlude()
             .on_mouse_down_out(cx.listener(|this, event: &MouseDownEvent, _, cx| {
                 this.account_menu = false;
                 this.menu_closed_at = Some(event.position);
                 cx.notify();
             }));
+
+        // 1. Active Profile Header Card
+        let avatar_element = match &curr_uuid {
+            Some(uuid) => (self.profile_heads)
+                .draw(Some(uuid), 36., self.scale, &t)
+                .into_any_element(),
+            None => div()
+                .flex()
+                .items_center()
+                .justify_center()
+                .size(px(36.))
+                .rounded(px(theme::RADIUS))
+                .bg(plate::alpha(n.card_hi, n.card_hi_alpha))
+                .child(blocks::icon("user", 20., shell::c(n.muted)))
+                .into_any_element(),
+        };
+
+        let status_color = if is_ms {
+            if curr_status == "Bağlı / Hazır" {
+                0x22c55e
+            } else {
+                0xf59e0b
+            }
+        } else {
+            0x94a3b8
+        };
+
+        let active_card = div()
+            .p(px(10.))
+            .rounded(px(theme::RADIUS))
+            .bg(t.well)
+            .border_1()
+            .border_color(plate::alpha(n.stroke, n.stroke_alpha))
+            .flex()
+            .flex_col()
+            .gap(px(8.))
+            .child(
+                div()
+                    .flex()
+                    .items_center()
+                    .gap(px(10.))
+                    .child(avatar_element)
+                    .child(
+                        div()
+                            .flex()
+                            .flex_col()
+                            .flex_1()
+                            .min_w_0()
+                            .child(
+                                div()
+                                    .flex()
+                                    .items_center()
+                                    .justify_between()
+                                    .child(
+                                        text(theme::LABEL)
+                                            .font_weight(FontWeight::BOLD)
+                                            .truncate()
+                                            .text_color(t.ink)
+                                            .child(curr_name),
+                                    )
+                                    .child(
+                                        div()
+                                            .px(px(6.))
+                                            .py(px(1.))
+                                            .rounded_full()
+                                            .bg(plate::alpha(status_color, 0.15))
+                                            .child(
+                                                shell::text(theme::night::CAPTION, shell::c(status_color))
+                                                    .font_weight(FontWeight::SEMIBOLD)
+                                                    .child(curr_status),
+                                            ),
+                                    ),
+                            )
+                            .child(
+                                text(theme::CAPTION)
+                                    .text_color(t.muted)
+                                    .child(curr_type),
+                            )
+                            .child(
+                                text(theme::CAPTION)
+                                    .font_family(theme::MONO)
+                                    .text_color(shell::c(n.ink_soft))
+                                    .child(format!("UUID: {uuid_short}")),
+                            ),
+                    ),
+            )
+            .child(
+                div()
+                    .flex()
+                    .items_center()
+                    .justify_between()
+                    .pt(px(6.))
+                    .border_t_1()
+                    .border_color(plate::alpha(n.stroke, n.rule_alpha))
+                    .child(
+                        div()
+                            .flex()
+                            .flex_col()
+                            .child(
+                                text(theme::CAPTION)
+                                    .text_color(t.muted)
+                                    .child("Seçili Profil"),
+                            )
+                            .child(
+                                text(theme::CAPTION)
+                                    .font_weight(FontWeight::SEMIBOLD)
+                                    .text_color(t.ink)
+                                    .truncate()
+                                    .child(curr_instance),
+                            ),
+                    )
+                    .child(
+                        div()
+                            .flex()
+                            .flex_col()
+                            .items_end()
+                            .child(
+                                text(theme::CAPTION)
+                                    .text_color(t.muted)
+                                    .child("Minecraft"),
+                            )
+                            .child(
+                                text(theme::CAPTION)
+                                    .font_weight(FontWeight::SEMIBOLD)
+                                    .text_color(t.ink)
+                                    .child(format!("v{curr_version}")),
+                            ),
+                    ),
+            );
+
+        menu = menu.child(active_card);
+
+        // 2. Profile Switching Section
+        menu = menu.child(
+            div()
+                .mt(px(4.))
+                .px(px(4.))
+                .child(
+                    text(theme::CAPTION)
+                        .font_weight(FontWeight::BOLD)
+                        .text_color(t.muted)
+                        .child("Kayıtlı Profiller / Hesap Değiştir"),
+                ),
+        );
+
         for (i, (who, name, how)) in self.players().into_iter().enumerate() {
             let chosen = who == now;
+            let who_clone = who.clone();
             menu = menu.child(
                 div()
                     .id(SharedString::from(format!("account-pick-{i}")))
@@ -96,8 +301,8 @@ impl Launcher {
                     .items_center()
                     .justify_between()
                     .gap(px(8.))
-                    .h(px(46.))
-                    .px(px(10.))
+                    .h(px(40.))
+                    .px(px(8.))
                     .rounded(px(theme::RADIUS))
                     .cursor_pointer()
                     .hover(move |s| s.bg(t.plate_soft))
@@ -106,7 +311,7 @@ impl Launcher {
                             Player::Microsoft(uuid) => Some(uuid),
                             _ => None,
                         },
-                        24.,
+                        22.,
                         self.scale,
                         &t,
                     ))
@@ -123,30 +328,94 @@ impl Launcher {
                         d.child(div().size(px(6.)).rounded_full().bg(t.accent))
                     })
                     .on_click(cx.listener(move |this, _: &ClickEvent, _, cx| {
-                        this.play_as(who.clone());
+                        this.play_as(who_clone.clone());
                         cx.notify();
                     })),
             );
         }
-        menu = menu.child(div().my(px(6.)).h(px(1.)).bg(t.rule)).child(
+
+        // 3. Actions Divider & Buttons
+        menu = menu.child(div().my(px(4.)).h(px(1.)).bg(t.rule));
+
+        let sign_out_btn = if let Some(uuid) = curr_uuid {
+            let uuid_c = uuid.clone();
             div()
-                .id("account-manage")
+                .id("account-sign-out")
                 .flex()
                 .items_center()
-                .h(px(32.))
-                .px(px(10.))
+                .justify_between()
+                .h(px(30.))
+                .px(px(8.))
                 .rounded(px(theme::RADIUS))
-                .text_size(px(theme::LABEL.px))
-                .text_color(t.muted)
                 .cursor_pointer()
-                .hover(move |s| s.bg(t.plate_soft).text_color(t.ink))
-                .child(tr("Manage accounts"))
-                .on_click(cx.listener(|this, _: &ClickEvent, _, cx| {
+                .hover(move |s| s.bg(t.plate_soft))
+                .child(
+                    text(theme::CAPTION)
+                        .font_weight(FontWeight::SEMIBOLD)
+                        .text_color(shell::c(n.danger))
+                        .child("Çıkış Yap"),
+                )
+                .on_click(cx.listener(move |this, _: &ClickEvent, _, cx| {
+                    this.sign_out_account(&uuid_c);
                     this.account_menu = false;
-                    this.go(Page::Settings);
                     cx.notify();
-                })),
-        );
+                }))
+                .into_any_element()
+        } else {
+            div()
+                .id("account-switch-login")
+                .flex()
+                .items_center()
+                .justify_between()
+                .h(px(30.))
+                .px(px(8.))
+                .rounded(px(theme::RADIUS))
+                .cursor_pointer()
+                .hover(move |s| s.bg(t.plate_soft))
+                .child(
+                    text(theme::CAPTION)
+                        .font_weight(FontWeight::SEMIBOLD)
+                        .text_color(shell::c(n.accent))
+                        .child("Microsoft ile Giriş Yap"),
+                )
+                .on_click(cx.listener(move |this, _: &ClickEvent, _, cx| {
+                    this.account_menu = false;
+                    this.sign_in_to_play();
+                    cx.notify();
+                }))
+                .into_any_element()
+        };
+
+        let bottom_actions = div()
+            .flex()
+            .items_center()
+            .justify_between()
+            .gap(px(8.))
+            .child(
+                div()
+                    .id("account-manage")
+                    .flex()
+                    .items_center()
+                    .h(px(30.))
+                    .px(px(8.))
+                    .rounded(px(theme::RADIUS))
+                    .cursor_pointer()
+                    .hover(move |s| s.bg(t.plate_soft))
+                    .child(
+                        text(theme::CAPTION)
+                            .text_color(t.muted)
+                            .child(tr("Manage accounts")),
+                    )
+                    .on_click(cx.listener(|this, _: &ClickEvent, _, cx| {
+                        this.account_menu = false;
+                        this.go(Page::Settings);
+                        cx.notify();
+                    })),
+            )
+            .child(sign_out_btn);
+
+        menu = menu.child(bottom_actions);
+
         Some(gpui::deferred(menu).with_priority(1))
     }
 

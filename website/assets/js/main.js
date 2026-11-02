@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
     tag_name: "v2.1.0",
     installer_name: "CREW-Client-Setup-x64.exe",
     installer_size: "18.4 MB",
-    installer_sha256: "9f8cf7c3367a4bcd43e97d3bbfe3f4bf15181e3b046008f80c73bd4e3c8f3a5c",
+    installer_sha256: "68435d96281ae6f48cbe4574e13014b20afede8e768ce4b7d032deb561d2ed00",
     download_url: "https://github.com/CodingM-eng/CREW-Client/releases/download/v2.1.0/CREW-Client-Setup-x64.exe"
   };
 
@@ -172,5 +172,47 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(() => {
         // Silently preserve the elegant empty-state card
       });
+  }
+
+  // QR Code Modal Handlers
+  const qrModal = document.getElementById('qr-modal');
+  const btnShowQr = document.getElementById('btn-show-qr');
+  const btnCloseQr = document.getElementById('btn-close-qr');
+  const btnCopyQrLink = document.getElementById('btn-copy-qr-link');
+
+  if (btnShowQr && qrModal) {
+    btnShowQr.addEventListener('click', () => {
+      qrModal.style.display = 'flex';
+    });
+  }
+
+  if (btnCloseQr && qrModal) {
+    btnCloseQr.addEventListener('click', () => {
+      qrModal.style.display = 'none';
+    });
+  }
+
+  if (qrModal) {
+    qrModal.addEventListener('click', (e) => {
+      if (e.target === qrModal) {
+        qrModal.style.display = 'none';
+      }
+    });
+  }
+
+  if (btnCopyQrLink) {
+    btnCopyQrLink.addEventListener('click', () => {
+      navigator.clipboard.writeText('https://client.crewnetwork.space/').then(() => {
+        const original = btnCopyQrLink.innerText;
+        btnCopyQrLink.innerText = 'Kopyalandı!';
+        btnCopyQrLink.style.background = '#10b981';
+        btnCopyQrLink.style.borderColor = '#10b981';
+        setTimeout(() => {
+          btnCopyQrLink.innerText = original;
+          btnCopyQrLink.style.background = '';
+          btnCopyQrLink.style.borderColor = '';
+        }, 2000);
+      });
+    });
   }
 });

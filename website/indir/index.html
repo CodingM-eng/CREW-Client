@@ -48,6 +48,10 @@
       <span class="section-tag">Doğrudan İndirme</span>
       <h1 class="section-title">CREW Client'i İndir</h1>
       <p class="section-desc">Windows 10 ve Windows 11 için optimize edilmiş en son kararlı sürüm.</p>
+      <button id="btn-show-qr" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 0.5rem 1rem; margin-top: 1rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span>Web Sitesi QR Kodunu Görüntüle</span>
+        </button>
     </div>
 
     <!-- Main Download Card: Setup Wizard (Recommended) -->
@@ -68,10 +72,10 @@
       <div style="background: var(--bg-dark); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem;">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
           <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Setup SHA-256 Doğrulama Özeti (CREW-Client-Setup-x64.exe)</span>
-          <button class="btn-copy" data-copy="9fe605f3ba8eccb4ebe5468176f88121716ceea5aff83d964ebfabb6b2f25462">Kopyala</button>
+          <button class="btn-copy" data-copy="68435d96281ae6f48cbe4574e13014b20afede8e768ce4b7d032deb561d2ed00">Kopyala</button>
         </div>
         <code style="word-break: break-all; font-size: 0.88rem; color: #ff859d; display: block; font-family: monospace;">
-          9fe605f3ba8eccb4ebe5468176f88121716ceea5aff83d964ebfabb6b2f25462
+          68435d96281ae6f48cbe4574e13014b20afede8e768ce4b7d032deb561d2ed00
         </code>
       </div>
     </div>
@@ -94,10 +98,10 @@
       <div style="background: var(--bg-dark); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem;">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
           <span style="font-size: 0.82rem; font-weight: 600; color: var(--text-muted);">Portable SHA-256 Doğrulama Özeti (CREW-Client.exe)</span>
-          <button class="btn-copy" data-copy="7c666d598d63b96c7b6d93743d583e77a0906159bafb383f92943cd74d8b7d93">Kopyala</button>
+          <button class="btn-copy" data-copy="da91197a92325879c6044b83c1a2fbb909584c3e4de6f4633801ef6cfd1f7a4e">Kopyala</button>
         </div>
         <code style="word-break: break-all; font-size: 0.82rem; color: #94a3b8; display: block; font-family: monospace;">
-          7c666d598d63b96c7b6d93743d583e77a0906159bafb383f92943cd74d8b7d93
+          da91197a92325879c6044b83c1a2fbb909584c3e4de6f4633801ef6cfd1f7a4e
         </code>
       </div>
     </div>
@@ -123,5 +127,33 @@
   </footer>
 
   <script src="../assets/js/main.js"></script>
+
+  <!-- QR Code Modal -->
+  <div id="qr-modal" class="modal-backdrop" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;">
+    <div class="modal-content" style="background: var(--bg-secondary); border: 1px solid var(--border-active); border-radius: var(--radius-lg); padding: 2rem; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.6);">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+        <h3 style="font-size: 1.25rem; font-weight: 700; color: #fff;">CREW Client QR Kodu</h3>
+        <button id="btn-close-qr" style="background: transparent; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; line-height: 1;">&times;</button>
+      </div>
+      <div style="background: #ffffff; padding: 16px; border-radius: 12px; display: inline-block; margin-bottom: 1rem; box-shadow: 0 8px 24px rgba(0,0,0,0.2);">
+        <img id="qr-img" src="../assets/img/qr-code.png" alt="CREW Client Web Sitesi QR Kodu" width="220" height="220" style="display: block;">
+      </div>
+      <p style="color: var(--text-soft); font-size: 0.9rem; margin-bottom: 0.5rem;">
+        Mobil cihazınızla taratarak resmi web sitesine anında ulaşın:
+      </p>
+      <div style="background: var(--bg-dark); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; font-family: monospace; font-size: 0.85rem; color: #ff859d; word-break: break-all; margin-bottom: 1.5rem;">
+        https://client.crewnetwork.space/
+      </div>
+      <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+        <button id="btn-copy-qr-link" class="btn-secondary" style="padding: 0.65rem 1.2rem; font-size: 0.9rem; cursor: pointer;">
+          <span>Bağlantıyı Kopyala</span>
+        </button>
+        <a id="btn-download-qr" href="../assets/img/qr-code.png" download="CREW-Client-QR.png" class="btn-primary" style="padding: 0.65rem 1.2rem; font-size: 0.9rem; text-decoration: none;">
+          <span>QR Kodunu İndir</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
