@@ -83,7 +83,24 @@ CREW Client, istemci kimliğini (Client ID) 4 farklı kaynaktan hiyerarşik olar
 
 ## 6. Demo / Çevrimdışı Mod
 
-Henüz bir Microsoft hesabıyla giriş yapmamış veya internet bağlantısı olmayan kullanıcılar, başlatıcı ana ekranındaki **"Demo / Çevrimdışı Modda Başlat"** seçeneğini kullanarak yerel dünyalarda ve çevrimdışı sunucularda CREW Client'ın yüksek performanslı Rust motorunu ve Fabric 1.21.11 ortamını hemen test edebilirler.
+Henüz bir Microsoft hesabıyla giriş yapmamış veya internet bağlantısı olmayan kullanıcılar, başlatıcı ana ekranındaki **"Demo / Çevrimdışı İncele"** seçeneğini kullanarak yerel dünyalarda ve çevrimdışı sunucularda CREW Client'ın yüksek performanslı Rust motorunu ve Fabric 1.21.11 ortamını hemen test edebilirler.
+
+---
+
+## 7. Sık Karşılaşılan Sorunlar ve Çözümleri
+
+### "Seçili kullanıcı hesabı, 'Microsoft Services' kiracısında mevcut değil..." (AADSTS50020)
+- **Neden Olur?**  
+  `portal.azure.com` adresine bireysel bir Microsoft hesabı (`@outlook.com`, `@hotmail.com`, `@gmail.com` vb.) ile girmeye çalıştığınızda, tarayıcınız sizi otomatik olarak kurumsal bir kiracıya bağlamaya çalışır. `c44b4083-3bb0-49c1-b47d-974e53cbdf3c`, Azure Portal'ın kendi dahili kimliğidir.
+- **Kesin Çözüm:**  
+  1. Tarayıcınızda **Gizli Sekme (InPrivate / Incognito)** açın.
+  2. `portal.azure.com` yerine doğrudan **[entra.microsoft.com](https://entra.microsoft.com/)** (Microsoft Entra Yönetim Merkezi) adresine gidin.
+  3. Bireysel hesabınızla giriş yapın.
+  4. Sol menüden **Kimlik (Identity)** > **Uygulamalar (Applications)** > **Uygulama kayıtları (App registrations)** > **Yeni kayıt (New registration)** yolunu izleyin.
+  5. **Kritik Seçim:** *"Desteklenen hesap türleri"* alanında mutlaka **"Herhangi bir kuruluş dizinindeki hesaplar ve kişisel Microsoft hesapları"** veya **"Yalnızca kişisel Microsoft hesapları"** seçeneğini işaretleyin. (Asla tek kiracı / Single-tenant seçmeyin).
+  6. Yeniden yönlendirme URI'si olarak **Mobil ve masaüstü** seçip `https://login.microsoftonline.com/common/oauth2/nativeclient` girin.
+  7. **Kimlik Doğrulama** menüsünden *"Genel istemci akışlarına izin ver"* seçeneğini *"Evet"* yapın ve kaydedin.
+  8. Alınan **Uygulama (istemci) Kimliği (Client ID)** değerini CREW Client başlatıcısındaki kutucuğa yapıştırın.
 
 ---
 

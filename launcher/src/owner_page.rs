@@ -222,11 +222,12 @@ impl Launcher {
                             .child(
                                 shell::text(theme::night::CAPTION, shell::c(n.ink_soft)).child(
                                     "Microsoft girişi için Azure Uygulama Kimliği gereklidir:
-                                     1. Azure Portal'a gidin: portal.azure.com > Microsoft Entra ID > Uygulama Kayıtları
-                                     2. Yeni kayıt oluşturun: 'Herhangi bir kuruluş dizinindeki hesaplar ve kişisel Microsoft hesapları'
+                                     1. entra.microsoft.com adresine gidin (Gizli sekme önerilir) > Uygulamalar > Uygulama Kayıtları
+                                     2. Yeni kayıt: 'Herhangi bir kuruluş dizinindeki hesaplar ve kişisel Microsoft hesapları' seçin
                                      3. Yeniden yönlendirme URI: Mobil ve masaüstü > https://login.microsoftonline.com/common/oauth2/nativeclient
                                      4. API İzinleri: XboxLive.signin ve offline_access izinlerini ekleyin
-                                     5. Oluşturulan Uygulama (İstemci) Kimliği'ni aşağıdaki kutucuğa yapıştırın:",
+                                     5. Kimlik Doğrulama: 'Genel istemci akışlarına izin ver' seçeneğini 'Evet' yapın
+                                     6. Oluşturulan Uygulama (İstemci) Kimliği'ni aşağıdaki kutucuğa yapıştırın:",
                                 ),
                             )
                             .child(input_field)
