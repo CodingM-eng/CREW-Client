@@ -1,13 +1,13 @@
-# Graphics: settings and performance
+# CREW Client — Grafik Motoru ve Performans Ayarları
 
-## Settings
+## Grafik Ayarları
 
-Horizon's graphics settings are two screens built from vanilla's widgets, opened from the top of **Video Settings** (**Horizon Graphics...** and **Advanced Graphics...**) or from **Options → Horizon Settings...**:
+CREW Client'ın gelişmiş grafik ayarları, vanilya menüleriyle tam uyumlu pencereler üzerinden yönetilir. **Görüntü Ayarları (Video Settings)** veya **Seçenekler → CREW Grafik Ayarları...** menüsü üzerinden erişilebilir:
 
-- **Graphics** (Simple): a preset (Performance, Balanced, Quality, Ultra or Custom) and LOD distance.
-- **Advanced Graphics**: every Horizon setting, grouped under Rendering, Quality, Display, Preferences, Performance and Overlay.
+- **Grafik Ön Tanımları (Basit):** Performans, Dengeli, Kalite, Ultra ve Özel hazır profiller.
+- **Gelişmiş Grafikler:** Render, Kalite, Ekran, Performans ve Bilgi Katmanı (Overlay) başlıkları altında toplanmış detaylı wgpu/Vulkan ayarları.
 
-Vanilla's own settings (render distance, FOV, framerate, VSync, GUI scale, smooth lighting...) stay where vanilla has them, in Video Settings; both screens leave them out.
+Standart vanilya ayarları (görüş mesafesi, FOV, kare hızı, VSync, GUI ölçeği) standart `options.txt` içerisinde saklanırken, CREW Client'a özgü ince ayarlar `%APPDATA%\CREW Client\` altındaki grafik yapılandırma dosyasında tutulur.
 
 Every row has a one-line description and its cost in frame time (none, low, medium, high, or saves time for culling that makes frames faster), and applies at once, except worker threads, which apply at the next start. A preset sets the quality settings together; changing one of them turns it into Custom. Display preferences (FOV, framerate, VSync, GUI scale, fullscreen, present mode, pacing) leave the preset as it is.
 

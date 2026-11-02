@@ -1,18 +1,11 @@
-# Horizon native client
+# CREW Client Yerel Rust İstemcisi
 
-`horizon-client` is the playable Rust client for Minecraft Java Edition 26.3.
-It streams a world around the player on worker threads, renders every vanilla
-block model with smooth lighting and biome tints, and runs the validated player
-physics, health and hunger at 20 ticks per second. You can mine with vanilla
-hardness/tool rules, collect drops from the block loot tables, place blocks,
-craft in the 2x2 inventory grid or on a crafting table, and save and reload worlds
-in vanilla's Anvil format.
+`crew-client` (ve `horizon-client`), Minecraft Java Edition 1.21.11 için geliştirilmiş yüksek performanslı oynanabilir Rust istemcisidir.
+Oyuncunun etrafındaki dünyayı arka plan çalışan iş parçacıklarında (worker threads) akıtır, tüm standart blok modellerini pürüzsüz aydınlatma ve biyom tonlarıyla çizer, doğrulanmış oyuncu fiziğini, can ve açlık değerlerini saniyede 20 tick (TPS) hızında çalıştırır. Standart alet/sertlik kurallarıyla maden yapabilir, ganimet tablolarından düşenleri toplayabilir, blok yerleştirebilir, 2x2 envanterde veya çalışma masasında üretim yapabilir ve dünyaları standart Anvil formatında kaydedip tekrar yükleyebilirsiniz.
 
-**Status:** playable; players get it through [the launcher](../launcher/README.md). The [Java parity table](../README.md#project-status)
-in the README scores each subsystem against vanilla and lists what is still
-missing; [Rust rewrite status](rust-parity.md) has the details.
+**Durum:** Oynanabilir; oyuncular oyuna [CREW Başlatıcı](../launcher/README.md) üzerinden erişir. README dosyasındaki [Java Parite Tablosu](../README.md#13-java-parite-ve-uyumluluk-durumu) her alt sistemin durumunu listeler. Detaylar için [Rust Yeniden Yazım Durumu](rust-parity.md) belgesini inceleyebilirsiniz.
 
-## Run from a checkout
+## Yerel Kaynaktan Çalıştırma
 
 Use current stable Rust (1.90+) and JDK 25 (Python 3.10+ only for the development
 harnesses). A checkout never

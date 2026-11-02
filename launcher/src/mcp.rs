@@ -42,7 +42,7 @@ fn session_tools() -> Value {
     let version = json!({ "type": "string", "description": "An installed version tag such as v2026.10.13. Default: the selected version (play: the instance's own first)." });
     let none = json!({ "type": "object", "properties": {} });
     json!([
-        { "name": "play", "description": "Start the Horizon client (a game window on the player's screen) under agent control: the game_* tools then play it. Returns once it has started; game_wait_ready waits for the world. CLI: horizon-launcher play",
+        { "name": "play", "description": "Start the CREW Client (a game window on the player's screen) under agent control: the game_* tools then play it. Returns once it has started; game_wait_ready waits for the world. CLI: crew-client play",
           "inputSchema": { "type": "object", "properties": { "version": version,
             "instance": { "type": "string", "description": "The instance to play, by name or id (instance_list). Default: the selected one." },
             "world": { "type": "string", "description": "Open or create this world (a folder under saves) at once." },
@@ -51,7 +51,7 @@ fn session_tools() -> Value {
             "server": { "type": "string", "description": "Join this server at once: an address, or a server of the instance's list (multiplayer_list) by name or position. Only when the player asks." },
             "offscreen": { "type": "boolean", "description": "Render without showing a window (game_screenshot still works)." },
             "arg": { "type": "array", "items": { "type": "string" }, "description": "Extra game arguments, passed through as-is (for example \"--server-thread\")." } } } },
-        { "name": "server", "description": "Start a Horizon dedicated server. It runs until server_stop or the end of this MCP session. Requires agreeing to the Minecraft EULA. CLI: horizon-launcher server",
+        { "name": "server", "description": "Start a CREW dedicated server. It runs until server_stop or the end of this MCP session. Requires agreeing to the Minecraft EULA. CLI: crew-client server",
           "inputSchema": { "type": "object", "properties": { "version": version, "dir": { "type": "string", "description": "The server's folder. Default: the launcher's server folder." }, "accept_eula": { "type": "boolean", "description": "Agree to the Minecraft EULA (https://aka.ms/MinecraftEULA) on the player's behalf. Only with their consent." } } } },
         { "name": "server_command", "description": "Send a console command to the server started with server (for example \"list\" or \"say hello\"), and return the lines it printed in reply.",
           "inputSchema": { "type": "object", "properties": { "command": { "type": "string" } }, "required": ["command"] } },

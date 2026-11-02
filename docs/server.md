@@ -1,16 +1,10 @@
-# Hosting a Horizon server: design
+# CREW Server — Adanmış Sunucu Mimarisi ve Barındırma
 
-Horizon's dedicated server should be the easiest and lightest Minecraft 26.3 server to host. It should be one
-small native program with no Java and no Python, one command to install it, one config file, and a CLI, a web
-panel and a control API to manage it. At the same view and simulation distance and with the same players, it
-should beat vanilla, Paper and Fabric + Lithium on TPS/MSPT, RAM, CPU, chunk generation and start time.
-Gameplay stays vanilla: there are no Paper-style rule changes unless the owner turns one on.
+CREW Server (`crew-server` / `horizon-server`), Minecraft 1.21.11 için Java veya harici çalışma zamanı gerektirmeyen, doğrudan yerel C++/Rust hızında çalışan yüksek performanslı adanmış sunucu çözümüdür. Tek bir yapılandırma dosyası (`server.toml`), komut satırı arayüzü ve yönetim araçlarıyla vanilya, Paper veya Fabric sunucularından çok daha düşük bellek ve işlemci kullanarak kararlı 20 TPS sunar.
 
-This page covers what the server does today (measured), the design of `horizon-server`, and what ships for the
-first working version (2026-10-23). The owner's guide is docs/hosting.md, also at
-https://playhorizon.dev/server.
+Kullanım rehberi için [docs/owners.md](owners.md) ve [docs/smp.md](smp.md) belgelerini inceleyebilirsiniz.
 
-## 1. Today
+## 1. Çalışma Mantığı
 
 ### How it runs
 

@@ -1,5 +1,5 @@
-//! Horizon launcher: installs Horizon builds, prepares them from the player's own Minecraft,
-//! and starts the client or a dedicated server.
+//! CREW Client başlatıcısı: CREW Client derlemelerini yönetir, oyuncunun Minecraft varlıklarını hazırlar
+//! ve yüksek performanslı istemciyi veya sunucuyu başlatır.
 
 #![cfg_attr(target_os = "windows", windows_subsystem = "windows")]
 

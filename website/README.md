@@ -10,19 +10,28 @@ Bu dizin (`website/`), CREW Client'ın resmi web sitesini (`https://client.crewn
 website/
 ├── _headers                   # Cloudflare Pages güvenlik ve önbellekleme başlıkları
 ├── wrangler.toml              # Cloudflare Pages proje yapılandırması
-├── index.html                 # Ana sayfa (Hero, Özellikler, Önizleme, Topluluk)
-├── assets/
-│   ├── css/
-│   │   └── style.css          # Koyu tema, akıcı grid, animasyonlar ve tipografi
-│   ├── js/
-│   │   └── main.js            # Mobil menü, GitHub Releases API, sekme yöneticisi
-│   └── img/                   # CREW marka SVG ve PNG logoları / simgeleri
+├── index.html                 # Ana sayfa (Hero, Özellikler, Performans, Videolar)
+├── ozellikler/
+│   └── index.html             # Ayrıntılı özellikler sayfası
+├── performans/
+│   └── index.html             # İnteraktif FPS hesaplayıcı & doğrulanmış benchmarklar
 ├── indir/
-│   └── index.html             # İndirme sayfası & SHA-256 doğrulama
+│   └── index.html             # Setup & Portable indirmeleri ve SHA-256 kodları
 ├── surumler/
-│   └── index.html             # Sürüm geçmişi & v2.1.0 sürüm notları
-└── dokumanlar/
-    └── index.html             # 7 bölümlük kapsamlı dokümantasyon ve SSS
+│   └── index.html             # Sürüm geçmişi & katman ayrımı
+├── surum-notlari/
+│   └── index.html             # Türkçe değişiklik günlüğü (changelog)
+├── stats/
+│   └── index.html             # Canlı GitHub ve Minecraft sunucu istatistikleri
+├── videolar/
+│   └── index.html             # YouTube kanal akışı & Shorts filtresi
+├── dokumanlar/
+│   └── index.html             # Dokümantasyon rehberi ve SSS
+└── assets/
+    ├── css/style.css          # Koyu tema, akıcı grid ve tipografi
+    ├── js/main.js             # Mobil menü, GitHub Releases API, YouTube senkronizasyonu
+    ├── data/benchmarks.json   # Doğrulanmış laboratuvar benchmark veri seti
+    └── img/                   # CREW marka SVG ve PNG logoları / simgeleri
 ```
 
 ---

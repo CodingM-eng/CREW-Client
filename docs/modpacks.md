@@ -1,17 +1,8 @@
-# Modpacks: porting any pack to Horizon
+# CREW Client — Mod Paketleri ve İçe Aktarma Rehberi
 
-Goal (Ludovic, 2026-10-16): **support modpacks like All the Mods 10 far better than Minecraft
-does, and be able to port any of them.** "Better" is measured: pack load time, RAM, FPS, TPS
-and world-generation speed against the same pack on NeoForge or Fabric. "Any of them" means a
-pipeline, not a list of hand ports. It takes a pack as players download it and produces native
-Horizon mods. The pipeline is AI agents in dependency order, each port checked against the
-original mod running in a dev-only Java instance.
+Bu belge, CREW Client başlatıcısında Modrinth `.mrpack` ve CurseForge mod paketlerinin nasıl içe aktarıldığını, veri/varlık katmanlarının nasıl işlendiğini ve Fabric 1.21.11 ortamında mod paketlerinin nasıl çalıştırıldığını açıklamaktadır. Detaylı mod yönetimi için [docs/mods.md](mods.md) sayfasına bakabilirsiniz.
 
-This page is the design. It builds on [mods.md](mods.md) (content mods, native mods, and
-why Java jars cannot run in Horizon, so we port instead). The ATM10 inventory behind the numbers below is
-[modpacks/atm10-mods.csv](modpacks/atm10-mods.csv).
-
-## In one picture
+## Mod Paketi Akışı
 
 ```
  pack (.mrpack / CurseForge zip or instance / Prism instance)

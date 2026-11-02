@@ -1,88 +1,63 @@
-# For server owners: `server.properties` to `server.toml`
+# CREW Client — Sunucu Sahipleri İçin Yapılandırma Rehberi (`server.toml`)
 
-You run a vanilla server today and edit `server.properties`. With `horizon-server` you edit one file,
-`server.toml`, instead. Before every start the server writes `server.properties` from it, so the game reads
-exactly what a vanilla server reads. This page maps one to the other. The full guide is
-[hosting.md](hosting.md); the design is [server.md](server.md), section 4.
+Bu belge, adanmış (dedicated) sunucu çalıştıran yöneticiler için standart `server.properties` dosyasının modern `server.toml` yapısına nasıl uyarlandığını açıklamaktadır.
 
-## Moving over
+---
 
-Run `horizon-server init` in your server folder, or `horizon-server import server.properties`. It reads the
-file with vanilla's own parser:
+## 1. Neden `server.toml`?
 
-- keys that have a field below go into their section of `server.toml`;
-- any other key that differs from vanilla's default goes into `[properties]`;
-- keys left at their defaults are dropped, so the file stays short;
-- your original is kept as `server.properties.imported`.
+Geleneksel `server.properties` dosyası düz metin anahtar-değer yapısındadır ve karmaşık ayarları yönetmeyi zorlaştırır. `server.toml` ise:
+- Okunabilir bölümlere (`[server]`, `[world]`, `[network]`) ayrılmıştır.
+- Tip güvenli değerler (sayılar, boolean mantığı, dizgeler) kullanır.
+- Başlatılmadan önce otomatik olarak standart `server.properties` formatına da dönüştürülebilir; böylece eski eklentilerle tam uyum sağlar.
 
-The world folder, `ops.json`, `whitelist.json`, the ban lists and `usercache.json` keep vanilla's names and
-formats, so going back to a vanilla server works too.
+---
 
-## Keys that have a field
+## 2. Mevcut Sunucuyu İçe Aktarma
 
-| `server.properties` | `server.toml` | Default |
-|---|---|---|
-| `motd` | `[server] motd` | `"A Minecraft Server"` |
-| `server-port` | `[server] port` | `25565` |
-| `server-ip` | `[server] bind` | `""` (every address) |
-| `max-players` | `[server] max_players` | `20` |
-| `online-mode` | `[server] online_mode` | `true` |
-| `white-list` | `[server] whitelist` | `true` |
-| `enforce-whitelist` | `[server] enforce_whitelist` | `false` |
-| `view-distance` | `[server] view_distance` | `10` |
-| `simulation-distance` | `[server] simulation_distance` | `10` |
-| `level-name` | `[world] name` | `"world"` |
-| `level-seed` | `[world] seed` | `""` (random on first start) |
-| `gamemode` | `[world] game_mode` | `"survival"` |
-| `difficulty` | `[world] difficulty` | `"easy"` |
-| `hardcore` | `[world] hardcore` | `false` |
+Eski bir `server.properties` dosyasını `server.toml` formatına dönüştürmek için:
 
-Two details differ from vanilla's file: `white-list` becomes `whitelist`, and a seed may be a number or any
-text (vanilla hashes text), written as a string.
+```powershell
+crew-server.exe import server.properties
+```
 
-## Every other key
+Bu işlem:
+1. Mevcut ayarlarınızı ayrıştırır.
+2. Optimize edilmiş bir `server.toml` dosyası üretir.
+3. Orijinal dosyanızı yedek olarak `server.properties.imported` adıyla saklar.
 
-Put any other vanilla key under `[properties]`, spelled as vanilla spells it:
+---
+
+## 3. Ayar Eşleme Tablosu
+
+| `server.properties` | `server.toml` | Varsayılan Değer | Açıklama |
+|---|---|---|---|
+| `motd` | `[server] motd` | `"CREW Network Sunucusu"` | Sunucu listesinde görünen başlık. |
+| `server-port` | `[server] port` | `25565` | Sunucunun dinlediği TCP portu. |
+| `server-ip` | `[server] bind` | `""` | Dinlenecek IP adresi (boş = tümü). |
+| `max-players` | `[server] max_players` | `20` | Maksimum eşzamanlı oyuncu sayısı. |
+| `online-mode` | `[server] online_mode` | `true` | Resmi Microsoft kimlik doğrulama denetimi. |
+| `white-list` | `[server] whitelist` | `false` | Beyaz liste (izinli oyuncular) filtresi. |
+| `view-distance` | `[server] view_distance` | `10` | Görüş mesafesi (chunk cinsinden). |
+| `simulation-distance` | `[server] simulation_distance` | `10` | Varlık simülasyon mesafesi. |
+| `level-name` | `[world] name` | `"world"` | Dünya klasörünün adı. |
+| `level-seed` | `[world] seed` | `""` | Dünya oluşturma tohumu (boş = rastgele). |
+| `difficulty` | `[world] difficulty` | `"normal"` | Zorluk seviyesi (peaceful, easy, normal, hard). |
+| `hardcore` | `[world] hardcore` | `false` | Hardcore modu (öldükten sonra izleyici olma). |
+
+---
+
+## 4. Özel ve Ek Özellikler
+
+Standart Minecraft'ın diğer tüm ince ayarlarını `[properties]` bloğu altında aynı isimle tanımlayabilirsiniz:
 
 ```toml
 [properties]
 spawn-protection = 16
-resource-pack = "https://example.com/pack.zip"
+allow-flight = false
+enable-command-block = true
 ```
 
-A key that has a field above is an error under `[properties]`; set it in its section.
+---
 
-## Settings that are not in `server.properties`
-
-These belong to `horizon-server`, not to the game:
-
-| `server.toml` | Meaning |
-|---|---|
-| `[engine] path`, `resources`, `restart_on_crash` | Which game program and prepared files to run, and whether to restart it after a crash. |
-| `[backups] every`, `keep` | Automatic backups (`"6h"`, `"0"` turns them off) and how many to keep. |
-| `[updates] keep` | Other releases kept besides the one in use and the one rollback goes to. |
-| `[panel] bind`, `allow_public` | The web panel's address (`""` turns it off) and whether it may listen on a public address. |
-
-## What to know when you switch
-
-- **Edit `server.toml`, not `server.properties`.** The latter is rewritten at every start.
-- **Mistakes stop the start.** Unknown keys and values vanilla would refuse are errors, not ignored.
-- **In-game changes survive.** When the game changes a setting itself (`/whitelist on`), the supervisor copies
-  it back into `server.toml` after the game stops, and keeps your comments and order.
-- **Changes apply at the next restart.** `horizon-server config set KEY=VALUE` edits the file without opening
-  it; on a running server it applies `difficulty`, `defaultgamemode` and `whitelist on|off` live. There is no
-  full live reload yet.
-
-## Planned: limiting a server to Horizon clients
-
-The design (`docs/design.md`, section 6 of horizon-rust/horizon-server) adds one more setting. It is not in
-`server.toml` yet.
-
-```toml
-[clients]
-allow = "any"        # "any" (vanilla Java and Horizon) or "horizon" (Horizon clients only)
-```
-
-With `"horizon"` the server refuses a client that does not identify as Horizon. This is a convenience filter,
-not security: Horizon's client is open source, so a modified client can claim to be Horizon. The real gate
-stays `online_mode`, plus the whitelist and bans on top of it.
+*CREW Network © 2026 — [client.crewnetwork.space](https://client.crewnetwork.space/)*

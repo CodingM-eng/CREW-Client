@@ -1,8 +1,6 @@
-# Resource packs: what works
+# CREW Client — Kaynak Paketleri ve Doku Desteği
 
-Java Edition resource packs load in Horizon: put the folder or `.zip` in `resourcepacks/`, pick it on the Resource Packs
-screen (the same screen as vanilla's) or in game, and every loader reloads from it. This page lists everything a
-26.3 resource pack can change and whether Horizon honours it, with the proof.
+Minecraft Java Edition kaynak paketleri CREW Client üzerinde sorunsuz çalışır: İndirdiğiniz klasörü veya `.zip` dosyasını `%APPDATA%\CREW Client\resourcepacks\` dizinine yerleştirmeniz ve oyun içi Kaynak Paketleri ekranından seçmeniz yeterlidir. Bu sayfa, 1.21.11 kaynak paketlerinin hangi öğeleri değiştirebildiğini ve istemcinin bunları nasıl işlediğini listeler.
 
 ## How it works
 

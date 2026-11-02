@@ -1,17 +1,10 @@
-# Horizon's design system
+# CREW Client Tasarım Sistemi
 
-One design language for the launcher, the website and the few overlays the game draws that
-vanilla has no screen for (the on-screen keyboard a controller types with). Every game screen
-and the HUD are not part of it: they are vanilla's, because parity is the point of the game, and
-Horizon's own settings are pages built from vanilla's widgets, the way mods add theirs.
+Başlatıcı, web sitesi ve özel arayüz katmanları için birleşik tasarım dili. Standart oyun içi HUD ve vanilya menüleri pariteyi korumak için vanilya tarzını sürdürürken, CREW başlatıcısı ve web arayüzü CREW Network'ün Night Paleti (koyu gri/siyah zemin, CREW kırmızısı vurgu `#FF2A2A` / `#E60000` ve saf beyaz tipografi) ile modern bir görünüm sunar.
 
-The tokens live in one place, `crates/horizon-theme`. The launcher (`launcher/src/theme.rs`)
-and the game (`crates/horizon-client/src/ui_theme.rs`) read them as Rust constants, and the
-website reads them as CSS custom properties generated from the same crate
-(`cargo run -p xtask -- tokens` writes `crates/horizon-theme/tokens.css`, which the website's build
-reads from main; a test fails when the file is out of date). Change a value in the crate and all three follow.
+Tasarım belirteçleri (tokens) merkezi olarak `crates/horizon-theme` kütüphanesinde tanımlanır. Başlatıcı (`launcher/src/theme.rs`) ve motor bileşenleri bu değerleri Rust sabitleri olarak okur; web sitesi ise aynı kütüphaneden üretilen CSS değişkenlerini (`tokens.css`) kullanır.
 
-## Where it comes from
+## Tasarım İlkeleri
 
 The direction was set by [mkdir.directory](https://mkdir.directory/), a directory site that is
 almost nothing but type. What we take from it is its restraint rather than its content:

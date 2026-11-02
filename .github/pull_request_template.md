@@ -1,39 +1,34 @@
-<!-- Opened by an AI agent? First line: "> 🤖 Opened by <your GitHub login>'s AI agent (<tool, model>), not by <your GitHub login> personally." Use your own login, not someone else's. -->
+<!-- Bir AI ajanı tarafından açıldıysa ilk satıra belirtiniz: "> 🤖 <kullanıcı_adı> AI ajanı tarafından açılmıştır." -->
 
-## What and why
+## Ne Değişti ve Neden?
 
-<!-- What this changes, and why. Link the issue it fixes ("Fixes #123"). -->
+<!-- Bu çekme isteği neleri değiştiriyor ve neden gerekli? İlgili bir sorun/hata varsa bağlayın ("Kapatır #123"). -->
 
-## Kind
+## Çekme İsteği Türü
 
-<!-- Tick one: it sets the pull request's label (CONTRIBUTING.md "Pull requests"). -->
+<!-- Uygun olanı işaretleyin: -->
 
-- [ ] parity: Horizon now does what vanilla 26.3 does
-- [ ] bug: a crash or a breakage
-- [ ] perf: faster, or less memory
-- [ ] feature: something new for players (listed under New in the release notes)
-- [ ] extra: Horizon-only, off by default
-- [ ] tooling: tools, CI, tests, harnesses
-- [ ] docs
+- [ ] parite: Minecraft 1.21.11 / 26.3 davranış uyumu
+- [ ] hata: bir çökme veya arayüz hatasının düzeltilmesi
+- [ ] performans: daha hızlı render veya daha düşük bellek tüketimi
+- [ ] özellik: kullanıcılar için yeni bir özellik
+- [ ] yerelleştirme: Türkçe dil geliştirmeleri
+- [ ] araçlar: testler, CI iş akışları, derleme otomasyonu
+- [ ] dokümantasyon: kılavuzlar veya README güncellemeleri
 
-## Vanilla reference
+## Doğrulama ve Testler
 
-<!-- The vanilla classes and methods this follows (tools/rea_vanilla.py), and the harness that checks it.
-     "Horizon-only" for a feature vanilla doesn't have; "none" for tooling or docs. -->
+<!-- Çalıştırılan yerel testleri ve sonuçlarını belirtin: -->
 
-## Other projects' code
+- [ ] `cargo test --manifest-path launcher/Cargo.toml --lib` çalıştırıldı ve geçti
+- [ ] `cargo test --manifest-path launcher/Cargo.toml --bin crew-client` çalıştırıldı ve geçti
+- [ ] `cargo test -p horizon-telemetry` çalıştırıldı ve geçti
+- [ ] Kullanıcı arayüzü değişiklikleri için ekran görüntüsü eklendi
 
-<!-- "none", or for each project you read or copied from: its link at the commit, its license (only MIT,
-     BSD-2-Clause, BSD-3-Clause, Apache-2.0, ISC, zlib, 0BSD, MIT-0, Unlicense or CC0-1.0), and what you took.
-     CONTRIBUTING.md "Only original code". -->
+## Ekran Görüntüleri (Arayüz Değişiklikleri İçin)
 
-## Self-check
+<!-- Arayüzde bir değişiklik yaptıysanız: Öncesi ve Sonrası ekran görüntüleri ekleyin. Aksi halde bu bölümü silebilirsiniz. -->
 
-<!-- Paste the block `python3 tools/pr_ready.py` prints (`--base upstream/main` from a fork). -->
+---
 
-## Screenshots
-
-<!-- For anything players see: before and after. Delete this section otherwise. -->
-
-<!-- Please tick "Allow edits by maintainers": we push small fixups ourselves instead of a round trip.
-     See CONTRIBUTING.md. -->
+*Lütfen maintainer düzenlemelerine izin verin seçeneğini işaretli bırakınız.*

@@ -1,11 +1,6 @@
-# Horizon shader packs
+# CREW Client — Shader Paketleri ve Gölgelendirme Mimarisi
 
-Horizon has its own shader packs: WGSL written against stages of Horizon's renderer, checked before they run. This page
-is the guide for pack authors. The design and the pack format are in [api/shaders.md](api/shaders.md); every stage's
-signature, input, resource and limit is in the generated [api/shaders-reference.md](api/shaders-reference.md).
-
-Shader packs in the Iris/OptiFine format are a separate feature with its own loader; this page is only about
-Horizon's own format.
+CREW Client, modern WebGPU / WGSL standartlarına dayalı yerel shader paketlerini destekler. Bu sayfada paket geliştiricileri için render aşamaları, WGSL formatı ve gölgelendirici yapılandırması açıklanmaktadır. Standart Iris/OptiFine shader paketleri ayrı bir dönüştürücü katmanı ile ele alınırken, bu belge CREW Client'ın yerel shader motorunu kapsar.
 
 | Part | Where | State |
 |---|---|---|
