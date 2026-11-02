@@ -312,6 +312,10 @@ impl Launcher {
                     .gap(px(10.))
                     .child(card(Loader::Fabric))
                     .child(card(Loader::Quilt)),
+            ).child(
+                shell::text(night::CAPTION, c(n.muted)).child(
+                    "Not: Fabric ve Quilt mod yükleyicileri tam olarak desteklenmektedir. Forge ve NeoForge bu sürmde desteklenmemektedir."
+                ),
             );
         }
         rows.child(shell::text(night::CAPTION, c(n.muted)).child(

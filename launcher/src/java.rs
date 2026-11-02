@@ -96,9 +96,17 @@ pub struct Runtime {
 impl Runtime {
     /// The `java` program to start the game with.
     pub fn java(&self) -> PathBuf {
-        self.home
-            .join("bin")
-            .join(if cfg!(windows) { "javaw.exe" } else { "java" })
+        let bin = self.home.join("bin");
+        if cfg!(windows) {
+            let javaw = bin.join("javaw.exe");
+            if javaw.is_file() {
+                javaw
+            } else {
+                bin.join("java.exe")
+            }
+        } else {
+            bin.join("java")
+        }
     }
 }
 
@@ -154,7 +162,10 @@ pub fn installed() -> Vec<Runtime> {
         homes.extend(
             std::env::split_paths(&path)
                 .filter(|dir| dir.file_name().is_some_and(|n| n == "bin"))
-                .filter_map(|dir| fs::canonicalize(dir.join("java")).ok())
+                .filter_map(|dir| {
+                    let exe = if cfg!(windows) { "java.exe" } else { "java" };
+                    fs::canonicalize(dir.join(exe)).ok()
+                })
                 .filter_map(|java| Some(java.parent()?.parent()?.to_path_buf())),
         );
     }
@@ -193,12 +204,20 @@ fn parents() -> Vec<PathBuf> {
         sources::Os::Linux => ["/usr/lib/jvm", "/usr/java", "/usr/local/lib/jvm"]
             .map(PathBuf::from)
             .into(),
-        sources::Os::Windows => ["ProgramFiles", "ProgramW6432"]
+        sources::Os::Windows => ["ProgramFiles", "ProgramW6432", "LOCALAPPDATA", "APPDATA"]
             .into_iter()
             .filter_map(std::env::var_os)
             .flat_map(|base| {
                 let base = PathBuf::from(base);
-                ["Eclipse Adoptium", "Java", "Microsoft", "Zulu", "BellSoft"].map(|v| base.join(v))
+                [
+                    base.join("Eclipse Adoptium"),
+                    base.join("Java"),
+                    base.join("Microsoft"),
+                    base.join("Zulu"),
+                    base.join("BellSoft"),
+                    base.join("Programs").join("Eclipse Adoptium"),
+                    base.join("PrismLauncher").join("java"),
+                ]
             })
             .collect(),
     };

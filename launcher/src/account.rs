@@ -1727,30 +1727,55 @@ pub fn java_player() -> Result<crate::java_launch::Player, String> {
     player
 }
 
+pub(crate) fn offline_uuid(name: &str) -> String {
+    use sha2::Digest;
+    let mut hash = sha2::Sha256::digest(format!("OfflinePlayer:{name}").as_bytes());
+    hash[6] = (hash[6] & 0x0f) | 0x30;
+    hash[8] = (hash[8] & 0x3f) | 0x80;
+    hash[..16].iter().map(|b| format!("{b:02x}")).collect::<String>()
+}
+
 fn java_player_with(
     ep: &Endpoints,
     client_id: Option<&str>,
     store: &dyn SecretStore,
     accounts: &mut Accounts,
 ) -> Result<crate::java_launch::Player, String> {
-    let pass = launch(ep, client_id, store, accounts).map_err(|e| e.to_string())?;
+    let pass = launch(ep, client_id, store, accounts);
     let kept = || {
         let order = accounts.selected().into_iter().chain(&accounts.accounts);
         order
             .into_iter()
             .find_map(|a| Some((a.clone(), secrets_in(store, &a.uuid).filter(|s| s.owns)?)))
     };
-    let (account, secrets) = pass
-        .session
-        .or(pass.owner)
-        .or_else(kept)
-        .ok_or_else(|| NoOwner.to_string())?;
-    Ok(crate::java_launch::Player {
-        name: account.name,
-        uuid: account.uuid,
-        token: secrets.minecraft_token,
-        xuid: secrets.xuid.unwrap_or_default(),
-    })
+    match pass {
+        Ok(pass) => {
+            let (account, secrets) = pass
+                .session
+                .or(pass.owner)
+                .or_else(kept)
+                .ok_or_else(|| NoOwner.to_string())?;
+            Ok(crate::java_launch::Player {
+                name: account.name,
+                uuid: account.uuid,
+                token: secrets.minecraft_token,
+                xuid: secrets.xuid.unwrap_or_default(),
+            })
+        }
+        Err(NoOwner) => {
+            if let Some(offline_name) = accounts.name_arg() {
+                let uuid = offline_uuid(offline_name);
+                Ok(crate::java_launch::Player {
+                    name: offline_name.to_string(),
+                    uuid,
+                    token: "0".to_string(),
+                    xuid: String::new(),
+                })
+            } else {
+                Err(NoOwner.to_string())
+            }
+        }
+    }
 }
 
 #[cfg(test)]

@@ -1738,15 +1738,14 @@ fn text(step: theme::Step) -> Div {
 
 /// A release's tag as a title: mono, so its digits read at a glance.
 fn version_tag(tag: &str) -> Div {
+    let lbl = horizon_launcher::nightly::label(tag)
+        .unwrap_or_else(|| tag.trim_start_matches('v').to_string());
     div()
         .font_family(theme::MONO)
         .text_size(px(22.))
         .line_height(px(28.))
         .font_weight(FontWeight::MEDIUM)
-        .child(
-            horizon_launcher::nightly::label(tag)
-                .unwrap_or_else(|| tag.trim_start_matches('v').to_string()),
-        )
+        .child(format!("CREW {lbl}"))
 }
 
 /// CREW Client's geometric emblem: an angular gaming crest with top/bottom brackets,
@@ -2653,7 +2652,10 @@ impl Launcher {
         // "Nightly · ba6344a", a release's tag: the menu lists the full tags.
         let label = self.selected().map_or_else(
             || tr("No version").into(),
-            |tag| horizon_launcher::nightly::label(tag).unwrap_or_else(|| tag.clone()),
+            |tag| {
+                let lbl = horizon_launcher::nightly::label(tag).unwrap_or_else(|| tag.clone());
+                format!("CREW {lbl}")
+            },
         );
         // As tall as Play: "Version" over the tag, and a chevron.
         let n = t.night;
@@ -2731,7 +2733,13 @@ impl Launcher {
                         .text_color(t.ink)
                         .cursor_pointer()
                         .hover(move |s| s.bg(t.plate_soft))
-                        .child(tag.clone())
+                        .child(if let Some(lbl) = horizon_launcher::nightly::label(&tag) {
+                            format!("CREW {lbl}")
+                        } else if tag.starts_with('v') {
+                            format!("CREW Stable {tag}")
+                        } else {
+                            format!("CREW {tag}")
+                        })
                         .child(
                             div()
                                 .flex()
@@ -4716,9 +4724,18 @@ impl Render for Launcher {
                     .child(
                         div()
                             .relative()
+                            .flex()
+                            .flex_col()
+                            .items_center()
+                            .gap(px(16.))
                             .top(px(-24. * (1. - gone)))
                             .opacity(gone)
-                            .child(word),
+                            .child(mark(56., &t))
+                            .child(word)
+                            .child(
+                                shell::text(theme::night::CAPTION, t.muted)
+                                    .child("CREW Network · Performans Minecraft İstemcisi"),
+                            ),
                     )
                     .when(reveal == 0., |d| {
                         d.on_click(cx.listener(|this, _: &ClickEvent, _, cx| {

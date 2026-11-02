@@ -220,8 +220,15 @@ pub fn classpath(version: &Value, minecraft: &Path, os: &str) -> Result<Vec<Path
         if !allowed(&library["rules"], os, &[]) {
             continue;
         }
-        if let Some(path) = library["downloads"]["artifact"]["path"].as_str() {
-            let path = minecraft.join("libraries").join(mojang::relative(path)?);
+        let rel_path = if let Some(path) = library["downloads"]["artifact"]["path"].as_str() {
+            Some(path.to_string())
+        } else if let Some(name) = library["name"].as_str() {
+            crate::loaders::maven_path(name).ok()
+        } else {
+            None
+        };
+        if let Some(path) = rel_path {
+            let path = minecraft.join("libraries").join(mojang::relative(&path)?);
             if !paths.contains(&path) {
                 paths.push(path);
             }
@@ -408,7 +415,7 @@ pub fn command(version: &Value, launch: &Launch) -> Result<Command, String> {
                 .collect::<Vec<_>>()
                 .join(separator),
         ),
-        ("launcher_name", "horizon-launcher".into()),
+        ("launcher_name", "crew-client".into()),
         (
             "resolution_width",
             launch.window.map(|w| w.0.to_string()).unwrap_or_default(),

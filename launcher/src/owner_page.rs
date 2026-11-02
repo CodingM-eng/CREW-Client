@@ -164,7 +164,8 @@ impl Launcher {
                 shell::text(theme::night::UI, shell::c(n.ink_soft)).child(tr(what).to_string()),
             )),
             Shown::Error(e) => {
-                if !configured {
+                let show_config_input = !configured || e.contains("invalid_client");
+                if show_config_input {
                     let focused = self.client_id_focused;
                     let input_field = div()
                         .id("client-id-input")
@@ -237,9 +238,13 @@ impl Launcher {
                     )
                 } else {
                     let msg = if e == "Sign-in cancelled." {
-                        "Giriş iptal edildi."
+                        "Giriş kullanıcı tarafından iptal edildi.".to_string()
+                    } else if e.contains("expired_token") || e.contains("timeout") || e.contains("timed out") {
+                        "Giriş oturumu zaman aşımına uğradı. Lütfen tekrar deneyin.".to_string()
+                    } else if e.contains("403") || e.contains("Forbidden") {
+                        "Mojang API erişimi reddedildi (403). Azure uygulamasının Mojang onayı ve XboxLive.signin iznine sahip olduğundan emin olun.".to_string()
                     } else {
-                        "Microsoft hesabı bağlantısı kurulamadı. Lütfen tekrar deneyin."
+                        format!("Microsoft kimlik doğrulama hatası: {e}")
                     };
                     body.child(
                         raised()

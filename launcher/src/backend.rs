@@ -1523,9 +1523,43 @@ pub fn java_game(
     };
     let marker = downloaded(&game.minecraft)?;
     if !marker.is_file() {
-        let listed = crate::minecraft_versions::load()?;
-        let version = listed.find(&game.minecraft)?;
-        download_version_for_owner(&version.id, &version.sha1, log)?;
+        let version_json = minecraft
+            .join("versions")
+            .join(mojang::relative(&game.minecraft)?)
+            .join(format!("{}.json", &game.minecraft));
+        let version_jar = minecraft
+            .join("versions")
+            .join(mojang::relative(&game.minecraft)?)
+            .join(format!("{}.jar", &game.minecraft));
+
+        let mut ready = version_json.is_file() && version_jar.is_file();
+        if !ready {
+            if let Some(src_mc) = Settings::load().minecraft_dir {
+                let src_json = src_mc
+                    .join("versions")
+                    .join(&game.minecraft)
+                    .join(format!("{}.json", &game.minecraft));
+                let src_jar = src_mc
+                    .join("versions")
+                    .join(&game.minecraft)
+                    .join(format!("{}.jar", &game.minecraft));
+                if src_json.is_file() && src_jar.is_file() {
+                    let dest_dir = minecraft.join("versions").join(mojang::relative(&game.minecraft)?);
+                    let _ = fs::create_dir_all(&dest_dir);
+                    let _ = fs::copy(&src_json, &version_json);
+                    let _ = fs::copy(&src_jar, &version_jar);
+                    ready = true;
+                }
+            }
+        }
+        if !ready {
+            let listed = crate::minecraft_versions::load()?;
+            let version = listed.find(&game.minecraft)?;
+            download_version_for_owner(&version.id, &version.sha1, log)?;
+        }
+        if let Some(parent) = marker.parent() {
+            let _ = fs::create_dir_all(parent);
+        }
         fs::write(&marker, "").map_err(|e| format!("{}: {e}", marker.display()))?;
     }
     let mut start = game.minecraft.clone();
@@ -2414,7 +2448,7 @@ pub fn client_as(tag: &str, who: Option<&account::Player>) -> Result<Command, St
         None => account::session_for_game(&game_home(), false).map_err(|e| e.to_string()),
         Some(who) => account::session_for_game_as(&game_home(), who),
     }
-    .map_err(|refused| format!("{refused} Sign in with `horizon-launcher account sign-in`."))?;
+    .map_err(|refused| format!("{refused} Sign in with `crew-client account sign-in`."))?;
     need_prepared(tag)?;
     complete_assets(tag);
     crate::browser::horizon::before_play(&game_home());

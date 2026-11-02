@@ -34,11 +34,9 @@ impl Launcher {
         );
         let mut what = vec![format!("Minecraft: Java Edition {game}")];
         if !tag.is_empty() {
-            what.push(format!(
-                "CREW Client {}",
-                horizon_launcher::nightly::label(tag)
-                    .unwrap_or_else(|| tag.trim_start_matches('v').to_string())
-            ));
+            let engine_lbl = horizon_launcher::nightly::label(tag)
+                .unwrap_or_else(|| tag.trim_start_matches('v').to_string());
+            what.push(format!("CREW Client {engine_lbl} (Motor Horizon)"));
         }
         what.push(tr(if prepared { "Ready" } else { "Needs preparing" }).to_string());
         // The exact count, a link to the page with its history and peaks.
@@ -316,8 +314,8 @@ impl Launcher {
                         .relative()
                         .font_weight(FontWeight::BOLD)
                         .child(
-                            horizon_launcher::nightly::label(tag)
-                                .unwrap_or_else(|| tag.trim_start_matches('v').to_string()),
+                            format!("CREW Client {}", horizon_launcher::nightly::label(tag)
+                                .unwrap_or_else(|| tag.trim_start_matches('v').to_string()))
                         ),
                 )
                 .child(
