@@ -39,6 +39,24 @@ impl Launcher {
         }
     }
 
+    /// Activates Demo / Offline mode for inspecting the launcher interface without Microsoft login.
+    pub(crate) fn start_demo_mode(&mut self) {
+        let mut accounts = Accounts::load();
+        let demo_name = if accounts.offline.is_empty() {
+            "Demo_Oyuncu".to_string()
+        } else {
+            accounts.offline.first().cloned().unwrap_or_else(|| "Demo_Oyuncu".to_string())
+        };
+        let _ = accounts.play_as_with(account::store(), horizon_launcher::account::Player::Offline(demo_name), true);
+        let _ = accounts.save();
+        self.accounts = accounts;
+        self.settings.dev_offline = true;
+        self.settings.owner_notice_seen = true;
+        self.settings.save();
+        self.cancel_sign_in();
+        self.owner_screen_open = false;
+    }
+
     pub(crate) fn owner_screen(&mut self, cx: &mut Context<Self>) -> Stateful<Div> {
         let t = self.theme;
         let n = t.night;
@@ -146,17 +164,42 @@ impl Launcher {
                 shell::text(theme::night::UI, shell::c(n.ink_soft)).child(tr(what).to_string()),
             )),
             Shown::Error(e) => {
-                let msg = if e.contains("HORIZON_MSA_CLIENT_ID") || e.contains("not configured") {
-                    "Microsoft OAuth yapılandırması eksik. Kurulum rehberini kontrol edin."
-                } else if e == "Sign-in cancelled." {
-                    "Giriş iptal edildi."
+                if !configured {
+                    body.child(
+                        raised()
+                            .flex()
+                            .flex_col()
+                            .gap(px(6.))
+                            .child(
+                                shell::text(theme::night::UI, shell::c(n.danger))
+                                    .font_weight(FontWeight::BOLD)
+                                    .child("Microsoft İstemci Kimliği (Client ID) Yapılandırılmamış"),
+                            )
+                            .child(
+                                shell::text(theme::night::CAPTION, shell::c(n.ink_soft)).child(
+                                    "Microsoft girişi için Azure Uygulama Kimliği gereklidir. Geliştirici veya yönetici olarak şu yollardan biriyle belirtebilirsiniz:
+• CREW_MSA_CLIENT_ID ortam değişkeni
+• msa_client_id.txt dosyası (istemci dizininde)
+• auth.json yapılandırması",
+                                ),
+                            )
+                            .child(
+                                shell::text(theme::night::CAPTION, shell::c(n.muted)).child(
+                                    "Arayüzü ve yerel özellikleri incelemek için aşağıdaki 'Demo / Çevrimdışı İncele' seçeneğini kullanabilirsiniz.",
+                                ),
+                            ),
+                    )
                 } else {
-                    "Microsoft hesabı bağlantısı kurulamadı. Lütfen tekrar deneyin."
-                };
-                body.child(
-                    raised()
-                        .child(shell::text(theme::night::UI, shell::c(n.danger)).child(msg)),
-                )
+                    let msg = if e == "Sign-in cancelled." {
+                        "Giriş iptal edildi."
+                    } else {
+                        "Microsoft hesabı bağlantısı kurulamadı. Lütfen tekrar deneyin."
+                    };
+                    body.child(
+                        raised()
+                            .child(shell::text(theme::night::UI, shell::c(n.danger)).child(msg)),
+                    )
+                }
             }
             Shown::Idle => body,
         };
@@ -185,21 +228,36 @@ impl Launcher {
                 .relative()
                 .child(tr("Waiting for Microsoft… the window goes on by itself.").to_string())
         });
+        let mut buttons: Vec<AnyElement> = Vec::new();
+        if let Some(m) = main {
+            buttons.push(m.into_any_element());
+        }
+        buttons.push(
+            shell::action("owner-demo", shell::Action::Raised, &t)
+                .child(shell::label("Demo / Çevrimdışı İncele"))
+                .on_click(cx.listener(|this, _: &ClickEvent, _, cx| {
+                    this.start_demo_mode();
+                    cx.notify();
+                }))
+                .into_any_element(),
+        );
+        buttons.push(
+            shell::action("owner-later", shell::Action::Quiet, &t)
+                .child(shell::label(tr("Not now").to_string()))
+                .on_click(cx.listener(|this, _: &ClickEvent, _, cx| {
+                    this.close_owner_screen();
+                    cx.notify();
+                }))
+                .into_any_element(),
+        );
         let answers = div()
             .relative()
             .flex()
+            .flex_wrap()
             .items_center()
             .gap(px(10.))
             .mt(px(14.))
-            .children(main)
-            .child(
-                shell::action("owner-later", shell::Action::Quiet, &t)
-                    .child(shell::label(tr("Not now").to_string()))
-                    .on_click(cx.listener(|this, _: &ClickEvent, _, cx| {
-                        this.close_owner_screen();
-                        cx.notify();
-                    })),
-            );
+            .children(buttons);
         // Opaque: it sits over the page's content, not over the bare sky.
         let card = plate::cut(
             theme::night::PIXEL_CORNER,
