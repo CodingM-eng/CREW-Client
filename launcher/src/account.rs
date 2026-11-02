@@ -37,31 +37,66 @@ const RENEW_BEFORE: u64 = 3600;
 
 /// The configured Azure app, if any: `CREW_MSA_CLIENT_ID` or `HORIZON_MSA_CLIENT_ID`
 /// at run time or build time, or from a local configuration file (`msa_client_id.txt` / `auth.json`).
+fn read_client_id_from_dir(dir: &std::path::Path) -> Option<String> {
+    let txt_file = dir.join("msa_client_id.txt");
+    if txt_file.is_file() {
+        if let Ok(content) = std::fs::read_to_string(txt_file) {
+            let trimmed = content.trim().to_owned();
+            if !trimmed.is_empty() {
+                return Some(trimmed);
+            }
+        }
+    }
+    let auth_file = dir.join("auth.json");
+    if auth_file.is_file() {
+        if let Ok(text) = std::fs::read_to_string(auth_file) {
+            if let Ok(val) = serde_json::from_str::<serde_json::Value>(&text) {
+                if let Some(id) = val.get("client_id").and_then(|c| c.as_str()) {
+                    let trimmed = id.trim().to_owned();
+                    if !trimmed.is_empty() {
+                        return Some(trimmed);
+                    }
+                }
+            }
+        }
+    }
+    None
+}
+
 pub fn client_id() -> Option<String> {
     std::env::var("CREW_MSA_CLIENT_ID")
         .ok()
         .or_else(|| std::env::var("HORIZON_MSA_CLIENT_ID").ok())
         .or_else(|| option_env!("CREW_MSA_CLIENT_ID").map(str::to_owned))
         .or_else(|| option_env!("HORIZON_MSA_CLIENT_ID").map(str::to_owned))
+        .or_else(|| read_client_id_from_dir(&crate::backend::data_dir()))
+        .or_else(|| read_client_id_from_dir(&crate::backend::game_home()))
+        .or_else(|| std::env::current_dir().ok().and_then(|d| read_client_id_from_dir(&d)))
         .or_else(|| {
-            let data_file = crate::backend::data_dir().join("msa_client_id.txt");
-            if data_file.is_file() {
-                std::fs::read_to_string(data_file).ok()
-            } else {
-                let auth_file = crate::backend::data_dir().join("auth.json");
-                if auth_file.is_file() {
-                    std::fs::read_to_string(auth_file).ok().and_then(|text| {
-                        serde_json::from_str::<serde_json::Value>(&text)
-                            .ok()
-                            .and_then(|v| v.get("client_id").and_then(|c| c.as_str()).map(str::to_owned))
-                    })
-                } else {
-                    None
-                }
-            }
+            std::env::current_exe()
+                .ok()
+                .and_then(|p| p.parent().and_then(|d| read_client_id_from_dir(d)))
         })
         .map(|id| id.trim().to_owned())
         .filter(|id| !id.is_empty())
+}
+
+/// Saves the client ID to auth.json and msa_client_id.txt in the application data directory.
+pub fn save_client_id(id: &str) -> Result<(), std::io::Error> {
+    let trimmed = id.trim();
+    if trimmed.is_empty() {
+        return Ok(());
+    }
+    let dir = crate::backend::data_dir();
+    std::fs::create_dir_all(&dir)?;
+    let auth_file = dir.join("auth.json");
+    let content = serde_json::json!({
+        "client_id": trimmed
+    });
+    std::fs::write(&auth_file, serde_json::to_string_pretty(&content)?)?;
+    let txt_file = dir.join("msa_client_id.txt");
+    let _ = std::fs::write(&txt_file, trimmed);
+    Ok(())
 }
 
 /// Where the requests go: the real services, or a mock in tests.

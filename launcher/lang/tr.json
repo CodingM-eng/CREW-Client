@@ -225,7 +225,7 @@
   "Beta": "Beta",
   "Benchmark uploads": "Performans testi (Benchmark) yüklemeleri",
   "Saved: the next Play {what}.": "Kaydedildi: Bir sonraki Başlat {what}.",
-  "{count} playing now": "Şu anda {count} kişi oynuyor",
+  "{count} playing now": "CREW Client: {count} aktif kullanıcı",
   "Mods": "Modlar",
   "A shell command, run in the instance's folder. The game starts only if it succeeds.": "Örnek klasöründe çalıştırılan kabuk komutu. Oyun yalnızca komut başarılı olursa başlar.",
   "Host a world for your friends on this computer. Create one, press Start, and give them the address.": "Bu bilgisayarda arkadaşlarınız için bir dünya barındırın. Bir tane oluşturun, Başlat'a basın ve onlara adresi verin.",

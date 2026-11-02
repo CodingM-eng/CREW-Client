@@ -165,27 +165,73 @@ impl Launcher {
             )),
             Shown::Error(e) => {
                 if !configured {
+                    let focused = self.client_id_focused;
+                    let input_field = div()
+                        .id("client-id-input")
+                        .relative()
+                        .w_full()
+                        .h(px(34.))
+                        .px(px(10.))
+                        .py(px(4.))
+                        .rounded(px(theme::night::RADIUS_CONTROL))
+                        .overflow_hidden()
+                        .border_2()
+                        .border_color(if focused { t.accent } else { t.outline })
+                        .bg(t.well)
+                        .font_family(theme::MONO)
+                        .text_size(px(12.))
+                        .cursor_text()
+                        .track_focus(&self.client_id_focus)
+                        .child(line_edit::content(
+                            &self.client_id_input,
+                            &t,
+                            focused,
+                            false,
+                            false,
+                            "Örn: 00000000-0000-0000-0000-000000000000",
+                        ))
+                        .on_click(cx.listener(|this, _: &ClickEvent, window, cx| {
+                            window.focus(&this.client_id_focus, cx);
+                            cx.notify();
+                        }))
+                        .on_key_down(cx.listener(|this, ev: &gpui::KeyDownEvent, window, cx| {
+                            match line_edit::handle(&mut this.client_id_input, ev, cx) {
+                                line_edit::Key::Pass => return,
+                                line_edit::Key::Escape => window.blur(cx),
+                                line_edit::Key::Enter => {
+                                    this.save_client_id_and_sign_in();
+                                }
+                                _ => {}
+                            }
+                            cx.stop_propagation();
+                            cx.notify();
+                        }));
+                    let input_field = line_edit::mouse(input_field, cx, |this| &mut this.client_id_input);
+
                     body.child(
                         raised()
                             .flex()
                             .flex_col()
-                            .gap(px(6.))
+                            .gap(px(8.))
                             .child(
                                 shell::text(theme::night::UI, shell::c(n.danger))
                                     .font_weight(FontWeight::BOLD)
-                                    .child("Microsoft İstemci Kimliği (Client ID) Yapılandırılmamış"),
+                                    .child("Microsoft İstemci Kimliği (Client ID) Yapılandırması"),
                             )
                             .child(
                                 shell::text(theme::night::CAPTION, shell::c(n.ink_soft)).child(
-                                    "Microsoft girişi için Azure Uygulama Kimliği gereklidir. Geliştirici veya yönetici olarak şu yollardan biriyle belirtebilirsiniz:
-• CREW_MSA_CLIENT_ID ortam değişkeni
-• msa_client_id.txt dosyası (istemci dizininde)
-• auth.json yapılandırması",
+                                    "Microsoft girişi için Azure Uygulama Kimliği gereklidir:
+                                     1. Azure Portal'a gidin: portal.azure.com > Microsoft Entra ID > Uygulama Kayıtları
+                                     2. Yeni kayıt oluşturun: 'Herhangi bir kuruluş dizinindeki hesaplar ve kişisel Microsoft hesapları'
+                                     3. Yeniden yönlendirme URI: Mobil ve masaüstü > https://login.microsoftonline.com/common/oauth2/nativeclient
+                                     4. API İzinleri: XboxLive.signin ve offline_access izinlerini ekleyin
+                                     5. Oluşturulan Uygulama (İstemci) Kimliği'ni aşağıdaki kutucuğa yapıştırın:",
                                 ),
                             )
+                            .child(input_field)
                             .child(
                                 shell::text(theme::night::CAPTION, shell::c(n.muted)).child(
-                                    "Arayüzü ve yerel özellikleri incelemek için aşağıdaki 'Demo / Çevrimdışı İncele' seçeneğini kullanabilirsiniz.",
+                                    "Girdiğiniz kimlik auth.json dosyasına kaydedilecek ve sonraki açılışlarda hatırlanacaktır.                                      Alternatif olarak aşağıdaki 'Demo / Çevrimdışı İncele' butonuyla yerel profille devam edebilirsiniz.",
                                 ),
                             ),
                     )
@@ -213,7 +259,14 @@ impl Launcher {
                 )
             }
             Shown::Starting(_) => None,
-            Shown::Error(_) if !configured => None,
+            Shown::Error(_) if !configured => Some(
+                shell::action("owner-save-signin", shell::Action::Main, &t)
+                    .child(shell::label("Kaydet ve Giriş Yap"))
+                    .on_click(cx.listener(|this, _: &ClickEvent, _, cx| {
+                        this.save_client_id_and_sign_in();
+                        cx.notify();
+                    })),
+            ),
             _ => Some(
                 microsoft::sign_in_button("owner-sign-in", &t).on_click(cx.listener(
                     |this, _: &ClickEvent, _, cx| {

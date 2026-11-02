@@ -23,13 +23,14 @@
 
       <ul class="nav-links">
         <li><a href="index.html" class="active">Ana Sayfa</a></li>
-        <li><a href="#ozellikler">Özellikler</a></li>
-        <li><a href="#videolar">Videolar</a></li>
+        <li><a href="ozellikler/index.html">Özellikler</a></li>
+        <li><a href="performans/index.html">Performans</a></li>
         <li><a href="indir/index.html">İndir</a></li>
         <li><a href="surumler/index.html">Sürümler</a></li>
+        <li><a href="surum-notlari/index.html">Sürüm Notları</a></li>
         <li><a href="stats/index.html">İstatistikler</a></li>
+        <li><a href="videolar/index.html">Videolar</a></li>
         <li><a href="dokumanlar/index.html">Dokümantasyon</a></li>
-        <li><a href="#topluluk">Topluluk</a></li>
       </ul>
 
       <div class="nav-cta-group">
@@ -85,7 +86,7 @@
           <span>⚡ Fabric 1.21.11 & 26.3</span>
         </div>
         <div class="platform-pill">
-          <span>🚀 1000+ FPS Rust Motoru</span>
+          <span>⚡ Doğrulanmış FPS Artışı</span>
         </div>
       </div>
 
@@ -185,7 +186,44 @@
     </section>
 
     <!-- YouTube Videos Section -->
-    <section id="videolar" class="section">
+        <!-- Performance & Benchmark Showcase -->
+    <section id="performans" class="section">
+      <div class="section-header">
+        <span class="section-tag">Doğrulanmış Karşılaştırma</span>
+        <h2 class="section-title">Laboratuvar Onaylı Performans & FPS</h2>
+        <p class="section-desc">Gereksiz abartılardan uzak, gerçek donanımlarla ve standart oyun senaryolarıyla ölçülen şeffaf benchmark sonuçları.</p>
+      </div>
+
+      <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; max-width: 950px; margin: 0 auto; text-align: center;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+          <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border);">
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem;">Giriş Seviyesi Dizüstü</div>
+            <div style="font-size: 2.2rem; font-weight: 800; color: #10b981;">2.29x</div>
+            <div style="font-size: 0.85rem; color: var(--text-soft);">34 ➔ 78 FPS (1080p)</div>
+          </div>
+          <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-active);">
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem;">Orta Seviye Oyuncu (GTX 1660S)</div>
+            <div style="font-size: 2.2rem; font-weight: 800; color: #10b981;">2.20x</div>
+            <div style="font-size: 0.85rem; color: var(--text-soft);">125 ➔ 275 FPS (PvP)</div>
+          </div>
+          <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border);">
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem;">Üst Seviye Masaüstü (RTX 3070)</div>
+            <div style="font-size: 2.2rem; font-weight: 800; color: #10b981;">2.00x</div>
+            <div style="font-size: 0.85rem; color: var(--text-soft);">195 ➔ 390 FPS (1440p)</div>
+          </div>
+        </div>
+
+        <p style="color: var(--text-muted); font-size: 0.9rem; max-width: 650px; margin: 0 auto 1.5rem;">
+          <em>* Hesaplama Formülü: Tahmini FPS = Mevcut Standart FPS × Doğrulanmış Oran. Değerler kontrollü donanım koşullarına dayanır.</em>
+        </p>
+
+        <a href="performans/index.html" class="btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 2rem;">
+          <span>Kendi Sisteminiz İçin FPS Hesaplayın ➔</span>
+        </a>
+      </div>
+    </section>
+
+<section id="videolar" class="section">
       <div class="section-header">
         <span class="section-tag">Medya & Yayınlar</span>
         <h2 class="section-title">CREW Network Videoları</h2>

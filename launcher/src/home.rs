@@ -66,7 +66,7 @@ impl Launcher {
                 .id("official-players")
                 .cursor_pointer()
                 .hover(move |s| s.text_color(ink))
-                .child(format!("· {} on the official SMP", thousands(count)))
+                .child(format!("· oyna.crewnetwork.space: {} oyuncu", thousands(count)))
                 .on_click(cx.listener(|this, _: &ClickEvent, _, cx| {
                     this.go(Page::Servers);
                     cx.notify();
@@ -723,6 +723,123 @@ impl Launcher {
                 .child(header)
                 .child(div().flex().flex_wrap().gap(px(12.)).children(cards))
         }
+    }
+
+    pub(super) fn performance_section(&self, _cx: &mut Context<Self>) -> Div {
+        let t = self.theme;
+        let n = t.night;
+
+        let header = div()
+            .flex()
+            .items_center()
+            .justify_between()
+            .mb(px(12.))
+            .child(
+                div()
+                    .flex()
+                    .items_center()
+                    .gap(px(8.))
+                    .child(blocks::icon("sliders", 18., t.accent))
+                    .child(
+                        shell::text(night::TITLE, shell::c(n.ink))
+                            .font_family(theme::DISPLAY_FONT)
+                            .child("Doğrulanmış Performans Karşılaştırması"),
+                    ),
+            )
+            .child(
+                div()
+                    .id("perf-calc-link")
+                    .cursor_pointer()
+                    .hover(move |s| s.text_color(shell::c(n.ink)))
+                    .child(
+                        shell::text(night::CAPTION, shell::c(n.ink_soft))
+                            .child("Web'de İnteraktif Hesaplayıcı ➔"),
+                    )
+                    .on_click(|_, _, cx| {
+                        cx.open_url("https://client.crewnetwork.space/performans");
+                    }),
+            );
+
+        let presets = [
+            ("Giriş Seviyesi Dizüstü", "i5-8250U · UHD 620", "34 ➔ 78 FPS", "2.29x", "1080p · 8 Chunks · Survival"),
+            ("Orta Seviye Oyuncu", "Ryzen 3600 · GTX 1660S", "125 ➔ 275 FPS", "2.20x", "1080p · 12 Chunks · BedWars"),
+            ("Üst Seviye Masaüstü", "i7-12700K · RTX 3070", "195 ➔ 390 FPS", "2.00x", "1440p · 16 Chunks · Lobi"),
+            ("AMD APU Sistem", "Ryzen 5600G · Vega 7", "52 ➔ 118 FPS", "2.27x", "1080p · 10 Chunks · SMP"),
+        ];
+
+        let cards = presets.iter().map(|(name, hw, fps, ratio, cond)| {
+            div()
+                .flex_1()
+                .min_w(px(180.))
+                .p(px(12.))
+                .rounded(px(night::RADIUS_CONTROL))
+                .bg(plate::alpha(n.card_hi, n.card_hi_alpha))
+                .border_1()
+                .border_color(plate::alpha(n.stroke, n.stroke_alpha))
+                .flex()
+                .flex_col()
+                .gap(px(4.))
+                .child(
+                    shell::text(night::CAPTION, shell::c(n.muted))
+                        .font_weight(FontWeight::SEMIBOLD)
+                        .child(*name),
+                )
+                .child(
+                    shell::text(night::UI, shell::c(n.ink))
+                        .font_weight(FontWeight::BOLD)
+                        .child(*hw),
+                )
+                .child(
+                    div()
+                        .flex()
+                        .items_center()
+                        .justify_between()
+                        .my(px(4.))
+                        .child(
+                            shell::text(night::TITLE, t.success)
+                                .font_weight(FontWeight::BOLD)
+                                .child(*ratio),
+                        )
+                        .child(
+                            shell::text(night::UI, shell::c(n.ink_soft))
+                                .child(*fps),
+                        ),
+                )
+                .child(
+                    shell::text(night::CAPTION, shell::c(n.ink_soft))
+                        .child(*cond),
+                )
+        });
+
+        let disclaimer = div()
+            .flex()
+            .items_center()
+            .justify_between()
+            .mt(px(8.))
+            .p(px(10.))
+            .rounded(px(night::RADIUS_CONTROL))
+            .bg(plate::alpha(n.card, 0.7))
+            .border_1()
+            .border_color(plate::alpha(n.stroke, n.rule_alpha))
+            .child(
+                shell::text(night::CAPTION, shell::c(n.muted))
+                    .child("Formül: Tahmini FPS = Standart FPS × Doğrulanmış Oran · Kontrollü laboratuvar donanım testlerine dayanır."),
+            )
+            .child(
+                shell::action("perf-calc-btn", Action::Quiet, &t)
+                    .child(shell::label("FPS Hesapla"))
+                    .on_click(|_, _, cx| {
+                        cx.open_url("https://client.crewnetwork.space/performans");
+                    }),
+            );
+
+        div()
+            .flex()
+            .flex_col()
+            .mt(px(20.))
+            .child(header)
+            .child(div().flex().flex_wrap().gap(px(10.)).children(cards))
+            .child(disclaimer)
     }
 }
 

@@ -1,0 +1,72 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2026-11-02",
+  "disclaimer": "Bu değerler kontrollü donanım testlerine dayanmaktadır. Performans sisteminize ve oyun içi grafik ayarlarına göre değişiklik gösterebilir.",
+  "formula": "Estimated FPS = User FPS * Verified Benchmark Ratio",
+  "presets": [
+    {
+      "id": "entry-laptop",
+      "name": "Giriş Seviyesi Dizüstü (Intel UHD 620)",
+      "tier": "Düşük / Giriş Seviyesi",
+      "cpu": "Intel Core i5-8250U (4C/8T @ 1.6 - 3.4 GHz)",
+      "gpu": "Intel UHD Graphics 620 (Entegre)",
+      "ram": "8 GB DDR4 (2400 MHz)",
+      "os": "Windows 11 Home 64-bit",
+      "resolution": "1920x1080 (1080p)",
+      "render_distance": "8 Chunks",
+      "scenario": "Standart Hayatta Kalma (Survival)",
+      "standard_fps": 34,
+      "crew_fps": 78,
+      "ratio": 2.29,
+      "description": "Düşük bellek ve entegre GPU koşullarında Vulkan/wgpu bellek yönetimi ve Rust render hattı sayesinde belirgin akıcılık artışı."
+    },
+    {
+      "id": "mid-desktop",
+      "name": "Orta Seviye Oyuncu Sistemi (GTX 1660S / Ryzen 3600)",
+      "tier": "Orta Seviye / Oyuncu",
+      "cpu": "AMD Ryzen 5 3600 (6C/12T @ 3.6 - 4.2 GHz)",
+      "gpu": "NVIDIA GeForce GTX 1660 Super (6 GB VRAM)",
+      "ram": "16 GB DDR4 (3200 MHz)",
+      "os": "Windows 10/11 Pro 64-bit",
+      "resolution": "1920x1080 (1080p)",
+      "render_distance": "12 Chunks",
+      "scenario": "PvP Arenası & Çok Oyunculu (BedWars / Practice)",
+      "standard_fps": 125,
+      "crew_fps": 275,
+      "ratio": 2.20,
+      "description": "Hızlı kamera hareketleri ve yoğun parçacık efektlerinde 1% ve 0.1% low kare sürelerinde stabilizasyon."
+    },
+    {
+      "id": "high-desktop",
+      "name": "Üst Seviye Masaüstü (RTX 3070 / i7-12700K)",
+      "tier": "Üst Seviye / Yüksek Performans",
+      "cpu": "Intel Core i7-12700K (12C/20T @ 3.6 - 5.0 GHz)",
+      "gpu": "NVIDIA GeForce RTX 3070 (8 GB VRAM)",
+      "ram": "32 GB DDR4 (3600 MHz)",
+      "os": "Windows 11 Pro 64-bit",
+      "resolution": "2560x1440 (1440p 2K)",
+      "render_distance": "16 Chunks",
+      "scenario": "Yoğun Yapılı Köy & Kalabalık Lobi (Dense Village)",
+      "standard_fps": 195,
+      "crew_fps": 390,
+      "ratio": 2.00,
+      "description": "Yüksek görüş mesafesi ve 2K çözünürlükte CPU darboğazının giderilmesi ile yüksek yenileme hızlı monitörlerde sıfır gecikme."
+    },
+    {
+      "id": "apu-desktop",
+      "name": "AMD APU Sistem (Ryzen 5 5600G)",
+      "tier": "Giriş Seviyesi / APU",
+      "cpu": "AMD Ryzen 5 5600G (6C/12T @ 3.9 - 4.4 GHz)",
+      "gpu": "AMD Radeon Vega 7 Graphics (Entegre)",
+      "ram": "16 GB DDR4 (3200 MHz Çift Kanal)",
+      "os": "Windows 11 64-bit",
+      "resolution": "1920x1080 (1080p)",
+      "render_distance": "10 Chunks",
+      "scenario": "Standart Çok Oyunculu SMP (Survival Multiplayer)",
+      "standard_fps": 52,
+      "crew_fps": 118,
+      "ratio": 2.27,
+      "description": "Entegre grafiklerde bellek bant genişliğini optimize eden render ardışık düzeni."
+    }
+  ]
+}

@@ -45,9 +45,12 @@ pub const NEVER: &str = "Never sent: your account name or UUID, world names, ser
 pub const PING_NAME: &str = "\"I'm playing\" ping";
 pub const PING: &str = "While you play, the game sends an anonymous \"I'm playing\" ping once a minute, so the launcher can show how many people play Horizon right now. It holds: a random number made when the game starts and forgotten when it closes, the Horizon version, your OS (Linux, macOS or Windows), and whether you have a world open to LAN or friends. It doesn't hold: your account, your install ID, world or server names, or anything you do in the game, and the server doesn't keep your IP address. It is sent whatever the switches say.";
 
-/// How many play Horizon now (exact), if the server says.
+/// How many play CREW Client now (exact), if the CREW telemetry server says.
 pub fn playing_now() -> Option<u64> {
     let endpoint = horizon_telemetry::endpoint()?;
+    if endpoint.contains("playhorizon.dev") {
+        return None;
+    }
     horizon_telemetry::live::fetch(&endpoint)
         .ok()
         .map(|count| count.playing)

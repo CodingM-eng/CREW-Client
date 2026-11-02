@@ -193,6 +193,13 @@ pub fn is_game_tag(tag: &str) -> bool {
 pub fn launcher_version(tag: &str) -> Option<&str> {
     tag.strip_prefix(LAUNCHER_TAG_PREFIX)
         .or_else(|| tag.strip_prefix(OLD_LAUNCHER_TAG_PREFIX))
+        .or_else(|| {
+            if tag.starts_with("v2.") || tag.starts_with("v3.") || tag.starts_with("crew-v") {
+                tag.strip_prefix("crew-v").or_else(|| tag.strip_prefix('v'))
+            } else {
+                None
+            }
+        })
         .filter(|v| v.starts_with(|c: char| c.is_ascii_digit()))
 }
 
@@ -330,12 +337,22 @@ pub(crate) fn parse_releases(
             continue;
         }
         let found = r["assets"].as_array().into_iter().flatten().find_map(|a| {
-            (Some(a["name"].as_str()?) == asset).then(|| {
+            let name = a["name"].as_str()?;
+            let is_match = match asset {
+                Some(target) => {
+                    name == target
+                        || (target.contains("windows") && (name == "CREW-Client-Setup-x64.exe" || name == "CREW-Client.exe" || name == "CREW-Client-windows-x64.zip"))
+                }
+                None => false,
+            };
+            if is_match {
                 Some((
                     a["browser_download_url"].as_str()?.to_string(),
                     a["size"].as_u64()?,
                 ))
-            })?
+            } else {
+                None
+            }
         });
         out.push(Release {
             tag: tag.into(),

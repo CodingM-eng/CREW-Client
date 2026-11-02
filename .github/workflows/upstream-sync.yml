@@ -1,0 +1,94 @@
+name: CREW Client Upstream Sync & PR Automation
+
+on:
+  schedule:
+    - cron: '0 6 * * *' # Every day at 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  sync:
+    name: Sync from Upstream Horizon
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout CREW Client
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git Identity
+        run: |
+          git config user.name "CREW Client Bot"
+          git config user.email "bot@crewnetwork.space"
+
+      - name: Set up Upstream Remote
+        run: |
+          git remote add upstream https://github.com/horizon-rust/horizon.git || true
+          git fetch upstream main
+
+      - name: Check for Upstream Changes
+        id: check_diff
+        run: |
+          UPSTREAM_HEAD=$(git rev-parse upstream/main)
+          echo "Upstream main commit: $UPSTREAM_HEAD"
+          
+          # Check if upstream branch exists
+          if git show-ref --quiet refs/heads/upstream; then
+            LOCAL_UPSTREAM=$(git rev-parse upstream)
+          else
+            git branch upstream upstream/main
+            LOCAL_UPSTREAM=""
+          fi
+          
+          if [ "$UPSTREAM_HEAD" != "$LOCAL_UPSTREAM" ]; then
+            echo "has_updates=true" >> $GITHUB_OUTPUT
+            echo "commit=$UPSTREAM_HEAD" >> $GITHUB_OUTPUT
+          else
+            echo "has_updates=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up Python
+        if: steps.check_diff.outputs.has_updates == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Upstream Impact Analysis
+        if: steps.check_diff.outputs.has_updates == 'true'
+        run: |
+          python3 scripts/upstream_sync.py
+
+      - name: Update Upstream Tracking Branch
+        if: steps.check_diff.outputs.has_updates == 'true'
+        run: |
+          git checkout -B upstream upstream/main
+          git push origin upstream --force
+
+      - name: Create Upstream Sync Pull Request
+        if: steps.check_diff.outputs.has_updates == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: sync/upstream-horizon
+          base: main
+          title: "🔄 [Üst Kaynak] Horizon Güncellemeleri (${{ steps.check_diff.outputs.commit }})"
+          body: |
+            ## CREW Client — Güvenli Üst Kaynak (Upstream) Entegrasyonu
+
+            `horizon-rust/horizon:main` deposundan yeni değişiklikler tespit edildi.
+
+            ### 🛡️ Güvenlik ve Koruma Kontrolleri:
+            - [ ] CREW Client marka kimliği (logo, renkler, başlıklar) korunuyor mu?
+            - [ ] `lang/tr.json` Türkçe dil desteği eksiksiz mi?
+            - [ ] `i18n` ve `cargo test` testleri başarıyla geçiyor mu?
+            - [ ] Minecraft 1.21.11 ve Fabric uyumluluğu test edildi mi?
+
+            *Bu çekme isteği GitHub Actions otomasyonu tarafından oluşturulmuştur.*
+          labels: |
+            upstream-sync
+            automated-pr

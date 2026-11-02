@@ -299,6 +299,9 @@ struct Launcher {
     proxy_input: line_edit::LineEdit,
     proxy_focused: bool,
     proxy_focus: FocusHandle,
+    client_id_input: line_edit::LineEdit,
+    client_id_focused: bool,
+    client_id_focus: FocusHandle,
     /// Opt-in data collection: the player's answer and Settings' section (`collection`).
     collection: collection::Collection,
     /// Settings' "Connect an AI agent" (`agents_page`).
@@ -498,6 +501,13 @@ impl Launcher {
             ),
             proxy_focused: false,
             proxy_focus: cx.focus_handle(),
+            client_id_input: line_edit::LineEdit::new(
+                account::client_id().unwrap_or_default(),
+                128,
+                40,
+            ),
+            client_id_focused: false,
+            client_id_focus: cx.focus_handle(),
             settings,
             links: backend::Links::default(),
             preparing: false,
@@ -3002,6 +3012,7 @@ impl Launcher {
                 ));
             }
         }
+        rows = rows.child(self.performance_section(cx));
         rows = rows.child(self.youtube_section(cx));
 
         // The banner: the hero and the Play row over the sky (`sky.rs`), or over the player's
@@ -3692,6 +3703,14 @@ impl Launcher {
 
     /// Keeps the Proxy field in `settings.json`, and tells the parts that build their own agents
     /// (`horizon-port-pack`) which proxy to use.
+    pub(crate) fn save_client_id_and_sign_in(&mut self) {
+        let val = self.client_id_input.text().trim();
+        if !val.is_empty() {
+            let _ = account::save_client_id(val);
+        }
+        self.sign_in_to_play();
+    }
+
     fn save_proxy(&mut self) {
         let value = self.proxy_input.text().trim().to_owned();
         self.settings.proxy = (!value.is_empty()).then_some(value);
@@ -4523,6 +4542,7 @@ impl Render for Launcher {
         self.github.note_focus(window);
         self.args_focused = self.args_focus.is_focused(window);
         self.proxy_focused = self.proxy_focus.is_focused(window);
+        self.client_id_focused = self.client_id_focus.is_focused(window);
         let size = window.viewport_size();
         let content = match self.page {
             Page::Play => self.play_page(cx),

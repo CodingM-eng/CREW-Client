@@ -6,5 +6,6 @@
   "minecraft_target_version": "1.21.11 / 26.3",
   "update_endpoint": "https://client.crewnetwork.space/api/releases/latest.json",
   "github_releases_url": "https://github.com/CodingM-eng/CREW-Client/releases",
-  "last_synced": "2026-11-01T22:50:00Z"
+  "last_synced": "2026-11-01T22:50:00Z",
+  "last_checked": "2026-11-02T15:46:05.096435Z"
 }
