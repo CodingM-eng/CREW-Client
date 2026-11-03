@@ -1,1 +1,26 @@
-{"name":"Horizon: Minecraft Java Edition rewritten in Rust","short_name":"Horizon","description":"Minecraft: Java Edition 26.3 rewritten in Rust. Free, open source and tested against vanilla. Get the Horizon launcher for Windows, macOS and Linux.","start_url":"/","display":"browser","background_color":"#100a1f","theme_color":"#100a1f","icons":[{"src":"/icon.svg","type":"image/svg+xml","sizes":"any"},{"src":"/icon-192.png","type":"image/png","sizes":"192x192"},{"src":"/icon-512.png","type":"image/png","sizes":"512x512"}]}
+{
+  "name": "CREW Client — Minecraft Performans Başlatıcısı",
+  "short_name": "CREW Client",
+  "description": "Yerel Rust motoru, Fabric ve Quilt desteği, 3 kata varan FPS artışı ve sıfır gecikme sunan resmi Minecraft başlatıcısı.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0C0810",
+  "theme_color": "#0C0810",
+  "icons": [
+    {
+      "src": "/assets/img/crew-logo-transparent.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "/assets/img/crew-icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/assets/img/crew-icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
