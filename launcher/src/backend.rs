@@ -1509,7 +1509,7 @@ pub fn java_game(
 ) -> Result<Command, String> {
     let game = instance.java.as_ref().ok_or_else(|| {
         format!(
-            "{} plays Horizon, not Minecraft: Java Edition",
+            "{} CREW Client Yerel Rust Motoru ile çalışır, Minecraft: Java Edition ile değil",
             instance.name
         )
     })?;
@@ -1724,7 +1724,7 @@ fn java(
     let runtime = data_dir().join("minecraft").join("runtime");
     let home = mojang::java_runtime(&component, &runtime, 8, &fetch, &mojang::CANCEL, log)
         .map_err(|e| {
-        format!("{missing}\n  • Horizon also tried to download Minecraft's own Java from Mojang, but: {e}")
+        format!("{missing}\n  • CREW Client ayrıca Mojang'dan resmi Java çalışma ortamını indirmeyi denedi ancak: {e}")
     })?;
     find(major, &[home]).map(|jdk| jdk.home())
 }

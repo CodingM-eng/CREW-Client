@@ -2895,7 +2895,7 @@ impl Launcher {
                 &[("version", &version)],
             ),
             Some(true) => trf(
-                "Not prepared. Horizon can download Minecraft {version} from Mojang for your account, or use your own install.",
+                "Hazırlanmadı. CREW Client hesabınız için Minecraft {version} sürümünü Mojang'dan indirebilir veya kendi kurulumunuzu kullanabilir.",
                 &[("version", &version)],
             ),
             Some(false) => trf(
@@ -3785,9 +3785,9 @@ impl Launcher {
             .mt(px(8.))
             .p(px(12.))
             .bg(t.well)
-            .child(div().text_color(t.danger).child(tr("These mods were made for different Horizon versions").to_string()))
+            .child(div().text_color(t.danger).child("Bu modlar farklı CREW Client sürümleri için tasarlanmıştır".to_string()))
             .child(list.to_owned())
-            .child(tr("They often still work together. If the build fails, install versions made for the same Nightly.").to_string())
+            .child("Birlikte çalışabilirler. Derleme başarısız olursa aynı sürüm için hazırlanan modları yükleyin.".to_string())
             .child(
                 div()
                     .flex()
@@ -4114,9 +4114,9 @@ impl Launcher {
                 };
                 div().text_color(t.danger).child(msg)
             }
-            None if self.accounts.accounts.is_empty() => div().child(tr(
-                "Horizon needs a Microsoft account that owns Minecraft: Java Edition, like other launchers. It also plays online servers with your name and skin.",
-            )),
+            None if self.accounts.accounts.is_empty() => div().child(
+                "CREW Client, diğer başlatıcılar gibi Minecraft: Java Edition sahibi bir Microsoft hesabı gerektirir. Ayrıca çevrimiçi sunucularda adınız ve dış görünümünüzle oynamanızı sağlar.",
+            ),
             None => div().child(tr("Add another account.")),
         };
         let detail = if let Some(target) = &self.sign_in_target {
@@ -4615,9 +4615,9 @@ impl Launcher {
                                 .text_color(t.ink)
                                 .child(tr("Support the work below")),
                         )
-                        .child(text(theme::UI).text_color(t.muted).child(tr(
-                            "Horizon is built in the open. Sponsors fund the next release.",
-                        ))),
+                        .child(text(theme::UI).text_color(t.muted).child(
+                            "CREW Client açık kaynaklı olarak geliştirilmektedir. Destekçiler sonraki sürümleri finanse eder.",
+                        )),
                 )
                 .child(
                     button("sponsor", "Sponsor on GitHub", Kind::Secondary, &t)
@@ -4918,31 +4918,41 @@ impl Render for Launcher {
         }
         if let Some(opening) = &self.opening {
             let splash_opacity = (1. - ease_out_cubic(reveal)).clamp(0., 1.);
-            let word = div()
-                .flex()
-                .font_family(theme::PIXEL)
-                .text_size(px(theme::WORDMARK.px * 0.5))
-                .line_height(px(theme::WORDMARK.px * 0.5))
-                .font_weight(FontWeight::BOLD)
-                .text_color(t.ink)
-                .children("CREW CLIENT".chars().enumerate().map(|(i, c)| {
-                    let at = (held - i as f32 * theme::STAGGER.as_secs_f32() * 1.2).max(0.);
-                    let p = ease_out_cubic((at / theme::ENTER.as_secs_f32()).min(1.0));
-                    div()
-                        .relative()
-                        .opacity(p)
-                        .top(px(theme::RISE * 1.5 * (1. - p)))
-                        .child(c.to_string())
-                }));
+
+            // Stage 1 (0.0s - 0.4s): Initial fade-in of background and emblem
+            let stage1_p = (held / 0.4).clamp(0.0, 1.0);
+            let emblem_opacity = ease_out_cubic(stage1_p);
+            let emblem_scale_offset = (1.0 - emblem_opacity) * 12.0;
+
+            // Stage 2 (0.35s - 0.85s): Title, typography and red accent aura reveal
+            let stage2_p = ((held - 0.35) / 0.5).clamp(0.0, 1.0);
+            let text_opacity = ease_out_cubic(stage2_p);
+            let text_rise = (1.0 - text_opacity) * 10.0;
+
+            // Red accent glow around emblem (#FF2B4F)
+            let glow_intensity = 0.35 * text_opacity * (1. - ease_out_cubic(reveal));
+            let emblem_glow = gpui::BoxShadow {
+                color: t.accent.opacity(glow_intensity),
+                offset: gpui::point(px(0.), px(0.)),
+                blur_radius: px(24.),
+                spread_radius: px(6.),
+                inset: false,
+            };
+
+            // Stage 3 (0.8s - 1.4s+): Progress bar & real Turkish status messages
+            let stage3_p = ((held - 0.75) / 0.65).clamp(0.0, 1.0);
+            let bar_opacity = ease_out_cubic(stage3_p);
 
             let status_msg = if reveal > 0.0 {
                 "CREW Client hazır · Başlatılıyor..."
-            } else if matches!(self.releases, Load::Loading) || held < 0.5 {
-                "Sistem kaynakları hazırlanıyor..."
-            } else if held < 1.1 {
-                "Sürüm ve mod profilleri kontrol ediliyor..."
+            } else if held < 0.45 {
+                "Sistem ve grafik donanımı hazırlanıyor..."
+            } else if matches!(self.releases, Load::Loading) || held < 1.0 {
+                "CREW Client Yerel Rust Motoru ve profiller kontrol ediliyor..."
+            } else if held < 1.4 {
+                "Sürüm verileri ve ağ bağlantısı doğrulanıyor..."
             } else {
-                "CREW Client hazırlanıyor..."
+                "CREW Client hazır · Başlatılıyor..."
             };
 
             let progress = if reveal > 0.0 {
@@ -4950,14 +4960,26 @@ impl Render for Launcher {
             } else {
                 (held / 1.4).min(0.92)
             };
-            let fill_width = (200.0 * ease_out_cubic(progress)).clamp(8.0, 200.0);
+            let bar_width = 240.0;
+            let fill_width = (bar_width * ease_out_cubic(progress)).clamp(10.0, bar_width);
+
+            let bar_glow = gpui::BoxShadow {
+                color: t.accent.opacity(0.4 * bar_opacity),
+                offset: gpui::point(px(0.), px(0.)),
+                blur_radius: px(8.),
+                spread_radius: px(1.),
+                inset: false,
+            };
 
             let loading_bar = div()
                 .relative()
-                .w(px(200.))
-                .h(px(3.))
+                .w(px(bar_width))
+                .h(px(4.))
                 .rounded(px(2.))
-                .bg(plate::alpha(t.night.card, 0.6))
+                .bg(plate::alpha(t.night.card, 0.7))
+                .border_1()
+                .border_color(plate::alpha(t.night.stroke, 0.3))
+                .opacity(bar_opacity)
                 .overflow_hidden()
                 .child(
                     div()
@@ -4965,7 +4987,46 @@ impl Render for Launcher {
                         .h_full()
                         .w(px(fill_width))
                         .rounded(px(2.))
-                        .bg(t.accent),
+                        .bg(t.accent)
+                        .shadow(vec![bar_glow]),
+                );
+
+            let word = div()
+                .relative()
+                .flex()
+                .items_center()
+                .justify_center()
+                .font_family(theme::FONT)
+                .text_size(px(26.))
+                .line_height(px(32.))
+                .font_weight(FontWeight::BOLD)
+                .text_color(t.ink)
+                .opacity(text_opacity)
+                .top(px(text_rise))
+                .child("CREW CLIENT");
+
+            let subtitle = div()
+                .relative()
+                .flex()
+                .items_center()
+                .justify_center()
+                .opacity(text_opacity)
+                .top(px(text_rise * 0.7))
+                .child(
+                    shell::text(theme::night::CAPTION, shell::c(t.night.ink_soft))
+                        .font_weight(FontWeight::MEDIUM)
+                        .child("CREW Network · Performans Minecraft İstemcisi"),
+                );
+
+            let status_text = div()
+                .relative()
+                .flex()
+                .items_center()
+                .justify_center()
+                .opacity(bar_opacity)
+                .child(
+                    shell::text(theme::MICRO, shell::c(t.night.muted))
+                        .child(status_msg),
                 );
 
             root = root.child(
@@ -4979,7 +5040,7 @@ impl Render for Launcher {
                     .flex()
                     .items_center()
                     .justify_center()
-                    .bg(t.page.opacity(splash_opacity))
+                    .bg(plate::alpha(t.night.page, splash_opacity))
                     .when(reveal == 0., |d| d.cursor_pointer())
                     .child(
                         div()
@@ -4988,19 +5049,21 @@ impl Render for Launcher {
                             .flex_col()
                             .items_center()
                             .gap(px(14.))
-                            .top(px(-16. * (1. - splash_opacity)))
+                            .top(px(-18. * (1. - splash_opacity)))
                             .opacity(splash_opacity)
-                            .child(mark(56., &t))
-                            .child(word)
                             .child(
-                                shell::text(theme::night::CAPTION, shell::c(t.night.ink_soft))
-                                    .child("CREW Network · Performans Minecraft İstemcisi"),
+                                div()
+                                    .relative()
+                                    .rounded_full()
+                                    .shadow(vec![emblem_glow])
+                                    .opacity(emblem_opacity)
+                                    .top(px(emblem_scale_offset))
+                                    .child(mark(64., &t)),
                             )
+                            .child(word)
+                            .child(subtitle)
                             .child(loading_bar)
-                            .child(
-                                shell::text(theme::MICRO, shell::c(t.night.muted))
-                                    .child(status_msg),
-                            ),
+                            .child(status_text),
                     )
                     .when(reveal == 0., |d| {
                         d.on_click(cx.listener(|this, _: &ClickEvent, _, cx| {

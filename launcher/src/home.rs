@@ -32,12 +32,16 @@ impl Launcher {
             },
             |i| i.name.as_str(),
         );
-        let mut what = vec![format!("Minecraft: Java Edition {game}")];
-        if !tag.is_empty() {
+        let mut what = if tag.is_empty() {
+            vec![format!("Minecraft: Java Edition {game}")]
+        } else {
             let engine_lbl = horizon_launcher::nightly::label(tag)
                 .unwrap_or_else(|| tag.trim_start_matches('v').to_string());
-            what.push(format!("CREW Client {engine_lbl} (Motor Horizon)"));
-        }
+            vec![
+                format!("CREW Client {engine_lbl} (Yerel Rust Motoru)"),
+                format!("Minecraft {game} Uyumluluğu"),
+            ]
+        };
         what.push(tr(if prepared { "Ready" } else { "Needs preparing" }).to_string());
         // The exact count, a link to the page with its history and peaks.
         let ink = c(n.ink);

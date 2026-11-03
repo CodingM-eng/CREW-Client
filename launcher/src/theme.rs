@@ -9,7 +9,7 @@ use horizon_theme as tokens;
 use std::time::Duration;
 
 pub use tokens::night::{self, Night};
-pub use tokens::{Step, CAPTION, DISPLAY, HEADING, LABEL, MICRO, TITLE, UI, WORDMARK};
+pub use tokens::{Step, CAPTION, DISPLAY, HEADING, LABEL, MICRO, TITLE, UI};
 pub const FONT: &str = night::FONT;
 pub const DISPLAY_FONT: &str = night::DISPLAY_FONT;
 pub const MONO: &str = tokens::MONO;
@@ -35,6 +35,7 @@ pub const PAGE_GUTTER: f32 = 32.;
 pub const QUICK: Duration = tokens::QUICK.duration();
 pub const MOVE: Duration = tokens::MOVE.duration();
 pub const ENTER: Duration = tokens::ENTER.duration();
+#[allow(dead_code)]
 pub const STAGGER: Duration = tokens::STAGGER;
 
 #[derive(Clone, Copy)]

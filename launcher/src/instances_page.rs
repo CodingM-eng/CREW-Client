@@ -212,7 +212,7 @@ impl Launcher {
                         (None, Some(tag), _) if self.native_build_of(tag).is_some() => {
                             let build = self.native_build_of(tag).unwrap_or_default();
                             trf(
-                                "Native build · {version}",
+                                "Yerel Derleme · {version}",
                                 &[("version", &build.horizon_short())],
                             )
                         }
@@ -228,7 +228,7 @@ impl Launcher {
                         summary.map_or_else(|| tr("Modpack").into(), |p| p.summary()),
                     )
                 }
-                InstanceKind::Pack => (false, tr("From Horizon's registry").into()),
+                InstanceKind::Pack => (false, "CREW Paket Kayıt Defterinden".into()),
             };
             // Java instances have nothing of Horizon's to prepare: no state square.
             let state = (matches!(i.kind, InstanceKind::Default | InstanceKind::Own)
@@ -430,6 +430,26 @@ impl Launcher {
             );
         if !editing {
             body = body.child(self.kind_tabs(cx));
+            let kind_desc = match kind {
+                new_instance::NewKind::Horizon => {
+                    "CREW Client Yerel Rust Motoru: Rust ile sıfırdan geliştirilmiş, doğrudan donanım hızlandırmalı (Vulkan/DirectX 12) ve JVM gecikmesi bulunmayan yerel Minecraft motoru."
+                }
+                new_instance::NewKind::Vanilla => {
+                    "Resmi Vanilla Java Edition: Orijinal Mojang Java Edition sürümü. Resmi oyun dosyaları ve Java çalışma ortamı ile güvenilir oyun deneyimi."
+                }
+                new_instance::NewKind::Modded => {
+                    "Modlu Java Edition: Fabric veya Quilt yükleyicileri ile zenginleştirilmiş, topluluk modları ile tam uyumlu Java Edition ortamı."
+                }
+            };
+            body = body.child(
+                div()
+                    .p(px(10.))
+                    .rounded(px(theme::night::RADIUS_CONTROL))
+                    .bg(plate::alpha(n.card, 0.6))
+                    .border_1()
+                    .border_color(plate::alpha(n.stroke, n.stroke_alpha))
+                    .child(shell::text(theme::night::CAPTION, shell::c(n.ink_soft)).child(kind_desc)),
+            );
         }
         if java {
             body = body.child(self.java_choice_rows(cx));

@@ -130,24 +130,20 @@ impl Launcher {
         .detach();
     }
 
-    /// The tabs over a new instance's dialog: Horizon, Vanilla, Modded.
+    /// The tabs over a new instance's dialog: CREW Rust Edition, Vanilla, Modded.
     pub(super) fn kind_tabs(&self, cx: &mut Context<Self>) -> Div {
         let t = self.theme;
         let now = self.instances.dialog.as_ref().map(|d| d.java.kind);
         div().flex().gap(px(4.)).children(
             [
-                (NewKind::Horizon, "CREW Native"),
-                (NewKind::Vanilla, "Vanilla"),
-                (NewKind::Modded, "Modded"),
+                (NewKind::Horizon, "CREW Rust Edition (Yerel Motor)"),
+                (NewKind::Vanilla, "Vanilla (Java)"),
+                (NewKind::Modded, "Modlu (Fabric / Quilt)"),
             ]
             .map(|(kind, label)| {
                 shell::tab(
-                    format!("new-kind-{label}"),
-                    if kind == NewKind::Horizon {
-                        "CREW Native"
-                    } else {
-                        tr(label)
-                    },
+                    format!("new-kind-{:?}", kind),
+                    label,
                     now == Some(kind),
                     &t,
                 )
