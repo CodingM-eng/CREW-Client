@@ -32,15 +32,20 @@ impl Launcher {
             },
             |i| i.name.as_str(),
         );
+        let is_unsupported = !tag.is_empty() && !backend::is_supported_version(tag);
         let mut what = if tag.is_empty() {
             vec![format!("Minecraft: Java Edition {game}")]
         } else {
             let engine_lbl = horizon_launcher::nightly::label(tag)
                 .unwrap_or_else(|| tag.trim_start_matches('v').to_string());
-            vec![
+            let mut items = vec![
                 format!("CREW Client {engine_lbl} (Yerel Rust Motoru)"),
                 format!("Minecraft {game} Uyumluluğu"),
-            ]
+            ];
+            if is_unsupported {
+                items.push("Desteklenmeyen Eski Sürüm (Yükseltme Önerilir)".to_string());
+            }
+            items
         };
         what.push(tr(if prepared { "Ready" } else { "Needs preparing" }).to_string());
         // The exact count, a link to the page with its history and peaks.
@@ -85,7 +90,7 @@ impl Launcher {
                 div()
                     .flex_none()
                     .size(px(6.))
-                    .bg(if prepared { t.success } else { t.warn }),
+                    .bg(if is_unsupported || !prepared { t.warn } else { t.success }),
             )
             .child(
                 shell::text(night::CAPTION, c(n.ink_soft))

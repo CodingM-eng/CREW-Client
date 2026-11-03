@@ -1,0 +1,40 @@
+{
+  "version": "2.1.0",
+  "engine_upstream_tag": "v2026.10.13",
+  "minimum_supported_engine_version": "v2026.10.13",
+  "release_date": "2026-11-03",
+  "channel": "stable",
+  "downloads": {
+    "windows_installer": {
+      "filename": "CREW-Client-Setup-x64.exe",
+      "url": "https://client.crewnetwork.space/downloads/CREW-Client-Setup-x64.exe",
+      "sha256": "c1ccbdf9e73b2cbcf7209825b42d2a45a34f8a848ff3c70f074a3f1f31fca1e8",
+      "size_bytes": 85983232
+    },
+    "windows_portable": {
+      "filename": "CREW-Client.exe",
+      "url": "https://client.crewnetwork.space/downloads/CREW-Client.exe",
+      "sha256": "9ce2ebdd5a452ef72f1cf8ba64467026dfd1587d6d376ca769229f273295b9d3",
+      "size_bytes": 48234496
+    }
+  },
+  "supported_minecraft_versions": [
+    "1.21.11",
+    "1.21.1",
+    "1.20.4",
+    "1.16.5",
+    "1.8.9"
+  ],
+  "official_server": {
+    "address": "oyna.crewnetwork.space",
+    "ip": "51.178.92.171",
+    "port": 25565
+  },
+  "changelog_tr": [
+    "wgpu Vulkan ve DirectX 12 yerel render motoru (Horizon Engine v2026.10.13) entegrasyonu tamamlandı.",
+    "Mojang Minecraft 1.21.11 / 26.3 ağ protokolü (Protocol 777) tam uyumluluğu eklendi.",
+    "Açılış aşamaları (GPU Doğrulama, Bellek Ayrımı, Profil Yükleme, Başlatma) Crimson Kırmızı (#FF2B4F) teması ile modernize edildi.",
+    "Asgari desteklenen sürüm politikası (v2026.10.13+) devreye alındı; eski sürümler için uyarı rozetleri eklendi.",
+    "Java Edition (Vanilla, Fabric, Quilt) için 180 saniye akıllı zaman aşımı ve iptal mekanizması eklendi."
+  ]
+}

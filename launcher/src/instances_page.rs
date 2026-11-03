@@ -208,6 +208,9 @@ impl Launcher {
                             trf("{version} is not installed", &[("version", own)])
                         }
                         (None, None, None) => tr("No version installed").into(),
+                        (None, Some(tag), _) if !backend::is_supported_version(tag) => {
+                            format!("Eski Sürüm (Desteklenmiyor) · {tag}")
+                        }
                         (None, Some(_), _) if !prepared => tr("Needs preparing").into(),
                         (None, Some(tag), _) if self.native_build_of(tag).is_some() => {
                             let build = self.native_build_of(tag).unwrap_or_default();
@@ -231,9 +234,10 @@ impl Launcher {
                 InstanceKind::Pack => (false, "CREW Paket Kayıt Defterinden".into()),
             };
             // Java instances have nothing of Horizon's to prepare: no state square.
+            let is_unsupported = tag.as_deref().is_some_and(|t| !backend::is_supported_version(t));
             let state = (matches!(i.kind, InstanceKind::Default | InstanceKind::Own)
                 && i.java.is_none())
-            .then_some(if prepared { t.success } else { t.warn });
+            .then_some(if is_unsupported || !prepared { t.warn } else { t.success });
             let icon = self.instance_icon(&i, 36.);
             let clicked = i.clone();
             out.push(

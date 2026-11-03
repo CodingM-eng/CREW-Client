@@ -318,6 +318,20 @@ pub fn compare_versions(a: &str, b: &str) -> std::cmp::Ordering {
     release_order(a).cmp(&release_order(b))
 }
 
+/// Minimum supported engine release tag for new installs and updates (v2026.10.13: First production wgpu Vulkan/DX12 protocol 777 release).
+pub const MINIMUM_SUPPORTED_VERSION: &str = "v2026.10.13";
+
+/// Checks if a version or tag meets the minimum supported version policy.
+pub fn is_supported_version(tag: &str) -> bool {
+    if tag == "latest" {
+        return true;
+    }
+    if crate::nightly::date_of(tag).is_some() || tag.starts_with("nightly") {
+        return true;
+    }
+    compare_versions(tag, MINIMUM_SUPPORTED_VERSION).is_ge()
+}
+
 /// Every published release of the repository, both kinds, as GitHub's JSON.
 fn release_list() -> Result<serde_json::Value, String> {
     let url = format!("https://api.github.com/repos/{REPO}/releases?per_page=100");
@@ -469,9 +483,14 @@ pub fn latest(releases: &[Release]) -> Option<&Release> {
 }
 
 /// The releases a launcher installs by itself: every one that is published as a release, so
-/// GitHub's latest when it comes out. The pre-releases of the old Alpha channel are left out.
+/// GitHub's latest when it comes out. The pre-releases of the old Alpha channel are left out,
+/// and releases older than the minimum supported version (v2026.10.13) are excluded.
 pub fn installable_updates(releases: &[Release]) -> Vec<Release> {
-    releases.iter().filter(|r| !r.prerelease).cloned().collect()
+    releases
+        .iter()
+        .filter(|r| !r.prerelease && (is_supported_version(&r.tag) || crate::nightly::date_of(&r.tag).is_some()))
+        .cloned()
+        .collect()
 }
 
 /// How often a launcher left open looks for new releases: they come out several times a day.
@@ -772,6 +791,11 @@ fn unpack(archive: &Path, url: &str, to: &Path) -> Result<(), String> {
 /// the fraction done.
 pub fn install(release: &Release, progress: impl Fn(f32)) -> Result<(), String> {
     let tag = release.tag.as_str();
+    if !is_supported_version(tag) {
+        return Err(format!(
+            "{tag} sürümü artık desteklenmemektedir (Minimum desteklenen sürüm: {MINIMUM_SUPPORTED_VERSION}). Lütfen güncel bir sürüm yükleyin."
+        ));
+    }
     let sha256 = match &release.nightly {
         // Signed for the Nightly channel, served under its own GitHub tag.
         Some(published) => crate::signed::nightly_digest(
@@ -2674,6 +2698,11 @@ pub fn select_after_update(selected: Option<&str>, installed_before: &[String]) 
 /// Installs `tag` (or with "latest" the newest release, pre-releases left out), then updates the selection as
 /// `select_after_update` says when `as_update`, or always selects it otherwise.
 pub fn install_tag(tag: &str, as_update: bool, progress: impl Fn(f32)) -> Result<String, String> {
+    if tag != "latest" && !is_supported_version(tag) {
+        return Err(format!(
+            "{tag} sürümü artık desteklenmemektedir (Minimum desteklenen sürüm: {MINIMUM_SUPPORTED_VERSION}). Lütfen güncel bir sürüm yükleyin."
+        ));
+    }
     let releases = releases()?;
     let release = if tag == "latest" {
         releases
@@ -4399,6 +4428,24 @@ pub fn {f}("
         assert!(
             compare_versions("nightly-2026-10-28-9b772b2", "nightly-2026-10-27-7954902").is_gt()
         );
+    }
+
+    #[test]
+    fn minimum_supported_version_policy_enforcement() {
+        assert_eq!(MINIMUM_SUPPORTED_VERSION, "v2026.10.13");
+        // Versions older than v2026.10.13 must be rejected
+        assert!(!is_supported_version("v2026.9.30"));
+        assert!(!is_supported_version("v2026.10.12"));
+        // Baseline version must be accepted
+        assert!(is_supported_version("v2026.10.13"));
+        // Newer versions must be accepted
+        assert!(is_supported_version("v2026.10.14"));
+        assert!(is_supported_version("v2026.10.21"));
+        assert!(is_supported_version("v0.2.0"));
+        assert!(is_supported_version("v0.2.13"));
+        assert!(is_supported_version("v0.3.0"));
+        assert!(is_supported_version("nightly-2026-10-28"));
+        assert!(is_supported_version("latest"));
     }
 
     /// Players move to the Nightly at their next check: whoever was on the newest release, on a
