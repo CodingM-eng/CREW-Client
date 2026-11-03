@@ -277,6 +277,8 @@ struct Launcher {
     /// The game is waiting for its session (a token renewal), or a Java instance for its files
     /// and Java (`start_java`), before it starts.
     starting_client: Option<String>,
+    /// The current stage of client initialization (e.g. LWJGL, OpenAL, GUI atlas).
+    launch_stage: Option<String>,
     /// Play was pressed on a version not prepared yet: it starts once this preparation ends well.
     play_when_prepared: Option<String>,
     /// Join a friend: the code typed on the Play page, and the one the game
@@ -537,6 +539,7 @@ impl Launcher {
             dev_clicks: 0,
             dev_options: false,
             starting_client: None,
+            launch_stage: None,
             play_when_prepared: None,
             friend_code: line_edit::LineEdit::new(String::new(), 256, 32),
             friend_focused: false,
@@ -863,6 +866,17 @@ impl Launcher {
                 changed = true;
             }
         }
+        if let Some(pressed) = self.play_pressed {
+            if self.starting_client.is_some() && pressed.elapsed() > Duration::from_secs(180) {
+                self.starting_client = None;
+                self.launch_stage = None;
+                if let Some(client) = self.client.take() {
+                    client.kill();
+                }
+                self.client_error = Some("Oyun 180 saniye içinde başlatılamadı ve zaman aşımına uğradı. Lütfen günlükleri inceleyin veya tekrar deneyin.".to_string());
+                changed = true;
+            }
+        }
         while let Ok(msg) = self.rx.try_recv() {
             changed = true;
             match msg {
@@ -1139,6 +1153,16 @@ impl Launcher {
                 // Old versions log their session; it never reaches the window.
                 Msg::Line(_, line) if line.contains("Session ID is") => {}
                 Msg::Line(job, line) => {
+                    if job == Job::Client {
+                        if line.contains("LWJGL version") {
+                            self.launch_stage = Some("Grafik Motoru (LWJGL)...".to_string());
+                        } else if line.contains("OpenAL") || line.contains("Sound engine started") {
+                            self.launch_stage = Some("Ses Motoru (OpenAL)...".to_string());
+                        } else if line.contains("atlas/gui.png-atlas") {
+                            self.launch_stage = Some("Ana Menü Hazır".to_string());
+                            self.starting_client = None;
+                        }
+                    }
                     if job == Job::Client && line.starts_with(perf::GAME_FIRST_FRAME) {
                         if let Some(pressed) = self.play_pressed.take() {
                             self.perf
@@ -1183,6 +1207,8 @@ impl Launcher {
                         }
                         Job::Client => {
                             self.client = None;
+                            self.starting_client = None;
+                            self.launch_stage = None;
                             self.come_back(cx);
                             // The game saved: last played, sizes and pictures changed.
                             self.worlds.stale();
@@ -1446,6 +1472,7 @@ impl Launcher {
         self.client_started =
             Some(std::time::SystemTime::now() - std::time::Duration::from_secs(2));
         self.starting_client = Some(instance.id.clone());
+        self.launch_stage = Some("Başlatılıyor...".to_string());
         let tx = self.tx.clone();
         std::thread::spawn(move || {
             let log = |line: String| {
@@ -1496,6 +1523,7 @@ impl Launcher {
         // round trip when the token needs renewing) come first; `drain` starts the game when the
         // session arrives.
         self.starting_client = Some(tag.clone());
+        self.launch_stage = Some("Başlatılıyor...".to_string());
         self.play_pressed = Some(Instant::now());
         let tx = self.tx.clone();
         let offline_without_owner = self.settings.dev_offline;

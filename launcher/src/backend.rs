@@ -1630,24 +1630,30 @@ fn download_for(
     log: &dyn Fn(String),
 ) -> Result<(), String> {
     let v = &pins.version;
-    match pass {
+    let is_offline_demo = pins.client_sha1.is_empty()
+        && (Settings::load().dev_offline || account::Accounts::load().name_arg().is_some());
+    let (should_download, who_name) = match pass {
         Ok(account::Launch {
-            owner: Some((owner, _)),
+            owner: Some((ref owner, _)),
             ..
-        }) => {
-            let name = owner.name;
-            log(format!(
-                "{name} owns Minecraft: downloading {v} from Mojang"
-            ));
-            let os = match sources::Os::current() {
-                sources::Os::Linux => "linux",
-                sources::Os::MacOs => "osx",
-                sources::Os::Windows => "windows",
-            };
-            mojang::download(pins, dir, os, 8, fetch, &mojang::CANCEL, log).map_err(|e| {
-                format!("\n  • CREW Client tried to download {v} from Mojang for {name}, but: {e}")
-            })
-        }
+        }) => (true, owner.name.clone()),
+        _ if is_offline_demo => (true, "Yerel Demo Profili".to_string()),
+        _ => (false, String::new()),
+    };
+
+    if should_download {
+        log(format!("{who_name}: downloading {v} from Mojang"));
+        let os = match sources::Os::current() {
+            sources::Os::Linux => "linux",
+            sources::Os::MacOs => "osx",
+            sources::Os::Windows => "windows",
+        };
+        return mojang::download(pins, dir, os, 8, fetch, &mojang::CANCEL, log).map_err(|e| {
+            format!("\n  • CREW Client tried to download {v} from Mojang for {who_name}, but: {e}")
+        });
+    }
+
+    match pass {
         // An owner by its last answer, who can't be asked now.
         Ok(pass) => Err(format!(
             "\n  • Downloading {v} from Mojang needs your Microsoft account, which could not be \

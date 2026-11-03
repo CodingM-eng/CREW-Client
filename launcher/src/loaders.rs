@@ -224,7 +224,7 @@ pub fn install(
         let file = dir.join("libraries").join(crate::mojang::relative(&path)?);
         let matches_existing = sha1
             .as_ref()
-            .map_or(false, |h| sha1_file(&file).as_ref() == Some(h));
+            .is_some_and(|h| sha1_file(&file).as_ref() == Some(h));
         if !matches_existing || !file.is_file() {
             let body = if let Some(sha1_val) = &sha1 {
                 fetch_checked(fetch, &url, sha1_val).map_err(|e| format!("{url} {e}"))?

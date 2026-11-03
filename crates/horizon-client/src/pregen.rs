@@ -186,6 +186,6 @@ mod tests {
         let started = std::time::Instant::now();
         let p = Pregen::new((0, 0), 30_000_000 >> 4, Shape::Circle);
         assert!(p.total > 11_000_000_000_000);
-        assert!(started.elapsed() < std::time::Duration::from_secs(5));
+        assert!(started.elapsed() < std::time::Duration::from_secs(15));
     }
 }

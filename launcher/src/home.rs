@@ -227,6 +227,13 @@ impl Launcher {
                         })
                 }));
         }
+        let label_text = if let Some(stage) = &self.launch_stage {
+            stage.clone()
+        } else if running {
+            tr("Running").to_string()
+        } else {
+            tr("Play").to_string()
+        };
         let mut play = action("play", Action::Main, &t)
             .min_w(px(180.))
             .child(
@@ -234,9 +241,7 @@ impl Launcher {
                     .relative()
                     .child(blocks::icon("play", 20., c(t.night.on_accent))),
             )
-            .child(label(
-                tr(if running { "Running" } else { "Play" }).to_string(),
-            ));
+            .child(label(label_text));
         match play_press(ready, self.owner, self.preparing || running) {
             PlayPress::Nothing => play = disabled(play),
             PlayPress::Play => {
@@ -262,6 +267,21 @@ impl Launcher {
             .items_center()
             .gap(px(10.))
             .child(play)
+            .children(
+                (self.starting_client.is_some() || self.client.is_some()).then(|| {
+                    action("client-cancel", Action::Quiet, &t)
+                        .child(label(tr("Cancel").to_string()))
+                        .on_click(cx.listener(|this, _: &ClickEvent, _, cx| {
+                            horizon_launcher::mojang::CANCEL.store(true, Ordering::Relaxed);
+                            if let Some(client) = this.client.take() {
+                                client.kill();
+                            }
+                            this.starting_client = None;
+                            this.launch_stage = None;
+                            cx.notify();
+                        }))
+                }),
+            )
             // Horizon's versions don't apply to a Java instance.
             .children((!java).then(|| self.picker(cx)))
             .child(
