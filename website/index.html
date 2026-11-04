@@ -99,6 +99,9 @@
 
 <body class="min-h-full flex flex-col bg-[#0C0810] text-white/80 selection:bg-[#FF2B4F]/30 selection:text-white">
 
+  <!-- SKIP TO CONTENT -->
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#FF2B4F] focus:text-white focus:rounded-lg focus:shadow-lg focus:font-semibold">İçeriğe Atla</a>
+
   <!-- ========================================================================= -->
   <!-- HEADER & NAVIGATION -->
   <!-- ========================================================================= -->
@@ -186,7 +189,7 @@
   <!-- ========================================================================= -->
   <!-- MAIN CONTENT -->
   <!-- ========================================================================= -->
-  <main class="flex-1">
+  <main id="main-content" class="flex-1">
 
     <!-- ======================================================================= -->
     <!-- SECTION 0: HERO SECTION -->
@@ -1125,7 +1128,7 @@
   </footer>
 
   <!-- Toast Notification Container -->
-  <div id="crew-toast">
+  <div id="crew-toast" role="status" aria-live="polite">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-5 text-[#22c55e]">
       <path d="M20 6 9 17l-5-5"></path>
     </svg>

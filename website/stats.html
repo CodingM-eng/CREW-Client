@@ -434,14 +434,22 @@
             if (elTableSetupTag) elTableSetupTag.textContent = latestTag;
             if (elTablePortableTag) elTablePortableTag.textContent = latestTag;
           } else {
-            // Fallback to baseline release numbers if rate limited
-            if (elTotalDownloads && elTotalDownloads.textContent === '—') elTotalDownloads.textContent = '1,420+';
-            if (elSetupDownloads && elSetupDownloads.textContent === '—') elSetupDownloads.textContent = '980+';
-            if (elPortableDownloads && elPortableDownloads.textContent === '—') elPortableDownloads.textContent = '440+';
+            // API sınırına ulaşıldıysa veya yanıt alınamadıysa dürüstçe bildir
+            try {
+              const localRes = await fetch('/api/releases/latest.json');
+              if (localRes.ok) {
+                const localData = await localRes.json();
+                if (elTableSetupTag) elTableSetupTag.textContent = localData.version || 'v2.1.0';
+                if (elTablePortableTag) elTablePortableTag.textContent = localData.version || 'v2.1.0';
+              }
+            } catch (_) {}
+            if (elTotalDownloads && elTotalDownloads.textContent === '—') elTotalDownloads.textContent = 'API Limiti (Yenileyin)';
+            if (elSetupDownloads && elSetupDownloads.textContent === '—') elSetupDownloads.textContent = 'API Limiti (Yenileyin)';
+            if (elPortableDownloads && elPortableDownloads.textContent === '—') elPortableDownloads.textContent = 'API Limiti (Yenileyin)';
           }
         } catch (err) {
           console.warn('GitHub API erişim uyarısı:', err);
-          if (elTotalDownloads && elTotalDownloads.textContent === '—') elTotalDownloads.textContent = '1,420+';
+          if (elTotalDownloads && elTotalDownloads.textContent === '—') elTotalDownloads.textContent = 'API Limiti (Yenileyin)';
         }
 
         // 2. Fetch Minecraft Server Status
