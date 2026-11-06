@@ -153,9 +153,9 @@ impl Launcher {
                             ),
                     ),
             )
-            .child(bullet("Diğer başlatıcılar gibi, CREW Client da Minecraft: Java Edition sahibi bir Microsoft hesabı gerektirir."))
-            .child(bullet("Minecraft kurulumu gerekmez: CREW Client hesabınız için dosyaları doğrudan Mojang'dan indirir."))
-            .child(bullet("Dünyalarınız, çevrimdışı adlarınız ve ayarlarınız olduğu gibi korunur."))
+            .child(bullet(tr("Horizon needs a Microsoft account that owns Minecraft: Java Edition, like other launchers.")))
+            .child(bullet(tr("No Minecraft install needed: Horizon downloads it from Mojang for your account.")))
+            .child(bullet(tr("Your worlds, offline names and settings stay where they are.")))
             .child(bullet("oyna.crewnetwork.space ve tüm çok oyunculu sunuculara tam erişim."))
             .child(bullet("OAuth 2.0 RFC 8628 Device Code güvencesi (Şifreniz asla kaydedilmez)."));
 

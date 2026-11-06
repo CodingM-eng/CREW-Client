@@ -306,7 +306,7 @@
   "Close launch": "Başlatmayı kapat",
   "Doesn't run": "Çalışmıyor",
   "Install Horizon first.": "Önce CREW Client bileşenlerini yükleyin.",
-  "Horizon's violet by default. Every colour keeps text as easy to read.": "Varsayılan olarak CREW Client moru. Her renk, metnin kolayca okunabilmesini sağlar.",
+  "Horizon's violet by default. Every colour keeps text as easy to read.": "Varsayılan olarak CREW kırmızısı (#FF2B4F). Her renk metnin rahat okunmasını sağlar.",
   "Local file · {file}": "Yerel dosya · {file}",
   "Horizon's landscape. Pick a PNG, JPEG or WebP picture of your own.": "CREW Client'ın manzarası. Kendi PNG, JPEG veya WebP resminizi seçin.",
   "Not needed": "Gerek yok",

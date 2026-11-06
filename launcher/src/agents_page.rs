@@ -32,11 +32,11 @@ impl Launcher {
             tr("No AI"),
             Some(
                 div()
-                    .child(if on {
-                        "Açık: Tüm yapay zeka özellikleri gizlenir ve kapatılır. Oyun hiçbir kontrol soketi açmaz, crew-ctl ve MCP sunucuları reddeder."
+                    .child(tr(if on {
+                        "On: every AI feature is hidden and off. The game opens no control socket, and horizon-ctl and the MCP servers refuse."
                     } else {
-                        "Tüm yapay zeka özelliklerini gizler ve kapatır: başlatıcı ve oyunun ajan kontrolü, crew-ctl ve MCP sunucuları."
-                    })
+                        "Hides and turns off every AI feature: agent control of the launcher and the game, horizon-ctl and the MCP servers."
+                    }))
                     .into_any_element(),
             ),
             Some(toggle.into_any_element()),
@@ -106,9 +106,9 @@ impl Launcher {
                     .text_color(t.ink)
                     .child(tr("Connect an AI agent")),
             )
-            .child(div().max_w(px(640.)).text_color(t.muted).child(
-                "Kendi yapay zeka ajanınız (Claude Code, Codex, Cursor veya herhangi bir MCP istemcisi) başlatıcıyı ve başlattığı oyunu terminalle aynı komutlarla yönetebilir. Bilgisayarınızda yerel olarak çalışır ve CREW Client ile iletişim kurar; bir şey silmeden önce onay ister.",
-            ))
+            .child(div().max_w(px(640.)).text_color(t.muted).child(tr(
+                "Your own agent (Claude Code, Codex, Cursor or any MCP client) can drive the launcher and the game it starts, with the same commands as the terminal. It runs on your computer and talks to Horizon there; it asks before deleting anything.",
+            )))
             .child(picker);
         if let Some((program, args)) = client.add.clone() {
             let line = client.add_line().unwrap_or_default();
@@ -178,7 +178,7 @@ impl Launcher {
                         let exe = backend::update_target();
                         let task = cx.background_executor().spawn(async move {
                             match agents::self_test(&exe) {
-                                Ok(n) => (true, trf("MCP sunucusu {count} araçla yanıt verdi. Şimdi ajanınıza şunu sorun: \"CREW Client'a merhaba de\".", &[("count", &n.to_string())])),
+                                Ok(n) => (true, trf("The MCP server answered with {count} tools. Now ask your agent: \"Say hello from Horizon\".", &[("count", &n.to_string())])),
                                 Err(e) => (false, trf("The MCP server did not answer: {error}", &[("error", &e)])),
                             }
                         });
@@ -225,7 +225,7 @@ fn run_add(program: &str, args: &[String]) -> (bool, String) {
         Ok(out) if out.status.success() => (
             true,
             trf(
-                "Eklendi. Açıksa {program} uygulamasını yeniden başlatın, ardından şunu sorun: \"CREW Client'a merhaba de\".",
+                "Added. Restart {program} if it is open, then ask it: \"Say hello from Horizon\".",
                 &[("program", program)],
             ),
         ),

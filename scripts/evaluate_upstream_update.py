@@ -20,7 +20,7 @@ import os
 import sys
 import urllib.request
 import urllib.error
-from datetime import datetime
+from datetime import datetime, timezone
 
 # UTF-8 terminal encoding on Windows
 if sys.stdout.encoding != 'utf-8':
@@ -141,7 +141,7 @@ def generate_manifest(tag: str, crew_version: str, changelog_tr: list, dry_run: 
         "version": crew_version,
         "engine_upstream_tag": tag,
         "minimum_supported_engine_version": MINIMUM_SUPPORTED_VERSION,
-        "release_date": datetime.utcnow().strftime("%Y-%m-%d"),
+        "release_date": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         "channel": "stable",
         "downloads": {
             "windows_installer": {

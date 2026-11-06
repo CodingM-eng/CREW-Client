@@ -321,6 +321,60 @@ pub fn compare_versions(a: &str, b: &str) -> std::cmp::Ordering {
 /// Minimum supported engine release tag for new installs and updates (v2026.10.13: First production wgpu Vulkan/DX12 protocol 777 release).
 pub const MINIMUM_SUPPORTED_VERSION: &str = "v2026.10.13";
 
+/// Minimum supported Minecraft Java Edition version for NEW instance installations.
+/// Prevents new installations of outdated versions while leaving existing on-disk instances functional.
+pub const MINIMUM_SUPPORTED_MC_VERSION: &str = "1.8.9";
+
+/// Parses a Minecraft version string (e.g. "1.21.4" or "1.8.9") into numeric (major, minor, patch).
+pub fn parse_mc_semver(v: &str) -> Option<(u32, u32, u32)> {
+    let parts: Vec<&str> = v.split('.').collect();
+    if parts.len() >= 2 && parts[0] == "1" {
+        let major: u32 = parts[0].parse().ok()?;
+        let minor: u32 = parts[1].parse().ok()?;
+        let patch: u32 = if parts.len() > 2 {
+            parts[2]
+                .chars()
+                .take_while(|c| c.is_ascii_digit())
+                .collect::<String>()
+                .parse()
+                .unwrap_or(0)
+        } else {
+            0
+        };
+        Some((major, minor, patch))
+    } else {
+        None
+    }
+}
+
+/// Checks if a Minecraft Java version meets the policy for new instance installations.
+pub fn is_supported_mc_version(minecraft: &str) -> bool {
+    check_mc_version_policy(minecraft).is_ok()
+}
+
+/// Validates that a Minecraft version is supported for new installations.
+/// Returns a clear Turkish explanation if the version is blocked.
+pub fn check_mc_version_policy(minecraft: &str) -> Result<(), String> {
+    if let Some((maj, min, patch)) = parse_mc_semver(minecraft) {
+        let (min_maj, min_min, min_patch) =
+            parse_mc_semver(MINIMUM_SUPPORTED_MC_VERSION).unwrap_or((1, 8, 9));
+        if (maj, min, patch) < (min_maj, min_min, min_patch) {
+            return Err(format!(
+                "'{minecraft}' sürümü artık yeni kurulumlar için desteklenmemektedir (Asgari desteklenen sürüm: {MINIMUM_SUPPORTED_MC_VERSION}). Eski mevcut kurulumlarınız çalışmaya devam eder, ancak yeni kurulum için lütfen güncel bir kararlı sürüm seçin."
+            ));
+        }
+    } else if minecraft.starts_with('b')
+        || minecraft.starts_with('a')
+        || minecraft.contains("infdev")
+        || minecraft.contains("classic")
+    {
+        return Err(format!(
+            "'{minecraft}' eski Alpha/Beta sürümü yeni kurulumlar için desteklenmemektedir. Lütfen modern bir Minecraft sürümü ({MINIMUM_SUPPORTED_MC_VERSION}+) seçin."
+        ));
+    }
+    Ok(())
+}
+
 /// Checks if a version or tag meets the minimum supported version policy.
 pub fn is_supported_version(tag: &str) -> bool {
     if tag == "latest" {
@@ -4446,6 +4500,22 @@ pub fn {f}("
         assert!(is_supported_version("v0.3.0"));
         assert!(is_supported_version("nightly-2026-10-28"));
         assert!(is_supported_version("latest"));
+    }
+
+    #[test]
+    fn mc_version_policy_enforcement() {
+        assert_eq!(MINIMUM_SUPPORTED_MC_VERSION, "1.8.9");
+        assert!(is_supported_mc_version("1.21.4"));
+        assert!(is_supported_mc_version("1.21.11"));
+        assert!(is_supported_mc_version("1.20.1"));
+        assert!(is_supported_mc_version("1.16.5"));
+        assert!(is_supported_mc_version("1.8.9"));
+        assert!(!is_supported_mc_version("1.7.10"));
+        assert!(!is_supported_mc_version("1.6.4"));
+        assert!(!is_supported_mc_version("1.5.2"));
+        assert!(!is_supported_mc_version("b1.7.3"));
+        assert!(!is_supported_mc_version("a1.1.2"));
+        assert!(check_mc_version_policy("1.7.10").unwrap_err().contains("desteklenmemektedir"));
     }
 
     /// Players move to the Nightly at their next check: whoever was on the newest release, on a

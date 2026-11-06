@@ -203,7 +203,14 @@ impl Launcher {
                 InstanceKind::Default | InstanceKind::Own => (
                     self.page == Page::Play && selected.as_ref() == Some(&i.id),
                     match (&i.java, &tag, &i.version) {
-                        (Some(java), _, _) => java_line(java),
+                        (Some(java), _, _) => {
+                            let line = java_line(java);
+                            if !backend::is_supported_mc_version(&java.minecraft) {
+                                format!("{line} · Eski Sürüm (Desteklenmiyor)")
+                            } else {
+                                line
+                            }
+                        }
                         (None, None, Some(own)) => {
                             trf("{version} is not installed", &[("version", own)])
                         }
@@ -215,7 +222,7 @@ impl Launcher {
                         (None, Some(tag), _) if self.native_build_of(tag).is_some() => {
                             let build = self.native_build_of(tag).unwrap_or_default();
                             trf(
-                                "Yerel Derleme · {version}",
+                                "Native build · {version}",
                                 &[("version", &build.horizon_short())],
                             )
                         }
@@ -231,7 +238,7 @@ impl Launcher {
                         summary.map_or_else(|| tr("Modpack").into(), |p| p.summary()),
                     )
                 }
-                InstanceKind::Pack => (false, "CREW Paket Kayıt Defterinden".into()),
+                InstanceKind::Pack => (false, tr("From Horizon's registry").into()),
             };
             // Java instances have nothing of Horizon's to prepare: no state square.
             let is_unsupported = tag.as_deref().is_some_and(|t| !backend::is_supported_version(t));

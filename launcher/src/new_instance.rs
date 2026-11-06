@@ -198,11 +198,20 @@ impl Launcher {
                     .map(|v| {
                         let selected = chosen.as_deref() == Some(v.id.as_str());
                         let id = v.id.clone();
+                        let is_latest = v.id == versions.latest_release;
+                        let is_supported = backend::is_supported_mc_version(&v.id);
                         let kind = match v.kind {
                             VersionKind::Release => "Release",
                             VersionKind::Snapshot => "Snapshot",
                             VersionKind::OldBeta => "Beta",
                             VersionKind::OldAlpha => "Alpha",
+                        };
+                        let meta_label = if is_latest {
+                            format!("{} · En Son Kararlı ⭐ · {}", tr(kind), v.released.get(..10).unwrap_or(""))
+                        } else if !is_supported {
+                            format!("{} · Desteklenmiyor (Eski) · {}", tr(kind), v.released.get(..10).unwrap_or(""))
+                        } else {
+                            format!("{} · {}", tr(kind), v.released.get(..10).unwrap_or(""))
                         };
                         shell::row(format!("mc-{}", v.id), selected, &t)
                             .flex_none()
@@ -215,8 +224,8 @@ impl Launcher {
                                     .font_weight(FontWeight::SEMIBOLD)
                                     .child(v.id.clone()),
                             )
-                            .child(shell::text(night::CAPTION, c(n.muted)).relative().child(
-                                format!("{} · {}", tr(kind), v.released.get(..10).unwrap_or("")),
+                            .child(shell::text(night::CAPTION, if is_supported { c(n.muted) } else { c(n.danger) }).relative().child(
+                                meta_label,
                             ))
                             .on_click(cx.listener(move |this, _: &ClickEvent, _, cx| {
                                 this.change(|j| j.version = Some(id.clone()));
@@ -332,6 +341,7 @@ pub(super) fn create_java(
     name: &str,
     minecraft: &str,
 ) -> Result<instances::Instance, String> {
+    backend::check_mc_version_policy(minecraft)?;
     let loader = (choice.kind == NewKind::Modded)
         .then(|| loaders::choose(choice.loader.id(), minecraft, None))
         .transpose()?;
@@ -347,6 +357,20 @@ pub(super) fn create_java(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn cannot_create_java_instance_with_outdated_version() {
+        let choice = JavaChoice {
+            kind: NewKind::Vanilla,
+            ..Default::default()
+        };
+        // 1.7.10 must be blocked for NEW instances
+        let err = create_java(&choice, "Old Instance", "1.7.10").unwrap_err();
+        assert!(err.contains("desteklenmemektedir"));
+        // Old Beta must be blocked for NEW instances
+        let err2 = create_java(&choice, "Old Beta", "b1.7.3").unwrap_err();
+        assert!(err2.contains("desteklenmemektedir"));
+    }
 
     #[test]
     fn a_new_java_instance_is_named_after_what_it_plays() {

@@ -2895,7 +2895,7 @@ impl Launcher {
                 &[("version", &version)],
             ),
             Some(true) => trf(
-                "Hazırlanmadı. CREW Client hesabınız için Minecraft {version} sürümünü Mojang'dan indirebilir veya kendi kurulumunuzu kullanabilir.",
+                "Not prepared. Horizon can download Minecraft {version} from Mojang for your account, or use your own install.",
                 &[("version", &version)],
             ),
             Some(false) => trf(
@@ -3785,9 +3785,9 @@ impl Launcher {
             .mt(px(8.))
             .p(px(12.))
             .bg(t.well)
-            .child(div().text_color(t.danger).child("Bu modlar farklı CREW Client sürümleri için tasarlanmıştır".to_string()))
+            .child(div().text_color(t.danger).child(tr("These mods were made for different Horizon versions").to_string()))
             .child(list.to_owned())
-            .child("Birlikte çalışabilirler. Derleme başarısız olursa aynı sürüm için hazırlanan modları yükleyin.".to_string())
+            .child(tr("They often still work together. If the build fails, install versions made for the same Nightly.").to_string())
             .child(
                 div()
                     .flex()
@@ -4114,9 +4114,9 @@ impl Launcher {
                 };
                 div().text_color(t.danger).child(msg)
             }
-            None if self.accounts.accounts.is_empty() => div().child(
-                "CREW Client, diğer başlatıcılar gibi Minecraft: Java Edition sahibi bir Microsoft hesabı gerektirir. Ayrıca çevrimiçi sunucularda adınız ve dış görünümünüzle oynamanızı sağlar.",
-            ),
+            None if self.accounts.accounts.is_empty() => div().child(tr(
+                "Horizon needs a Microsoft account that owns Minecraft: Java Edition, like other launchers. It also plays online servers with your name and skin.",
+            )),
             None => div().child(tr("Add another account.")),
         };
         let detail = if let Some(target) = &self.sign_in_target {
@@ -4615,9 +4615,9 @@ impl Launcher {
                                 .text_color(t.ink)
                                 .child(tr("Support the work below")),
                         )
-                        .child(text(theme::UI).text_color(t.muted).child(
-                            "CREW Client açık kaynaklı olarak geliştirilmektedir. Destekçiler sonraki sürümleri finanse eder.",
-                        )),
+                        .child(text(theme::UI).text_color(t.muted).child(tr(
+                            "Horizon is built in the open. Sponsors fund the next release.",
+                        ))),
                 )
                 .child(
                     button("sponsor", "Sponsor on GitHub", Kind::Secondary, &t)

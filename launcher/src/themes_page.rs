@@ -71,9 +71,9 @@ impl Launcher {
             tr("Accent colour"),
             Some(
                 div()
-                    .child(
-                        "Varsayılan olarak CREW kırmızısı (#FF2B4F). Her renk metnin rahat okunmasını sağlar.",
-                    )
+                    .child(tr(
+                        "Horizon's violet by default. Every colour keeps text as easy to read.",
+                    ))
                     .into_any_element(),
             ),
             Some(
@@ -251,7 +251,7 @@ impl Launcher {
         let said = if custom {
             tr("Your picture, behind Home, cropped to fill it.")
         } else {
-            "CREW Client arka planı. Kendi PNG, JPEG veya WebP resminizi seçin."
+            tr("Horizon's landscape. Pick a PNG, JPEG or WebP picture of your own.")
         };
         let detail = div().flex().flex_col().child(said.to_string()).children(
             self.background_error
