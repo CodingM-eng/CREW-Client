@@ -51,6 +51,92 @@
     .bg-accent { background-color: #FF2B4F !important; }
     .border-accent { border-color: #FF2B4F !important; }
     .focus-ring-accent:focus-visible { outline: 2px solid #FF2B4F; outline-offset: 2px; }
+
+    /* ========================================================================= */
+    /* PREMIUM LIGHT THEME SYSTEM */
+    /* ========================================================================= */
+    html[data-theme="light"] {
+      --bg: #F8F9FA;
+      --surface: #FFFFFF;
+      --text-main: #111827;
+      --text-sub: #4B5563;
+      --border-color: rgba(0, 0, 0, 0.08);
+    }
+    html[data-theme="light"] body {
+      background-color: #F8F9FA !important;
+      color: #374151 !important;
+    }
+    html[data-theme="light"] header {
+      background-color: rgba(255, 255, 255, 0.92) !important;
+      border-color: rgba(0, 0, 0, 0.08) !important;
+      box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.05);
+    }
+    html[data-theme="light"] header a.text-white,
+    html[data-theme="light"] header span.text-white,
+    html[data-theme="light"] .font-display.text-white {
+      color: #111827 !important;
+    }
+    html[data-theme="light"] header nav a {
+      color: #4B5563 !important;
+    }
+    html[data-theme="light"] header nav a:hover {
+      color: #111827 !important;
+    }
+    html[data-theme="light"] #mobile-menu {
+      background-color: rgba(255, 255, 255, 0.98) !important;
+      border-color: rgba(0, 0, 0, 0.08) !important;
+    }
+    html[data-theme="light"] #mobile-menu a {
+      color: #374151 !important;
+    }
+    html[data-theme="light"] .hero-bg-gradient {
+      background: linear-gradient(to bottom, #FFFFFF 0%, #FFF2F4 38%, #FFE4E8 62%, #FFCCD5 80%, #F8F9FA 92%) !important;
+    }
+    html[data-theme="light"] h1.text-white,
+    html[data-theme="light"] h2.text-white,
+    html[data-theme="light"] h3.text-white {
+      color: #111827 !important;
+    }
+    html[data-theme="light"] .text-white\/70,
+    html[data-theme="light"] .text-white\/80 {
+      color: #4B5563 !important;
+    }
+    html[data-theme="light"] .text-white\/60,
+    html[data-theme="light"] .text-white\/50,
+    html[data-theme="light"] .text-white\/40 {
+      color: #6B7280 !important;
+    }
+    html[data-theme="light"] .bg-\[\#1A0D15\]\/80,
+    html[data-theme="light"] .bg-\[\#1A0D15\],
+    html[data-theme="light"] .bg-\[\#0e0914\],
+    html[data-theme="light"] .card-theme-bg {
+      background-color: #FFFFFF !important;
+      border-color: rgba(0, 0, 0, 0.08) !important;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+    }
+    html[data-theme="light"] .bg-white\/\[0\.04\],
+    html[data-theme="light"] .bg-white\/\[0\.06\],
+    html[data-theme="light"] .bg-white\/5,
+    html[data-theme="light"] .bg-white\/10 {
+      background-color: rgba(0, 0, 0, 0.03) !important;
+      border-color: rgba(0, 0, 0, 0.08) !important;
+    }
+    html[data-theme="light"] .border-white\/10,
+    html[data-theme="light"] .border-white\/5,
+    html[data-theme="light"] .border-white\/15,
+    html[data-theme="light"] .border-white\/20 {
+      border-color: rgba(0, 0, 0, 0.08) !important;
+    }
+    html[data-theme="light"] .bg-black\/30,
+    html[data-theme="light"] .bg-black\/40 {
+      background-color: rgba(0, 0, 0, 0.04) !important;
+      border-color: rgba(0, 0, 0, 0.08) !important;
+      color: #111827 !important;
+    }
+    html[data-theme="light"] footer {
+      background-color: #FFFFFF !important;
+      border-color: rgba(0, 0, 0, 0.08) !important;
+    }
     
     /* Toast notification */
     #crew-toast {
@@ -119,10 +205,11 @@
       </a>
 
       <!-- Desktop Nav -->
-      <nav aria-label="Ana Menü" class="hidden items-center gap-7 text-sm text-white/65 lg:flex">
-        <a class="inline-flex items-center gap-1 transition-colors hover:text-white" href="#ozellikler">Özellikler</a>
-        <a class="inline-flex items-center gap-1 transition-colors hover:text-white" href="#performans">Performans</a>
+      <nav aria-label="Ana Menü" class="hidden items-center gap-6 text-sm text-white/65 lg:flex">
+        <a class="inline-flex items-center gap-1 transition-colors hover:text-white" href="#ozellikler">İstemci</a>
+        <a class="inline-flex items-center gap-1 transition-colors hover:text-white" href="#ekosistem">Ekosistem</a>
         <a class="inline-flex items-center gap-1 transition-colors hover:text-white" href="#sunucu">Sunucu</a>
+        <a class="inline-flex items-center gap-1 transition-colors hover:text-white" href="#performans">Performans</a>
         <a class="inline-flex items-center gap-1 transition-colors hover:text-white" href="#indir">İndir</a>
         <a class="inline-flex items-center gap-1 transition-colors hover:text-white" href="#sss">SSS</a>
         <a class="inline-flex items-center gap-1 transition-colors hover:text-white" href="benchmarks.html">Testler</a>
@@ -141,6 +228,20 @@
           </svg>
           <span>GitHub</span>
         </a>
+
+        <!-- Theme Toggle Button (Dark / Light) -->
+        <button type="button" id="theme-toggle-btn" aria-label="Temayı değiştir (Koyu / Açık)" title="Temayı değiştir"
+                class="inline-flex size-9 items-center justify-center rounded-lg bg-white/[0.06] text-white/80 transition-colors hover:bg-white/10 hover:text-white border border-white/10">
+          <!-- Sun icon (for dark mode) -->
+          <svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-4">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+          </svg>
+          <!-- Moon icon (for light mode) -->
+          <svg id="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-4 hidden">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg>
+        </button>
 
         <!-- Direct Download CTA -->
         <a href="#indir" class="inline-flex h-9 items-center justify-center rounded-lg bg-[#FF2B4F] px-4 text-sm font-semibold text-white shadow-sm shadow-[#FF2B4F]/30 transition hover:bg-[#FF2B4F]/90">
@@ -163,9 +264,10 @@
     <!-- Mobile Slide-down Drawer -->
     <div id="mobile-menu" class="hidden lg:hidden border-b border-white/10 bg-[#0C0810]/95 backdrop-blur-xl px-6 py-6 transition-all duration-300">
       <nav class="flex flex-col gap-4 text-base font-medium text-white/80">
-        <a class="mobile-nav-link py-1 hover:text-white" href="#ozellikler">Özellikler</a>
-        <a class="mobile-nav-link py-1 hover:text-white" href="#performans">Performans</a>
-        <a class="mobile-nav-link py-1 hover:text-white" href="#sunucu">Sunucu</a>
+        <a class="mobile-nav-link py-1 hover:text-white" href="#ozellikler">İstemci Özellikleri</a>
+        <a class="mobile-nav-link py-1 hover:text-white" href="#ekosistem">Ekosistem Sinerjisi</a>
+        <a class="mobile-nav-link py-1 hover:text-white" href="#sunucu">CREW Network Sunucusu</a>
+        <a class="mobile-nav-link py-1 hover:text-white" href="#performans">Performans & Galeri</a>
         <a class="mobile-nav-link py-1 hover:text-white" href="#indir">İndir</a>
         <a class="mobile-nav-link py-1 hover:text-white" href="#sss">Sıkça Sorulan Sorular</a>
         <a class="mobile-nav-link py-1 hover:text-white" href="benchmarks.html">Performans Testleri</a>
@@ -206,25 +308,27 @@
         
         <!-- Left Hero Column -->
         <div class="max-w-2xl">
-          <!-- Platform Badge -->
-          <p class="inline-flex items-center gap-2 rounded-full bg-white/[0.06] px-3.5 py-1.5 text-xs sm:text-sm font-medium text-white/80 border border-white/10 backdrop-blur-md">
+          <!-- Platform & Ecosystem Badge -->
+          <div class="inline-flex flex-wrap items-center gap-2 rounded-full bg-white/[0.06] px-3.5 py-1.5 text-xs sm:text-sm font-medium text-white/80 border border-white/10 backdrop-blur-md">
             <span class="size-2 rounded-full bg-[#22c55e] animate-pulse"></span>
-            <span>CREW Client v2.1.0</span>
+            <span class="font-semibold text-white">CREW EKOSİSTEMİ</span>
             <span class="text-white/30">·</span>
-            <span class="text-white/60">Yerel Rust Mimarisi</span>
-          </p>
+            <span class="text-[#FF2B4F]">İstemci & Sunucu Bir Arada</span>
+            <span class="text-white/30">·</span>
+            <span class="text-white/60">v2.1.0</span>
+          </div>
 
           <!-- Main Heading -->
           <h1 class="mt-6 font-display text-[clamp(2.5rem,5.5vw,4.5rem)] leading-[1.05] font-semibold tracking-[-0.03em] text-white">
-            En sevdiğiniz Minecraft deneyimi,
-            <span class="text-[#FF2B4F] block pb-1">sıfırdan yüksek performansla.</span>
+            Oyununuzu Hızlandırın,
+            <span class="text-[#FF2B4F] block pb-1">Dünyanıza Bağlanın.</span>
           </h1>
 
           <!-- Subtitle -->
           <p class="mt-6 text-base sm:text-lg leading-relaxed text-white/70">
-            Ağır Java başlatıcılarının getirdiği gecikmeleri ve FPS dalgalanmalarını unutun. 
-            Doğrudan yerel Rust motoru, tam Fabric ve Quilt desteği, resmi Microsoft OAuth2 güvenliği 
-            ve sıfır gecikmeli oyun deneyimi sunan yeni nesil başlatıcı.
+            Sıfır JVM gecikmeli yerel Rust mimarisiyle geliştirilmiş <strong class="text-white font-semibold">CREW Client</strong> ve 
+            Türkiye'nin en dinamik 24/7 topluluk sunucusu <strong class="text-white font-semibold">CREW Network</strong> bir arada. 
+            İster sunucumuzda pürüzsüz rekabet edin, ister dilediğiniz mod paketi ve sürümle tek başınıza oynayın.
           </p>
 
           <!-- CTA Buttons -->
@@ -235,19 +339,30 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
               </svg>
-              <span>Hemen İndir (Setup .exe)</span>
+              <span>İstemciyi İndir (Setup .exe)</span>
+            </a>
+
+            <!-- Secondary: Connect to Server -->
+            <a href="#sunucu" 
+               class="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-white/10 px-5 text-[15px] font-medium text-white backdrop-blur-xl transition hover:bg-white/15">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-4 text-[#22c55e]">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+                <path d="M2 12h20"></path>
+              </svg>
+              <span>Sunucuya Katıl</span>
             </a>
 
             <!-- Secondary Download (Portable) -->
             <a href="https://github.com/CodingM-eng/CREW-Client/releases/download/v2.1.0/CREW-Client.exe" 
-               class="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-white/10 px-5 text-[15px] font-medium text-white backdrop-blur-xl transition hover:bg-white/15">
-              <span>Taşınabilir Sürüm (.exe)</span>
+               class="inline-flex h-12 items-center justify-center rounded-xl px-4 text-sm font-medium text-white/60 hover:text-white transition">
+              Taşınabilir (.exe)
             </a>
 
             <!-- GitHub link -->
             <a href="https://github.com/CodingM-eng/CREW-Client" target="_blank" rel="noopener noreferrer"
-               class="inline-flex h-12 items-center justify-center rounded-xl px-4 text-sm font-medium text-white/60 hover:text-white transition">
-              GitHub Deposu →
+               class="inline-flex h-12 items-center justify-center rounded-xl px-3 text-sm font-medium text-white/50 hover:text-white transition">
+              GitHub →
             </a>
           </div>
 
@@ -284,71 +399,143 @@
           </div>
         </div>
 
-        <!-- Right Hero Column: Interactive Benchmark Comparison Slider -->
+        <!-- Right Hero Column: Interactive Dual Flagship Showcase (Client & Network Tabs) -->
         <div class="relative rounded-2xl border border-white/10 bg-[#1A0D15]/80 p-6 backdrop-blur-xl shadow-2xl shadow-black/50">
-          <div class="flex items-center justify-between border-b border-white/5 pb-4">
-            <div>
-              <h3 class="text-sm font-semibold uppercase tracking-wider text-white/90">Kare Hızı Karşılaştırması</h3>
-              <p class="text-xs text-white/50">Vanilla Başlatıcı vs CREW Client</p>
-            </div>
-            <span id="hero-fps-ratio" class="rounded-full bg-[#FF2B4F]/20 px-2.5 py-1 text-xs font-semibold text-[#FF2B4F]">3.0× Daha Hızlı</span>
+          
+          <!-- Product Switcher Tabs -->
+          <div class="flex items-center gap-1.5 p-1 bg-white/5 rounded-xl border border-white/10 mb-5">
+            <button type="button" id="hero-tab-client" class="flex-1 py-2 px-3 rounded-lg text-xs font-semibold bg-[#FF2B4F] text-white shadow-md transition-all">
+              🎮 CREW Client
+            </button>
+            <button type="button" id="hero-tab-network" class="flex-1 py-2 px-3 rounded-lg text-xs font-semibold text-white/70 hover:text-white transition-all">
+              🌐 CREW Network Sunucusu
+            </button>
           </div>
 
-          <!-- CREW Client Bar -->
-          <div class="mt-6">
-            <div class="flex items-center justify-between text-sm">
-              <span class="flex items-center gap-2 font-medium text-white">
-                <span class="size-2 rounded-full bg-[#FF2B4F]"></span>
-                CREW Client
+          <!-- Tab Content 1: CREW Client (Interactive FPS Benchmark Slider) -->
+          <div id="hero-content-client" class="block">
+            <div class="flex items-center justify-between border-b border-white/5 pb-3">
+              <div>
+                <h3 class="text-sm font-semibold uppercase tracking-wider text-white/90">Kare Hızı Karşılaştırması</h3>
+                <p class="text-xs text-white/50">Standart Başlatıcı vs CREW Client</p>
+              </div>
+              <span id="hero-fps-ratio" class="rounded-full bg-[#FF2B4F]/20 px-2.5 py-1 text-xs font-semibold text-[#FF2B4F]">3.0× Daha Hızlı</span>
+            </div>
+
+            <!-- CREW Client Bar -->
+            <div class="mt-5">
+              <div class="flex items-center justify-between text-sm">
+                <span class="flex items-center gap-2 font-medium text-white">
+                  <span class="size-2 rounded-full bg-[#FF2B4F]"></span>
+                  CREW Client (wgpu Vulkan)
+                </span>
+                <span class="font-display text-xl font-bold text-[#FF2B4F] tabular-nums">360 FPS</span>
+              </div>
+              <div class="mt-2.5 h-3 w-full overflow-hidden rounded-full bg-white/5">
+                <div class="h-full rounded-full bg-gradient-to-r from-[#FF2B4F] to-[#FF6B8B]" style="width: 90%;"></div>
+              </div>
+            </div>
+
+            <!-- Standard Launcher Bar with Draggable Slider -->
+            <div class="mt-5">
+              <div class="flex items-center justify-between text-sm">
+                <span class="flex items-center gap-2 font-medium text-white/60">
+                  <span class="size-2 rounded-full bg-white/30"></span>
+                  Klasik Başlatıcı
+                </span>
+                <span id="slider-fps-val" class="font-display text-xl font-bold text-white/60 tabular-nums">120 FPS</span>
+              </div>
+              <div class="mt-2.5 h-3 w-full overflow-hidden rounded-full bg-white/5">
+                <div id="slider-fps-bar" class="h-full rounded-full bg-white/30 transition-all duration-75" style="width: 30%;"></div>
+              </div>
+              <div class="mt-3">
+                <input type="range" id="hero-fps-range" min="30" max="240" value="120" step="5"
+                       class="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#FF2B4F] outline-none"
+                       aria-label="Klasik başlatıcı kare hızı kaydırıcısı"/>
+                <p class="mt-2 text-center text-[11px] text-white/40">Kendi sisteminizle karşılaştırmak için kaydırın</p>
+              </div>
+            </div>
+
+            <!-- Quick Specs Box -->
+            <div class="mt-5 rounded-xl bg-black/30 p-3.5 border border-white/5 text-xs text-white/60 space-y-1.5">
+              <div class="flex justify-between">
+                <span>Bellek (RAM) Tasarrufu:</span>
+                <span class="font-medium text-white/90">%47 Daha Az Tüketim</span>
+              </div>
+              <div class="flex justify-between">
+                <span>%1 Düşük (1% Low FPS):</span>
+                <span class="font-medium text-[#22c55e]">148 FPS (Sıfır Mikro Takılma)</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Başlatma Süresi:</span>
+                <span class="font-medium text-white/90">&lt; 1 Saniye</span>
+              </div>
+            </div>
+
+            <div class="mt-4 text-center">
+              <a href="benchmarks.html" class="text-xs font-medium text-[#FF2B4F] hover:text-[#FF6B8B] transition">
+                Tüm Kıyaslama Testlerini İncele →
+              </a>
+            </div>
+          </div>
+
+          <!-- Tab Content 2: CREW Network (Live Server Card) -->
+          <div id="hero-content-network" class="hidden">
+            <div class="flex items-center justify-between border-b border-white/5 pb-3">
+              <div>
+                <h3 class="text-sm font-semibold uppercase tracking-wider text-white/90">Resmi Topluluk Sunucusu</h3>
+                <p class="text-xs text-white/50">24/7 Kesintisiz Türkiye Lokasyon</p>
+              </div>
+              <span class="rounded-full bg-[#22c55e]/20 px-2.5 py-1 text-xs font-semibold text-[#22c55e] flex items-center gap-1.5">
+                <span class="size-1.5 rounded-full bg-[#22c55e] animate-ping"></span>
+                Çevrimiçi
               </span>
-              <span class="font-display text-xl font-bold text-[#FF2B4F] tabular-nums">360 FPS</span>
             </div>
-            <div class="mt-2.5 h-3 w-full overflow-hidden rounded-full bg-white/5">
-              <div class="h-full rounded-full bg-gradient-to-r from-[#FF2B4F] to-[#FF6B8B]" style="width: 90%;"></div>
+
+            <!-- Server IP & Copy Box -->
+            <div class="mt-5 p-4 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between">
+              <div>
+                <span class="text-[11px] font-semibold text-white/50 uppercase tracking-wider block">Sunucu Adresi</span>
+                <span class="font-mono text-sm sm:text-base font-bold text-white">oyna.crewnetwork.space</span>
+              </div>
+              <button type="button" data-copy="oyna.crewnetwork.space"
+                      class="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-[#FF2B4F] px-3.5 text-xs font-semibold text-white shadow hover:bg-[#FF2B4F]/90 transition">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-3.5">
+                  <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                  <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                </svg>
+                <span>Kopyala</span>
+              </button>
+            </div>
+
+            <!-- Server Quick Highlights -->
+            <div class="mt-4 grid grid-cols-2 gap-2 text-xs">
+              <div class="p-3 rounded-xl bg-white/5 border border-white/5">
+                <span class="text-white/40 block">Desteklenen Sürümler:</span>
+                <span class="font-semibold text-white">1.21.x & 1.8.9 - 1.20</span>
+              </div>
+              <div class="p-3 rounded-xl bg-white/5 border border-white/5">
+                <span class="text-white/40 block">Oyun Modları:</span>
+                <span class="font-semibold text-white">Survival, Bedwars, PvP</span>
+              </div>
+              <div class="p-3 rounded-xl bg-white/5 border border-white/5">
+                <span class="text-white/40 block">Ortalama Ping:</span>
+                <span class="font-semibold text-[#22c55e]">8 - 15 ms (TR İçi)</span>
+              </div>
+              <div class="p-3 rounded-xl bg-white/5 border border-white/5">
+                <span class="text-white/40 block">DDoS Koruması:</span>
+                <span class="font-semibold text-white">Voxility 1.8 Tbps</span>
+              </div>
+            </div>
+
+            <!-- Link to full server section -->
+            <div class="mt-4 text-center">
+              <a href="#sunucu" class="text-xs font-medium text-[#FF2B4F] hover:text-[#FF6B8B] transition">
+                Sunucu Detayları & Etkinlik Takvimi →
+              </a>
             </div>
           </div>
 
-          <!-- Standard Launcher Bar with Draggable Slider -->
-          <div class="mt-6">
-            <div class="flex items-center justify-between text-sm">
-              <span class="flex items-center gap-2 font-medium text-white/60">
-                <span class="size-2 rounded-full bg-white/30"></span>
-                Klasik Başlatıcı
-              </span>
-              <span id="slider-fps-val" class="font-display text-xl font-bold text-white/60 tabular-nums">120 FPS</span>
-            </div>
-            <div class="mt-2.5 h-3 w-full overflow-hidden rounded-full bg-white/5">
-              <div id="slider-fps-bar" class="h-full rounded-full bg-white/30 transition-all duration-75" style="width: 30%;"></div>
-            </div>
-            <div class="mt-4">
-              <input type="range" id="hero-fps-range" min="30" max="240" value="120" step="5"
-                     class="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#FF2B4F] outline-none"
-                     aria-label="Klasik başlatıcı kare hızı kaydırıcısı"/>
-              <p class="mt-2 text-center text-[11px] text-white/40">Kendi sisteminizle karşılaştırmak için kaydırın</p>
-            </div>
-          </div>
-
-          <!-- Quick Specs Box -->
-          <div class="mt-6 rounded-xl bg-black/30 p-4 border border-white/5 text-xs text-white/60 space-y-2">
-            <div class="flex justify-between">
-              <span>Bellek (RAM) Kullanımı:</span>
-              <span class="font-medium text-white/80">%47 Daha Az</span>
-            </div>
-            <div class="flex justify-between">
-              <span>%1 Düşük (1% Low FPS):</span>
-              <span class="font-medium text-[#22c55e]">148 FPS (Sıfır Takılma)</span>
-            </div>
-            <div class="flex justify-between">
-              <span>Başlatma Süresi:</span>
-              <span class="font-medium text-white/80">&lt; 1 Saniye</span>
-            </div>
-          </div>
-
-          <div class="mt-5 text-center">
-            <a href="benchmarks.html" class="text-xs font-medium text-[#FF2B4F] hover:text-[#FF6B8B] transition">
-              Tüm Donanım Test Sonuçlarını Gör →
-            </a>
-          </div>
         </div>
 
       </div>
@@ -477,6 +664,111 @@
               arka plan madenciliği veya şüpheli telemetri kesinlikle bulunmaz.
             </p>
           </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- SECTION 1.5: ECOSYSTEM SYNERGY — HOW THEY WORK TOGETHER (#ekosistem) -->
+    <!-- ======================================================================= -->
+    <section id="ekosistem" aria-labelledby="ecosystem-title" class="scroll-mt-18 py-20 border-t border-white/5 relative isolate overflow-hidden">
+      <div class="mx-auto w-full max-w-6xl px-6 lg:px-10">
+        
+        <!-- Section Header -->
+        <div class="text-center max-w-2xl mx-auto mb-14">
+          <p class="text-xs font-semibold uppercase tracking-wider text-[#FF2B4F] inline-flex items-center gap-1.5">
+            <span class="size-1.5 rounded-full bg-[#FF2B4F]"></span>
+            <span>BİRLİKTE DAHA GÜÇLÜ</span>
+          </p>
+          <h2 id="ecosystem-title" class="mt-3 font-display text-[clamp(2rem,3.8vw,3.2rem)] leading-[1.08] font-semibold tracking-[-0.03em] text-white">
+            İki Güçlü Ürün, <span class="text-[#FF2B4F]">Kusursuz Bir Bütün.</span>
+          </h2>
+          <p class="mt-4 text-sm sm:text-base text-white/60 leading-relaxed">
+            CREW Client ve CREW Network bağımsız olarak birinci sınıf ürünlerdir; ancak birlikte kullanıldıklarında 
+            Minecraft deneyiminizi eşsiz bir akıcılık ve sinerjiye kavuşturur.
+          </p>
+        </div>
+
+        <!-- 4 Synergy Pillars -->
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          
+          <!-- Pillar 1 -->
+          <div class="group relative rounded-2xl bg-white/[0.04] p-6 border border-white/10 transition-all duration-300 hover:border-[#FF2B4F]/40 hover:-translate-y-1 flex flex-col justify-between">
+            <div>
+              <div class="size-11 rounded-xl bg-[#FF2B4F]/10 border border-[#FF2B4F]/30 flex items-center justify-center text-[#FF2B4F] mb-5">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-5">
+                  <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"></path>
+                </svg>
+              </div>
+              <h3 class="font-display text-lg font-semibold text-white">Tek Tıkla Doğrudan Giriş</h3>
+              <p class="mt-2.5 text-xs sm:text-sm text-white/60 leading-relaxed">
+                Sunucu IP'sini aramak veya elle yazmakla uğraşmayın. CREW Client başlatıcısındaki tek tıkla doğrudan CREW Network lobisine bağlanın.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-white/5 text-[11px] font-mono text-[#FF2B4F]">
+              0 Saniye Yapılandırma
+            </div>
+          </div>
+
+          <!-- Pillar 2 -->
+          <div class="group relative rounded-2xl bg-white/[0.04] p-6 border border-white/10 transition-all duration-300 hover:border-[#FF2B4F]/40 hover:-translate-y-1 flex flex-col justify-between">
+            <div>
+              <div class="size-11 rounded-xl bg-[#FF2B4F]/10 border border-[#FF2B4F]/30 flex items-center justify-center text-[#FF2B4F] mb-5">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-5">
+                  <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                  <path d="M3 3v5h5"></path>
+                  <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
+                  <path d="M16 21h5v-5"></path>
+                </svg>
+              </div>
+              <h3 class="font-display text-lg font-semibold text-white">Sıfır Beklemeli Senkronizasyon</h3>
+              <p class="mt-2.5 text-xs sm:text-sm text-white/60 leading-relaxed">
+                Sunucunun özel mini-oyun dokuları, özel zırh kaplamaları ve ses efektleri oyuna girmeden önce arka planda yerel önbelleğe alınır.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-white/5 text-[11px] font-mono text-[#22c55e]">
+              Kaynak Yükleme Donması Yok
+            </div>
+          </div>
+
+          <!-- Pillar 3 -->
+          <div class="group relative rounded-2xl bg-white/[0.04] p-6 border border-white/10 transition-all duration-300 hover:border-[#FF2B4F]/40 hover:-translate-y-1 flex flex-col justify-between">
+            <div>
+              <div class="size-11 rounded-xl bg-[#FF2B4F]/10 border border-[#FF2B4F]/30 flex items-center justify-center text-[#FF2B4F] mb-5">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-5">
+                  <path d="M12 20v-6M6 20V10M18 20V4"></path>
+                </svg>
+              </div>
+              <h3 class="font-display text-lg font-semibold text-white">Optimize Edilmiş Yerel Netcode</h3>
+              <p class="mt-2.5 text-xs sm:text-sm text-white/60 leading-relaxed">
+                Yerel soket katmanı paket kayıplarını (packet drop) ve gecikme sıçramalarını minimize ederek PvP ve rekabetçi anlarda kusursuz vuruş tespiti sunar.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-white/5 text-[11px] font-mono text-[#FF2B4F]">
+              8 - 15 ms Kristal Ping
+            </div>
+          </div>
+
+          <!-- Pillar 4 -->
+          <div class="group relative rounded-2xl bg-white/[0.04] p-6 border border-white/10 transition-all duration-300 hover:border-[#FF2B4F]/40 hover:-translate-y-1 flex flex-col justify-between">
+            <div>
+              <div class="size-11 rounded-xl bg-[#FF2B4F]/10 border border-[#FF2B4F]/30 flex items-center justify-center text-[#FF2B4F] mb-5">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-5">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="m4.93 4.93 14.14 14.14"></path>
+                </svg>
+              </div>
+              <h3 class="font-display text-lg font-semibold text-white">Evrensel Açık Uyumluluk</h3>
+              <p class="mt-2.5 text-xs sm:text-sm text-white/60 leading-relaxed">
+                CREW Client kapalı bir ekosistem değildir. Vanilla, Fabric ve Quilt desteğiyle dünyadaki tüm diğer Minecraft sunucularında özgürce oynayabilirsiniz.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-white/5 text-[11px] font-mono text-white/60">
+              %100 Standart Java Edition
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -1140,6 +1432,65 @@
   <!-- ========================================================================= -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // -------------------------------------------------------------
+      // 0. Theme Switcher (Dark / Light Theme System)
+      // -------------------------------------------------------------
+      const themeBtn = document.getElementById('theme-toggle-btn');
+      const iconSun = document.getElementById('theme-icon-sun');
+      const iconMoon = document.getElementById('theme-icon-moon');
+
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('crew-theme', theme);
+        if (theme === 'light') {
+          if (iconSun) iconSun.classList.add('hidden');
+          if (iconMoon) iconMoon.classList.remove('hidden');
+        } else {
+          if (iconSun) iconSun.classList.remove('hidden');
+          if (iconMoon) iconMoon.classList.add('hidden');
+        }
+      }
+
+      // Read saved theme or default to dark
+      const savedTheme = localStorage.getItem('crew-theme') || 'dark';
+      applyTheme(savedTheme);
+
+      if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+          const current = document.documentElement.getAttribute('data-theme') || 'dark';
+          const next = current === 'dark' ? 'light' : 'dark';
+          applyTheme(next);
+        });
+      }
+
+      // -------------------------------------------------------------
+      // 0.5 Hero Dual Product Tabs (Client vs Network)
+      // -------------------------------------------------------------
+      const tabClient = document.getElementById('hero-tab-client');
+      const tabNetwork = document.getElementById('hero-tab-network');
+      const contentClient = document.getElementById('hero-content-client');
+      const contentNetwork = document.getElementById('hero-content-network');
+
+      if (tabClient && tabNetwork && contentClient && contentNetwork) {
+        tabClient.addEventListener('click', () => {
+          tabClient.className = 'flex-1 py-2 px-3 rounded-lg text-xs font-semibold bg-[#FF2B4F] text-white shadow-md transition-all';
+          tabNetwork.className = 'flex-1 py-2 px-3 rounded-lg text-xs font-semibold text-white/70 hover:text-white transition-all';
+          contentClient.classList.remove('hidden');
+          contentClient.classList.add('block');
+          contentNetwork.classList.remove('block');
+          contentNetwork.classList.add('hidden');
+        });
+
+        tabNetwork.addEventListener('click', () => {
+          tabNetwork.className = 'flex-1 py-2 px-3 rounded-lg text-xs font-semibold bg-[#FF2B4F] text-white shadow-md transition-all';
+          tabClient.className = 'flex-1 py-2 px-3 rounded-lg text-xs font-semibold text-white/70 hover:text-white transition-all';
+          contentNetwork.classList.remove('hidden');
+          contentNetwork.classList.add('block');
+          contentClient.classList.remove('block');
+          contentClient.classList.add('hidden');
+        });
+      }
+
       // -------------------------------------------------------------
       // 1. Mobile Menu Toggle
       // -------------------------------------------------------------
