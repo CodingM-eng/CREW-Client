@@ -1,0 +1,17 @@
+[package]
+name = "crew-version-manager"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description = "CREW Client Minecraft version management, policy enforcement, Java mapping, and profile inheritance engine"
+
+[dependencies]
+crew-core = { path = "../crew-core" }
+crew-loader-fabric = { path = "../crew-loader-fabric" }
+crew-loader-quilt = { path = "../crew-loader-quilt" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[lints]
+workspace = true

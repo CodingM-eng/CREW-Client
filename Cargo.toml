@@ -4,6 +4,7 @@ members = [
     "crates/crew-core",
     "crates/crew-loader-fabric",
     "crates/crew-loader-quilt",
+    "crates/crew-version-manager",
     "crates/horizon-core",
     "crates/horizon-dualsense",
     "crates/horizon-narrator",
