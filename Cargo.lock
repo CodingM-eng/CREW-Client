@@ -656,6 +656,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "crew-loader-fabric"
+version = "0.1.0"
+dependencies = [
+ "crew-core",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "crossbeam-utils"
 version = "0.8.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
