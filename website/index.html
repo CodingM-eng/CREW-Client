@@ -1,1703 +1,502 @@
 <!DOCTYPE html>
-<html lang="tr" class="PZ6jEG_variable _8Li5zG_variable V5rL5a_variable h-full antialiased scroll-smooth">
+<html lang="tr" class="h-full antialiased scroll-smooth">
 <head>
+  <title>CREW Ekosistemi — OYUNUN ÖTESİNDE | CREW Network & CREW Client</title>
+  <meta name="description" content="CREW Network ile topluluğa katıl, CREW Client ile yerel Rust motoru ve sıfır gecikmeli Minecraft deneyimini keşfet."/>
+  
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>CREW Client — En Yüksek FPS, Sıfır Gecikme ve Kusursuz Minecraft Deneyimi</title>
-  <meta name="description" content="CREW Client, yerel Rust motoruyla sıfırdan geliştirilmiş, Fabric ve Quilt destekli, 3 kata varan FPS artışı ve sıfır gecikme sunan resmi Minecraft başlatıcısıdır. Windows 10/11 için optimize edildi."/>
-  
-  <meta name="theme-color" content="#0C0810"/>
-  <meta name="color-scheme" content="dark"/>
+  <meta name="theme-color" content="#09090C"/>
   <meta name="application-name" content="CREW Client"/>
   <meta name="author" content="CREW Network"/>
   <meta name="publisher" content="CREW Network"/>
   <meta name="robots" content="index, follow"/>
-  <link rel="canonical" href="https://client.crewnetwork.space/"/>
-
-  <!-- OpenGraph -->
-  <meta property="og:type" content="website"/>
-  <meta property="og:title" content="CREW Client — En Yüksek FPS, Sıfır Gecikme ve Kusursuz Minecraft Deneyimi"/>
-  <meta property="og:description" content="Yerel Rust mimarisi, Fabric ve Quilt desteği, resmi Microsoft OAuth2 güvenliği ve 3 kata varan kare hızı ile Minecraft'ı yeniden keşfedin."/>
-  <meta property="og:url" content="https://client.crewnetwork.space/"/>
-  <meta property="og:site_name" content="CREW Client"/>
-  <meta property="og:locale" content="tr_TR"/>
-  <meta property="og:image" content="opengraph-image.png"/>
-  <meta property="og:image:width" content="1200"/>
-  <meta property="og:image:height" content="630"/>
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="CREW Client — Minecraft Performans Başlatıcısı"/>
-  <meta name="twitter:description" content="Yerel Rust motoru, Fabric/Quilt uyumu ve resmi Microsoft güvenliğiyle Minecraft oynayın."/>
-  <meta name="twitter:image" content="opengraph-image.png"/>
-
+  
   <!-- Favicons -->
-  <link rel="icon" href="assets/img/crew-logo-transparent.svg" type="image/svg+xml"/>
-  <link rel="icon" href="favicon16ca.ico" sizes="48x48" type="image/x-icon"/>
-  <link rel="apple-touch-icon" href="apple-icon54e9.png" sizes="180x180"/>
+  <link rel="icon" href="/assets/img/crew-logo-transparent.svg" type="image/svg+xml"/>
+  <link rel="icon" href="/favicon16ca.ico" sizes="48x48" type="image/x-icon"/>
+  <link rel="apple-touch-icon" href="/apple-icon54e9.png" sizes="180x180"/>
 
-  <!-- Stylesheets -->
-  <link rel="stylesheet" href="_next/static/chunks/1b5g4h2mnvmk2.css"/>
-  <link rel="stylesheet" href="_next/static/chunks/1954ozk_cgkuy.css"/>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Core CSS Bundles -->
+  <link rel="stylesheet" href="/_next/static/chunks/1b5g4h2mnvmk2.css"/>
+  <link rel="stylesheet" href="/_next/static/chunks/1954ozk_cgkuy.css"/>
 
   <style>
     :root {
       --accent: #FF2B4F;
-      --accent-glow: rgba(255, 43, 79, 0.35);
-      --surface: #1A0D15;
-      --bg: #0C0810;
+      --accent-hover: #e02042;
+      --accent-glow: rgba(255, 43, 79, 0.25);
+      --bg: #09090C;
+      --surface: #111116;
+      --elevated: #1B1B23;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 43, 79, 0.4);
+      --text-primary: #FFFFFF;
+      --text-secondary: #9CA3AF;
+      --text-muted: #6B7280;
+      --nav-bg: rgba(9, 9, 12, 0.85);
+      --card-bg: rgba(17, 17, 22, 0.8);
+      --badge-bg: rgba(255, 43, 79, 0.1);
     }
-    .text-accent { color: #FF2B4F !important; }
-    .bg-accent { background-color: #FF2B4F !important; }
-    .border-accent { border-color: #FF2B4F !important; }
-    .focus-ring-accent:focus-visible { outline: 2px solid #FF2B4F; outline-offset: 2px; }
 
-    /* ========================================================================= */
-    /* PREMIUM LIGHT THEME SYSTEM */
-    /* ========================================================================= */
     html[data-theme="light"] {
-      --bg: #F8F9FA;
+      --bg: #F7F7FA;
       --surface: #FFFFFF;
-      --text-main: #111827;
-      --text-sub: #4B5563;
-      --border-color: rgba(0, 0, 0, 0.08);
-    }
-    html[data-theme="light"] body {
-      background-color: #F8F9FA !important;
-      color: #374151 !important;
-    }
-    html[data-theme="light"] header {
-      background-color: rgba(255, 255, 255, 0.92) !important;
-      border-color: rgba(0, 0, 0, 0.08) !important;
-      box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.05);
-    }
-    html[data-theme="light"] header a.text-white,
-    html[data-theme="light"] header span.text-white,
-    html[data-theme="light"] .font-display.text-white {
-      color: #111827 !important;
-    }
-    html[data-theme="light"] header nav a {
-      color: #4B5563 !important;
-    }
-    html[data-theme="light"] header nav a:hover {
-      color: #111827 !important;
-    }
-    html[data-theme="light"] #mobile-menu {
-      background-color: rgba(255, 255, 255, 0.98) !important;
-      border-color: rgba(0, 0, 0, 0.08) !important;
-    }
-    html[data-theme="light"] #mobile-menu a {
-      color: #374151 !important;
-    }
-    html[data-theme="light"] .hero-bg-gradient {
-      background: linear-gradient(to bottom, #FFFFFF 0%, #FFF2F4 38%, #FFE4E8 62%, #FFCCD5 80%, #F8F9FA 92%) !important;
-    }
-    html[data-theme="light"] h1.text-white,
-    html[data-theme="light"] h2.text-white,
-    html[data-theme="light"] h3.text-white {
-      color: #111827 !important;
-    }
-    html[data-theme="light"] .text-white\/70,
-    html[data-theme="light"] .text-white\/80 {
-      color: #4B5563 !important;
-    }
-    html[data-theme="light"] .text-white\/60,
-    html[data-theme="light"] .text-white\/50,
-    html[data-theme="light"] .text-white\/40 {
-      color: #6B7280 !important;
-    }
-    html[data-theme="light"] .bg-\[\#1A0D15\]\/80,
-    html[data-theme="light"] .bg-\[\#1A0D15\],
-    html[data-theme="light"] .bg-\[\#0e0914\],
-    html[data-theme="light"] .card-theme-bg {
-      background-color: #FFFFFF !important;
-      border-color: rgba(0, 0, 0, 0.08) !important;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
-    }
-    html[data-theme="light"] .bg-white\/\[0\.04\],
-    html[data-theme="light"] .bg-white\/\[0\.06\],
-    html[data-theme="light"] .bg-white\/5,
-    html[data-theme="light"] .bg-white\/10 {
-      background-color: rgba(0, 0, 0, 0.03) !important;
-      border-color: rgba(0, 0, 0, 0.08) !important;
-    }
-    html[data-theme="light"] .border-white\/10,
-    html[data-theme="light"] .border-white\/5,
-    html[data-theme="light"] .border-white\/15,
-    html[data-theme="light"] .border-white\/20 {
-      border-color: rgba(0, 0, 0, 0.08) !important;
-    }
-    html[data-theme="light"] .bg-black\/30,
-    html[data-theme="light"] .bg-black\/40 {
-      background-color: rgba(0, 0, 0, 0.04) !important;
-      border-color: rgba(0, 0, 0, 0.08) !important;
-      color: #111827 !important;
-    }
-    html[data-theme="light"] footer {
-      background-color: #FFFFFF !important;
-      border-color: rgba(0, 0, 0, 0.08) !important;
-    }
-    
-    /* Toast notification */
-    #crew-toast {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      z-index: 9999;
-      background: #1A0D15;
-      color: #fff;
-      border: 1px solid #FF2B4F;
-      box-shadow: 0 10px 25px -5px rgba(255, 43, 79, 0.4);
-      padding: 12px 20px;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      opacity: 0;
-      transform: translateY(16px);
-      pointer-events: none;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    #crew-toast.show {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
+      --elevated: #EBEBEF;
+      --border: rgba(0, 0, 0, 0.08);
+      --border-hover: rgba(255, 43, 79, 0.5);
+      --text-primary: #09090C;
+      --text-secondary: #4B5563;
+      --text-muted: #6B7280;
+      --nav-bg: rgba(247, 247, 250, 0.9);
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --badge-bg: rgba(255, 43, 79, 0.08);
     }
 
-    /* FAQ accordion transition */
-    .faq-answer {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
-      opacity: 0;
+    * {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      box-sizing: border-box;
     }
-    .faq-item.active .faq-answer {
-      max-height: 400px;
-      opacity: 1;
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.25s ease, color 0.25s ease;
     }
-    .faq-item.active .faq-chevron {
-      transform: rotate(180deg);
+
+    .crew-glass {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+    }
+
+    .crew-glass:hover {
+      border-color: var(--border-hover);
+    }
+
+    .text-accent { color: var(--accent) !important; }
+    .bg-accent { background-color: var(--accent) !important; }
+    .border-accent { border-color: var(--accent) !important; }
+
+    .glow-effect {
+      box-shadow: 0 0 35px -5px var(--accent-glow);
+    }
+
+    .nav-item {
+      color: var(--text-secondary);
+      font-weight: 500;
+      padding: 0.5rem 0.875rem;
+      border-radius: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .nav-item:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    html[data-theme="light"] .nav-item:hover {
+      background: rgba(0, 0, 0, 0.04);
+    }
+
+    .nav-item.active {
+      color: var(--accent) !important;
+      font-weight: 600;
+      background: var(--badge-bg);
+    }
+
+    /* Reduce motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
     }
   </style>
+
+  
 </head>
-
-<body class="min-h-full flex flex-col bg-[#0C0810] text-white/80 selection:bg-[#FF2B4F]/30 selection:text-white">
-
-  <!-- SKIP TO CONTENT -->
-  <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#FF2B4F] focus:text-white focus:rounded-lg focus:shadow-lg focus:font-semibold">İçeriğe Atla</a>
-
-  <!-- ========================================================================= -->
-  <!-- HEADER & NAVIGATION -->
-  <!-- ========================================================================= -->
-  <header class="fixed inset-x-0 top-0 z-50 bg-[#0C0810]/85 backdrop-blur-md border-b border-white/5 transition-all duration-300">
-    <div class="mx-auto flex h-18 w-full max-w-6xl items-center justify-between px-6 lg:px-10">
-      
+<body class="flex flex-col min-h-screen">
+  
+  <header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b transition-colors duration-200" style="background: var(--nav-bg); border-color: var(--border);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <!-- Brand Logo -->
-      <a class="flex items-center gap-2.5 text-white transition hover:opacity-90" href="index.html" aria-label="CREW Client Ana Sayfa">
-        <svg viewBox="0 0 16 16" aria-hidden="true" class="size-8">
-          <path class="fill-[#FF2B4F]" d="M4 3h2v4H4zM10 3h2v4h-2z"></path>
-          <path class="fill-white/80" d="M4 8h2v4H4zM10 8h2v4h-2z"></path>
-          <path class="fill-[#FF2B4F]" d="M1 7h14v2H1z"></path>
-        </svg>
-        <span class="font-display text-[19px] font-semibold tracking-[-0.02em]">CREW Client</span>
+      <a href="/" class="flex items-center gap-3 group" aria-label="CREW Ana Sayfa">
+        <img src="/assets/img/crew-logo-transparent.svg" alt="CREW Crest" class="w-8 h-8 transition-transform group-hover:scale-105" />
+        <span class="font-black tracking-wider text-xl" style="color: var(--text-primary); letter-spacing: 0.05em;">CREW</span>
       </a>
 
-      <!-- Desktop Nav -->
-      <nav aria-label="Ana Menü" class="hidden items-center gap-6 text-sm text-white/65 lg:flex">
-        <a class="inline-flex items-center gap-1 transition-colors hover:text-white" href="#ozellikler">İstemci</a>
-        <a class="inline-flex items-center gap-1 transition-colors hover:text-white" href="#ekosistem">Ekosistem</a>
-        <a class="inline-flex items-center gap-1 transition-colors hover:text-white" href="#sunucu">Sunucu</a>
-        <a class="inline-flex items-center gap-1 transition-colors hover:text-white" href="#performans">Performans</a>
-        <a class="inline-flex items-center gap-1 transition-colors hover:text-white" href="#indir">İndir</a>
-        <a class="inline-flex items-center gap-1 transition-colors hover:text-white" href="#sss">SSS</a>
-        <a class="inline-flex items-center gap-1 transition-colors hover:text-white" href="benchmarks.html">Testler</a>
-        <a class="inline-flex items-center gap-1 transition-colors hover:text-white" href="stats.html">İstatistikler</a>
-        <a class="inline-flex items-center gap-1 transition-colors hover:text-white" href="releases.html">Sürümler</a>
-        <a class="inline-flex items-center gap-1 transition-colors hover:text-white" href="docs.html">Belgeler</a>
+      <!-- Desktop Navigation (Clean 3 Pillars + Destek) -->
+      <nav class="hidden md:flex items-center gap-2 text-sm">
+        <a href="/" class="nav-item active">Ana Sayfa</a>
+        <a href="/sunucu/" class="nav-item ">Sunucu</a>
+        <a href="/client/" class="nav-item ">Client</a>
+        <a href="/destek/" class="nav-item ">Destek</a>
       </nav>
 
-      <!-- Right Actions -->
-      <div class="flex items-center gap-2.5">
-        <!-- GitHub Link -->
-        <a href="https://github.com/CodingM-eng/CREW-Client" target="_blank" rel="noopener noreferrer" 
-           class="hidden h-9 items-center gap-2 rounded-lg px-3 text-sm text-white/70 transition-colors hover:text-white sm:inline-flex">
-          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" class="size-4">
-            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path>
-          </svg>
-          <span>GitHub</span>
-        </a>
-
-        <!-- Theme Toggle Button (Dark / Light) -->
-        <button type="button" id="theme-toggle-btn" aria-label="Temayı değiştir (Koyu / Açık)" title="Temayı değiştir"
-                class="inline-flex size-9 items-center justify-center rounded-lg bg-white/[0.06] text-white/80 transition-colors hover:bg-white/10 hover:text-white border border-white/10">
-          <!-- Sun icon (for dark mode) -->
-          <svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-4">
-            <circle cx="12" cy="12" r="4"></circle>
-            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
-          </svg>
-          <!-- Moon icon (for light mode) -->
-          <svg id="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-4 hidden">
-            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
-          </svg>
+      <!-- Right Actions: Theme Toggle + CTA -->
+      <div class="flex items-center gap-3">
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" type="button" aria-label="Temayı Değiştir" class="p-2 rounded-lg border transition-all hover:scale-105 active:scale-95" style="background: var(--surface); border-color: var(--border); color: var(--text-primary);">
+          <svg id="theme-moon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          <svg id="theme-sun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
         </button>
 
-        <!-- Direct Download CTA -->
-        <a href="#indir" class="inline-flex h-9 items-center justify-center rounded-lg bg-[#FF2B4F] px-4 text-sm font-semibold text-white shadow-sm shadow-[#FF2B4F]/30 transition hover:bg-[#FF2B4F]/90">
-          İndir
+        <!-- Primary CTA -->
+        <a href="/client/indir/" class="hidden sm:inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-semibold text-white transition-all shadow-md hover:opacity-90 active:scale-95" style="background: #FF2B4F;">
+          Client'ı İndir
         </a>
 
-        <!-- Mobile Menu Toggle Button -->
-        <button type="button" id="mobile-menu-btn" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menüyü aç/kapat" 
-                class="ml-1 inline-flex size-9 items-center justify-center rounded-lg bg-white/[0.06] text-white/80 transition-colors hover:bg-white/10 hover:text-white lg:hidden">
-          <svg id="menu-icon-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="size-5">
-            <path d="M4 7h16M4 12h16M4 17h16"></path>
-          </svg>
-          <svg id="menu-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="size-5 hidden">
-            <path d="M18 6 6 18M6 6l12 12"></path>
-          </svg>
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-btn" type="button" aria-label="Menüyü Aç/Kapat" class="md:hidden p-2 rounded-lg border transition-colors" style="background: var(--surface); border-color: var(--border); color: var(--text-primary);">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
       </div>
     </div>
 
-    <!-- Mobile Slide-down Drawer -->
-    <div id="mobile-menu" class="hidden lg:hidden border-b border-white/10 bg-[#0C0810]/95 backdrop-blur-xl px-6 py-6 transition-all duration-300">
-      <nav class="flex flex-col gap-4 text-base font-medium text-white/80">
-        <a class="mobile-nav-link py-1 hover:text-white" href="#ozellikler">İstemci Özellikleri</a>
-        <a class="mobile-nav-link py-1 hover:text-white" href="#ekosistem">Ekosistem Sinerjisi</a>
-        <a class="mobile-nav-link py-1 hover:text-white" href="#sunucu">CREW Network Sunucusu</a>
-        <a class="mobile-nav-link py-1 hover:text-white" href="#performans">Performans & Galeri</a>
-        <a class="mobile-nav-link py-1 hover:text-white" href="#indir">İndir</a>
-        <a class="mobile-nav-link py-1 hover:text-white" href="#sss">Sıkça Sorulan Sorular</a>
-        <a class="mobile-nav-link py-1 hover:text-white" href="benchmarks.html">Performans Testleri</a>
-        <a class="mobile-nav-link py-1 hover:text-white" href="stats.html">Canlı İstatistikler</a>
-        <a class="mobile-nav-link py-1 hover:text-white" href="releases.html">Sürümler & Güncellemeler</a>
-        <a class="mobile-nav-link py-1 hover:text-white" href="docs.html">Belgeler & Kılavuz</a>
-      </nav>
-      <div class="mt-6 flex flex-col gap-3 pt-6 border-t border-white/10">
-        <a href="https://github.com/CodingM-eng/CREW-Client/releases/download/v2.1.0/CREW-Client-Setup-x64.exe" 
-           class="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#FF2B4F] text-center text-sm font-semibold text-white shadow-md shadow-[#FF2B4F]/25">
-          Setup .exe İndir (17.6 MB)
-        </a>
-        <a href="https://github.com/CodingM-eng/CREW-Client/releases/download/v2.1.0/CREW-Client.exe" 
-           class="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-white/10 text-center text-sm font-medium text-white hover:bg-white/15">
-          Taşınabilir Sürüm (.exe)
+    <!-- Mobile Drawer -->
+    <div id="mobile-menu" class="hidden md:hidden border-b px-4 pt-3 pb-5 space-y-2" style="background: var(--nav-bg); border-color: var(--border);">
+      <a href="/" class="block px-3 py-2 rounded-lg text-sm font-medium active">Ana Sayfa</a>
+      <a href="/sunucu/" class="block px-3 py-2 rounded-lg text-sm font-medium ">Sunucu (CREW Network)</a>
+      <a href="/client/" class="block px-3 py-2 rounded-lg text-sm font-medium ">Client (CREW Client)</a>
+      <a href="/destek/" class="block px-3 py-2 rounded-lg text-sm font-medium ">Destek & SSS</a>
+      <div class="pt-2 border-t mt-3" style="border-color: var(--border);">
+        <a href="/client/indir/" class="block text-center py-2.5 rounded-lg text-sm font-semibold text-white shadow-md" style="background: #FF2B4F;">
+          Client'ı İndir
         </a>
       </div>
     </div>
   </header>
 
-  <!-- ========================================================================= -->
-  <!-- MAIN CONTENT -->
-  <!-- ========================================================================= -->
-  <main id="main-content" class="flex-1">
 
-    <!-- ======================================================================= -->
-    <!-- SECTION 0: HERO SECTION -->
-    <!-- ======================================================================= -->
-    <section class="relative isolate flex min-h-svh flex-col overflow-hidden">
-      <!-- Background Starry Gradient & Canvas -->
-      <div aria-hidden="true" class="group overflow-hidden bg-[linear-gradient(to_bottom,#0C0810_0%,#1a0c16_38%,#30111e_62%,#4a1226_80%,#0C0810_92%)] absolute inset-0 -z-10">
-        <canvas id="hero-stars-canvas" class="absolute top-0 left-0 w-full h-full opacity-80 pointer-events-none"></canvas>
+  <main class="flex-grow pt-20">
+    
+    <!-- HERO SECTION -->
+    <section class="relative min-h-[85vh] flex items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-8 py-20">
+      <!-- Background Ambient Glow -->
+      <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+        <div class="w-[600px] h-[600px] rounded-full blur-[140px] opacity-20" style="background: radial-gradient(circle, #FF2B4F 0%, transparent 70%);"></div>
       </div>
 
-      <div aria-hidden="true" class="h-20 shrink-0"></div>
-
-      <div class="mx-auto grid w-full max-w-6xl flex-1 content-center items-start gap-x-12 gap-y-12 px-6 pt-12 pb-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:items-center lg:px-10 xl:gap-x-16">
-        
-        <!-- Left Hero Column -->
-        <div class="max-w-2xl">
-          <!-- Platform & Ecosystem Badge -->
-          <div class="inline-flex flex-wrap items-center gap-2 rounded-full bg-white/[0.06] px-3.5 py-1.5 text-xs sm:text-sm font-medium text-white/80 border border-white/10 backdrop-blur-md">
-            <span class="size-2 rounded-full bg-[#22c55e] animate-pulse"></span>
-            <span class="font-semibold text-white">CREW EKOSİSTEMİ</span>
-            <span class="text-white/30">·</span>
-            <span class="text-[#FF2B4F]">İstemci & Sunucu Bir Arada</span>
-            <span class="text-white/30">·</span>
-            <span class="text-white/60">v2.1.0</span>
-          </div>
-
-          <!-- Main Heading -->
-          <h1 class="mt-6 font-display text-[clamp(2.5rem,5.5vw,4.5rem)] leading-[1.05] font-semibold tracking-[-0.03em] text-white">
-            Oyununuzu Hızlandırın,
-            <span class="text-[#FF2B4F] block pb-1">Dünyanıza Bağlanın.</span>
-          </h1>
-
-          <!-- Subtitle -->
-          <p class="mt-6 text-base sm:text-lg leading-relaxed text-white/70">
-            Sıfır JVM gecikmeli yerel Rust mimarisiyle geliştirilmiş <strong class="text-white font-semibold">CREW Client</strong> ve 
-            Türkiye'nin en dinamik 24/7 topluluk sunucusu <strong class="text-white font-semibold">CREW Network</strong> bir arada. 
-            İster sunucumuzda pürüzsüz rekabet edin, ister dilediğiniz mod paketi ve sürümle tek başınıza oynayın.
-          </p>
-
-          <!-- CTA Buttons -->
-          <div class="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <!-- Primary Download -->
-            <a href="https://github.com/CodingM-eng/CREW-Client/releases/download/v2.1.0/CREW-Client-Setup-x64.exe" 
-               class="inline-flex h-12 items-center justify-center gap-2.5 rounded-xl bg-[#FF2B4F] px-6 text-[15px] font-semibold text-white shadow-lg shadow-[#FF2B4F]/25 transition hover:bg-[#FF2B4F]/90 hover:scale-[1.02]">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
-              </svg>
-              <span>İstemciyi İndir (Setup .exe)</span>
-            </a>
-
-            <!-- Secondary: Connect to Server -->
-            <a href="#sunucu" 
-               class="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-white/10 px-5 text-[15px] font-medium text-white backdrop-blur-xl transition hover:bg-white/15">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-4 text-[#22c55e]">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
-                <path d="M2 12h20"></path>
-              </svg>
-              <span>Sunucuya Katıl</span>
-            </a>
-
-            <!-- Secondary Download (Portable) -->
-            <a href="https://github.com/CodingM-eng/CREW-Client/releases/download/v2.1.0/CREW-Client.exe" 
-               class="inline-flex h-12 items-center justify-center rounded-xl px-4 text-sm font-medium text-white/60 hover:text-white transition">
-              Taşınabilir (.exe)
-            </a>
-
-            <!-- GitHub link -->
-            <a href="https://github.com/CodingM-eng/CREW-Client" target="_blank" rel="noopener noreferrer"
-               class="inline-flex h-12 items-center justify-center rounded-xl px-3 text-sm font-medium text-white/50 hover:text-white transition">
-              GitHub →
-            </a>
-          </div>
-
-          <!-- Release Metadata Pill -->
-          <div class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-white/50">
-            <span class="inline-flex items-center gap-1.5">
-              <svg viewBox="0 0 16 16" fill="currentColor" class="size-3.5 text-white/60">
-                <path d="M0 2.222 6.556 1.33v6.222H0V2.222zm0 6.666h6.556v6.222L0 14.222V8.888zm7.556-7.777L16 0v7.556H7.556V1.111zm0 7.777H16V16l-8.444-1.111V8.888z"/>
-              </svg>
-              Windows 10/11 x64
-            </span>
-            <span class="text-white/20">·</span>
-            <span>v2.1.0 Kararlı</span>
-            <span class="text-white/20">·</span>
-            <span>17.6 MB Kurulum / 65.5 MB Taşınabilir</span>
-            <span class="text-white/20">·</span>
-            <span class="text-[#22c55e]">SHA-256 Doğrulanmış</span>
-          </div>
-
-          <!-- Feature Metric Highlights -->
-          <div class="mt-8 grid grid-cols-3 gap-3 border-t border-white/10 pt-6">
-            <div>
-              <span class="block font-display text-2xl font-bold text-white">3×</span>
-              <span class="text-xs text-white/50">Kare Hızı Artışı</span>
-            </div>
-            <div>
-              <span class="block font-display text-2xl font-bold text-white">0 ms</span>
-              <span class="text-xs text-white/50">Başlatıcı Yükü</span>
-            </div>
-            <div>
-              <span class="block font-display text-2xl font-bold text-white">%100</span>
-              <span class="text-xs text-white/50">Fabric & Quilt Uyumu</span>
-            </div>
-          </div>
+      <div class="relative max-w-5xl mx-auto text-center space-y-8 z-10">
+        <!-- Top Badge -->
+        <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border text-xs font-semibold tracking-wide transition-all" style="background: var(--badge-bg); border-color: var(--border); color: var(--accent);">
+          <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+          CREW EKOSİSTEMİ · YEREL RUST MOTORU & 24/7 SUNUCU
         </div>
 
-        <!-- Right Hero Column: Interactive Dual Flagship Showcase (Client & Network Tabs) -->
-        <div class="relative rounded-2xl border border-white/10 bg-[#1A0D15]/80 p-6 backdrop-blur-xl shadow-2xl shadow-black/50">
-          
-          <!-- Product Switcher Tabs -->
-          <div class="flex items-center gap-1.5 p-1 bg-white/5 rounded-xl border border-white/10 mb-5">
-            <button type="button" id="hero-tab-client" class="flex-1 py-2 px-3 rounded-lg text-xs font-semibold bg-[#FF2B4F] text-white shadow-md transition-all">
-              🎮 CREW Client
-            </button>
-            <button type="button" id="hero-tab-network" class="flex-1 py-2 px-3 rounded-lg text-xs font-semibold text-white/70 hover:text-white transition-all">
-              🌐 CREW Network Sunucusu
-            </button>
+        <!-- Headline -->
+        <h1 class="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight uppercase" style="color: var(--text-primary); letter-spacing: -0.03em;">
+          OYUNUN <span class="text-accent underline decoration-red-500/30 decoration-wavy">ÖTESİNDE.</span>
+        </h1>
+
+        <!-- Supporting text -->
+        <p class="max-w-2xl mx-auto text-lg sm:text-xl font-normal leading-relaxed" style="color: var(--text-secondary);">
+          CREW Network ile topluluğa katıl, CREW Client ile Minecraft deneyimini keşfet.
+        </p>
+
+        <!-- Primary Dual CTAs -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+          <a href="/sunucu/" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 rounded-xl text-base font-bold text-white transition-all shadow-xl hover:shadow-red-500/25 hover:scale-[1.02] active:scale-95" style="background: #FF2B4F;">
+            <svg class="w-5 h-5 mr-2.5 fill-current" viewBox="0 0 24 24"><path d="M4 1v22h16V1H4zm14 20H6V3h12v18zM8 5h8v2H8V5zm0 4h8v2H8V9zm0 4h8v2H8v-2z"/></svg>
+            Sunucuyu Keşfet
+          </a>
+          <a href="/client/" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 rounded-xl text-base font-bold border transition-all hover:scale-[1.02] active:scale-95" style="background: var(--surface); border-color: var(--border); color: var(--text-primary);">
+            <svg class="w-5 h-5 mr-2.5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            CREW Client'i Keşfet
+          </a>
+        </div>
+
+        <!-- Ecosystem Pill Specs -->
+        <div class="pt-8 flex flex-wrap items-center justify-center gap-6 text-xs" style="color: var(--text-muted);">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span>Minecraft 1.8.9 - 1.21.x</span>
           </div>
-
-          <!-- Tab Content 1: CREW Client (Interactive FPS Benchmark Slider) -->
-          <div id="hero-content-client" class="block">
-            <div class="flex items-center justify-between border-b border-white/5 pb-3">
-              <div>
-                <h3 class="text-sm font-semibold uppercase tracking-wider text-white/90">Kare Hızı Karşılaştırması</h3>
-                <p class="text-xs text-white/50">Standart Başlatıcı vs CREW Client</p>
-              </div>
-              <span id="hero-fps-ratio" class="rounded-full bg-[#FF2B4F]/20 px-2.5 py-1 text-xs font-semibold text-[#FF2B4F]">3.0× Daha Hızlı</span>
-            </div>
-
-            <!-- CREW Client Bar -->
-            <div class="mt-5">
-              <div class="flex items-center justify-between text-sm">
-                <span class="flex items-center gap-2 font-medium text-white">
-                  <span class="size-2 rounded-full bg-[#FF2B4F]"></span>
-                  CREW Client (wgpu Vulkan)
-                </span>
-                <span class="font-display text-xl font-bold text-[#FF2B4F] tabular-nums">360 FPS</span>
-              </div>
-              <div class="mt-2.5 h-3 w-full overflow-hidden rounded-full bg-white/5">
-                <div class="h-full rounded-full bg-gradient-to-r from-[#FF2B4F] to-[#FF6B8B]" style="width: 90%;"></div>
-              </div>
-            </div>
-
-            <!-- Standard Launcher Bar with Draggable Slider -->
-            <div class="mt-5">
-              <div class="flex items-center justify-between text-sm">
-                <span class="flex items-center gap-2 font-medium text-white/60">
-                  <span class="size-2 rounded-full bg-white/30"></span>
-                  Klasik Başlatıcı
-                </span>
-                <span id="slider-fps-val" class="font-display text-xl font-bold text-white/60 tabular-nums">120 FPS</span>
-              </div>
-              <div class="mt-2.5 h-3 w-full overflow-hidden rounded-full bg-white/5">
-                <div id="slider-fps-bar" class="h-full rounded-full bg-white/30 transition-all duration-75" style="width: 30%;"></div>
-              </div>
-              <div class="mt-3">
-                <input type="range" id="hero-fps-range" min="30" max="240" value="120" step="5"
-                       class="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#FF2B4F] outline-none"
-                       aria-label="Klasik başlatıcı kare hızı kaydırıcısı"/>
-                <p class="mt-2 text-center text-[11px] text-white/40">Kendi sisteminizle karşılaştırmak için kaydırın</p>
-              </div>
-            </div>
-
-            <!-- Quick Specs Box -->
-            <div class="mt-5 rounded-xl bg-black/30 p-3.5 border border-white/5 text-xs text-white/60 space-y-1.5">
-              <div class="flex justify-between">
-                <span>Bellek (RAM) Tasarrufu:</span>
-                <span class="font-medium text-white/90">%47 Daha Az Tüketim</span>
-              </div>
-              <div class="flex justify-between">
-                <span>%1 Düşük (1% Low FPS):</span>
-                <span class="font-medium text-[#22c55e]">148 FPS (Sıfır Mikro Takılma)</span>
-              </div>
-              <div class="flex justify-between">
-                <span>Başlatma Süresi:</span>
-                <span class="font-medium text-white/90">&lt; 1 Saniye</span>
-              </div>
-            </div>
-
-            <div class="mt-4 text-center">
-              <a href="benchmarks.html" class="text-xs font-medium text-[#FF2B4F] hover:text-[#FF6B8B] transition">
-                Tüm Kıyaslama Testlerini İncele →
-              </a>
-            </div>
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span>Vulkan & DirectX 12 (wgpu)</span>
           </div>
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span>Düşük Gecikmeli TR Lokasyon</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-          <!-- Tab Content 2: CREW Network (Live Server Card) -->
-          <div id="hero-content-network" class="hidden">
-            <div class="flex items-center justify-between border-b border-white/5 pb-3">
-              <div>
-                <h3 class="text-sm font-semibold uppercase tracking-wider text-white/90">Resmi Topluluk Sunucusu</h3>
-                <p class="text-xs text-white/50">24/7 Kesintisiz Türkiye Lokasyon</p>
-              </div>
-              <span class="rounded-full bg-[#22c55e]/20 px-2.5 py-1 text-xs font-semibold text-[#22c55e] flex items-center gap-1.5">
-                <span class="size-1.5 rounded-full bg-[#22c55e] animate-ping"></span>
-                Çevrimiçi
+    <!-- DUAL PRODUCTS SECTION: CREW NETWORK & CREW CLIENT -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+        <h2 class="text-xs font-bold uppercase tracking-widest text-accent">İki Güçlü Ürün, Tek Ekosistem</h2>
+        <p class="text-3xl sm:text-4xl font-extrabold" style="color: var(--text-primary);">Topluluk ve Teknolojinin Buluştuğu Nokta</p>
+        <p class="text-sm leading-relaxed" style="color: var(--text-secondary);">CREW, hem 24/7 kesintisiz çalışan çok oyunculu sunucusu hem de sıfır gecikme sağlayan yerel Rust istemcisi ile Minecraft'ta yeni bir standart belirler.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- PRODUCT 1: CREW NETWORK (SERVER) -->
+        <div class="crew-glass rounded-2xl p-8 sm:p-10 flex flex-col justify-between transition-all duration-300 relative group overflow-hidden">
+          <div class="space-y-6">
+            <div class="flex items-center justify-between">
+              <span class="px-3 py-1 rounded-md text-xs font-bold tracking-wide uppercase" style="background: rgba(16, 185, 129, 0.1); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.2);">
+                24/7 Çevrim İçi Sunucu
               </span>
+              <span class="text-xs font-mono" style="color: var(--text-muted);">oyna.crewnetwork.space</span>
             </div>
 
-            <!-- Server IP & Copy Box -->
-            <div class="mt-5 p-4 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between">
-              <div>
-                <span class="text-[11px] font-semibold text-white/50 uppercase tracking-wider block">Sunucu Adresi</span>
-                <span class="font-mono text-sm sm:text-base font-bold text-white">oyna.crewnetwork.space</span>
+            <div>
+              <h3 class="text-2xl sm:text-3xl font-extrabold mb-3" style="color: var(--text-primary);">CREW Network</h3>
+              <p class="text-sm leading-relaxed" style="color: var(--text-secondary);">
+                Türkiye lokasyonlu, özel donanımlarla barındırılan rekabetçi Minecraft sunucusu. Sıfır TPS kaybı, BoxPvP, dengeli Survival ve gelişmiş hile korumasıyla gerçek oyuncu deneyimi.
+              </p>
+            </div>
+
+            <!-- Features List -->
+            <ul class="space-y-3 text-xs" style="color: var(--text-secondary);">
+              <li class="flex items-center gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+                <span><strong>Özel Modlar:</strong> BoxPvP, Survival, 1v1 Arena ve Topluluk Etkinlikleri</span>
+              </li>
+              <li class="flex items-center gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+                <span><strong>20 TPS Kesintisiz Çekirdek:</strong> Yüksek tıklama ve kombo doğruluğu</span>
+              </li>
+              <li class="flex items-center gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+                <span><strong>Geniş Sürüm Uyumu:</strong> 1.8.9'dan en son 1.21.x'e kadar doğrudan katılım</span>
+              </li>
+            </ul>
+
+            <!-- Copy IP Box -->
+            <div class="p-3.5 rounded-xl border flex items-center justify-between gap-3" style="background: var(--elevated); border-color: var(--border);">
+              <div class="truncate">
+                <span class="text-[10px] block uppercase font-mono" style="color: var(--text-muted);">Sunucu Adresi</span>
+                <span class="font-mono text-sm font-bold text-accent">oyna.crewnetwork.space</span>
               </div>
-              <button type="button" data-copy="oyna.crewnetwork.space"
-                      class="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-[#FF2B4F] px-3.5 text-xs font-semibold text-white shadow hover:bg-[#FF2B4F]/90 transition">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-3.5">
-                  <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
-                  <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-                </svg>
-                <span>Kopyala</span>
+              <button onclick="navigator.clipboard.writeText('oyna.crewnetwork.space'); alert('Sunucu adresi kopyalandı: oyna.crewnetwork.space');" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold border transition-all hover:bg-red-500/10 hover:border-red-500/50" style="border-color: var(--border); color: var(--text-primary);">
+                Kopyala
               </button>
             </div>
-
-            <!-- Server Quick Highlights -->
-            <div class="mt-4 grid grid-cols-2 gap-2 text-xs">
-              <div class="p-3 rounded-xl bg-white/5 border border-white/5">
-                <span class="text-white/40 block">Desteklenen Sürümler:</span>
-                <span class="font-semibold text-white">1.21.x & 1.8.9 - 1.20</span>
-              </div>
-              <div class="p-3 rounded-xl bg-white/5 border border-white/5">
-                <span class="text-white/40 block">Oyun Modları:</span>
-                <span class="font-semibold text-white">Survival, Bedwars, PvP</span>
-              </div>
-              <div class="p-3 rounded-xl bg-white/5 border border-white/5">
-                <span class="text-white/40 block">Ortalama Ping:</span>
-                <span class="font-semibold text-[#22c55e]">8 - 15 ms (TR İçi)</span>
-              </div>
-              <div class="p-3 rounded-xl bg-white/5 border border-white/5">
-                <span class="text-white/40 block">DDoS Koruması:</span>
-                <span class="font-semibold text-white">Voxility 1.8 Tbps</span>
-              </div>
-            </div>
-
-            <!-- Link to full server section -->
-            <div class="mt-4 text-center">
-              <a href="#sunucu" class="text-xs font-medium text-[#FF2B4F] hover:text-[#FF6B8B] transition">
-                Sunucu Detayları & Etkinlik Takvimi →
-              </a>
-            </div>
           </div>
 
-        </div>
-
-      </div>
-
-      <div aria-hidden="true" class="h-12 shrink-0"></div>
-    </section>
-
-    <!-- ======================================================================= -->
-    <!-- SECTION 1: ARCHITECTURE & FEATURES (#ozellikler) -->
-    <!-- ======================================================================= -->
-    <section id="ozellikler" aria-labelledby="features-title" class="scroll-mt-18 py-20 border-t border-white/5">
-      <div class="mx-auto w-full max-w-6xl px-6 lg:px-10">
-        
-        <!-- Top Split Card -->
-        <div class="grid lg:grid-cols-[minmax(0,25rem)_3rem_minmax(0,1fr)_3rem_23rem] items-center">
-          <div class="relative z-20 lg:col-start-1 lg:row-start-1">
-            <p class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#FF2B4F]">
-              <span>MİMARİ & PERFORMANS</span>
-            </p>
-            <h2 id="features-title" class="mt-4 font-display text-[clamp(2rem,3.6vw,3rem)] leading-[1.08] font-semibold tracking-[-0.03em] text-white">
-              Tavizsiz Hız, Sıfır Ek Yük.
-            </h2>
-          </div>
-
-          <div class="relative z-20 mt-6 lg:col-span-3 lg:col-start-1 lg:row-start-2 lg:mt-0 lg:pt-6">
-            <p class="text-base sm:text-lg leading-relaxed text-white/70">
-              CREW Client, klasik ağır Java başlatıcılarının aksine doğrudan donanımla konuşan 
-              yerel Rust motoru ve donanım hızlandırmalı GPUI arayüzü ile çalışır. 
-              Gereksiz katmanlar kaldırıldı; tüm sistem kaynakları yalnızca oyununuza ayrıldı.
-            </p>
-            <a href="#sunucu" class="mt-5 inline-flex items-center gap-1.5 text-[15px] font-medium text-[#FF2B4F] hover:text-[#FF6B8B] transition">
-              Resmi CREW Network Sunucusunu Gör →
+          <div class="pt-8">
+            <a href="/sunucu/" class="inline-flex items-center gap-2 text-sm font-bold text-accent hover:underline">
+              Sunucu Detaylarını İncele &rarr;
             </a>
           </div>
-
-          <!-- Feature Wallpaper Graphic -->
-          <div class="relative mt-10 h-[15rem] overflow-hidden rounded-2xl border border-white/10 sm:h-[18rem] lg:col-span-3 lg:col-start-3 lg:row-span-2 lg:row-start-1 lg:mt-0 lg:h-auto">
-            <img alt="Minecraft dünyası ve yüksek performans manzarası" 
-                 loading="lazy" 
-                 class="h-full w-full object-cover object-center" 
-                 src="_next/about-wallpapera8a0.jpeg?url=%2Fabout-wallpaper.jpg&amp;w=1200&amp;q=75"/>
-            <div class="absolute inset-0 bg-gradient-to-t from-[#0C0810] via-transparent to-transparent"></div>
-          </div>
         </div>
 
-        <!-- 3 Primary Feature Cards -->
-        <div class="mt-14 grid gap-8 md:grid-cols-3">
-          <!-- Card 1 -->
-          <div class="rounded-2xl border border-white/5 bg-[#1A0D15]/60 p-7 backdrop-blur-sm transition hover:border-[#FF2B4F]/30 hover:bg-[#1A0D15]">
-            <div class="size-11 rounded-xl bg-[#FF2B4F]/10 flex items-center justify-center text-[#FF2B4F] mb-5">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-6">
-                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-              </svg>
-            </div>
-            <h3 class="text-lg font-semibold text-white">Yerel Rust Motoru</h3>
-            <p class="mt-3 text-sm leading-relaxed text-white/65">
-              Doğrudan makine koduna derlenen çekirdek. Ağır Electron veya Webview bağımlılıkları yoktur. 
-              Sıfır milisaniye başlatıcı gecikmesi ve minimum RAM tüketimiyle arka planda yok gibi çalışır.
-            </p>
-          </div>
-
-          <!-- Card 2 -->
-          <div class="rounded-2xl border border-white/5 bg-[#1A0D15]/60 p-7 backdrop-blur-sm transition hover:border-[#FF2B4F]/30 hover:bg-[#1A0D15]">
-            <div class="size-11 rounded-xl bg-[#FF2B4F]/10 flex items-center justify-center text-[#FF2B4F] mb-5">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-6">
-                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
-              </svg>
-            </div>
-            <h3 class="text-lg font-semibold text-white">Yüksek FPS & Düşük Gecikme</h3>
-            <p class="mt-3 text-sm leading-relaxed text-white/65">
-              Optimize edilmiş JVM parametreleri, modern bellek tahsis yöntemleri ve entegre 
-              performans modları sayesinde mikro takılmaları önler, %1 düşük kare hızlarını 3 kat artırır.
-            </p>
-          </div>
-
-          <!-- Card 3 -->
-          <div class="rounded-2xl border border-white/5 bg-[#1A0D15]/60 p-7 backdrop-blur-sm transition hover:border-[#FF2B4F]/30 hover:bg-[#1A0D15]">
-            <div class="size-11 rounded-xl bg-[#FF2B4F]/10 flex items-center justify-center text-[#FF2B4F] mb-5">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-6">
-                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-              </svg>
-            </div>
-            <h3 class="text-lg font-semibold text-white">Resmi Microsoft Güvenliği</h3>
-            <p class="mt-3 text-sm leading-relaxed text-white/65">
-              Resmi Microsoft OAuth2 PKCE akışını kullanır. Şifreniz asla istemci veya sunucularımızda saklanmaz. 
-              Oturum belirteçleri Windows Credential Manager ile donanım seviyesinde şifrelenir.
-            </p>
-          </div>
-        </div>
-
-        <!-- 3 Secondary Cards -->
-        <div class="mt-8 grid gap-8 md:grid-cols-3">
-          <!-- Card 4 -->
-          <div class="rounded-2xl border border-white/5 bg-[#1A0D15]/40 p-6 transition hover:border-white/15">
-            <h4 class="text-base font-medium text-white flex items-center gap-2">
-              <span class="size-2 rounded-full bg-[#FF2B4F]"></span>
-              Fabric & Quilt Mod Desteği
-            </h4>
-            <p class="mt-2 text-xs leading-relaxed text-white/60">
-              Tek tıkla Fabric veya Quilt profili oluşturun. Modlarınızı doğrudan arayüzden yönetin, 
-              Sodium, Lithium ve Iris gibi popüler modlarla anında çalışın.
-            </p>
-          </div>
-
-          <!-- Card 5 -->
-          <div class="rounded-2xl border border-white/5 bg-[#1A0D15]/40 p-6 transition hover:border-white/15">
-            <h4 class="text-base font-medium text-white flex items-center gap-2">
-              <span class="size-2 rounded-full bg-[#22c55e]"></span>
-              İmzalı Otomatik Güncellemeler
-            </h4>
-            <p class="mt-2 text-xs leading-relaxed text-white/60">
-              GitHub Releases altyapısı üzerinden kriptografik SHA-256 imzalarıyla doğrulanmış 
-              otomatik arka plan güncellemeleri. Her sürüm güvenli ve şeffaf.
-            </p>
-          </div>
-
-          <!-- Card 6 -->
-          <div class="rounded-2xl border border-white/5 bg-[#1A0D15]/40 p-6 transition hover:border-white/15">
-            <h4 class="text-base font-medium text-white flex items-center gap-2">
-              <span class="size-2 rounded-full bg-[#3b82f6]"></span>
-              Açık Kaynak & Şeffaf Topluluk
-            </h4>
-            <p class="mt-2 text-xs leading-relaxed text-white/60">
-              Kaynak kodları GitHub üzerinde herkesin incelemesine açıktır. Gizli veri toplama, 
-              arka plan madenciliği veya şüpheli telemetri kesinlikle bulunmaz.
-            </p>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ======================================================================= -->
-    <!-- SECTION 1.5: ECOSYSTEM SYNERGY — HOW THEY WORK TOGETHER (#ekosistem) -->
-    <!-- ======================================================================= -->
-    <section id="ekosistem" aria-labelledby="ecosystem-title" class="scroll-mt-18 py-20 border-t border-white/5 relative isolate overflow-hidden">
-      <div class="mx-auto w-full max-w-6xl px-6 lg:px-10">
-        
-        <!-- Section Header -->
-        <div class="text-center max-w-2xl mx-auto mb-14">
-          <p class="text-xs font-semibold uppercase tracking-wider text-[#FF2B4F] inline-flex items-center gap-1.5">
-            <span class="size-1.5 rounded-full bg-[#FF2B4F]"></span>
-            <span>BİRLİKTE DAHA GÜÇLÜ</span>
-          </p>
-          <h2 id="ecosystem-title" class="mt-3 font-display text-[clamp(2rem,3.8vw,3.2rem)] leading-[1.08] font-semibold tracking-[-0.03em] text-white">
-            İki Güçlü Ürün, <span class="text-[#FF2B4F]">Kusursuz Bir Bütün.</span>
-          </h2>
-          <p class="mt-4 text-sm sm:text-base text-white/60 leading-relaxed">
-            CREW Client ve CREW Network bağımsız olarak birinci sınıf ürünlerdir; ancak birlikte kullanıldıklarında 
-            Minecraft deneyiminizi eşsiz bir akıcılık ve sinerjiye kavuşturur.
-          </p>
-        </div>
-
-        <!-- 4 Synergy Pillars -->
-        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          
-          <!-- Pillar 1 -->
-          <div class="group relative rounded-2xl bg-white/[0.04] p-6 border border-white/10 transition-all duration-300 hover:border-[#FF2B4F]/40 hover:-translate-y-1 flex flex-col justify-between">
-            <div>
-              <div class="size-11 rounded-xl bg-[#FF2B4F]/10 border border-[#FF2B4F]/30 flex items-center justify-center text-[#FF2B4F] mb-5">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-5">
-                  <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"></path>
-                </svg>
-              </div>
-              <h3 class="font-display text-lg font-semibold text-white">Tek Tıkla Doğrudan Giriş</h3>
-              <p class="mt-2.5 text-xs sm:text-sm text-white/60 leading-relaxed">
-                Sunucu IP'sini aramak veya elle yazmakla uğraşmayın. CREW Client başlatıcısındaki tek tıkla doğrudan CREW Network lobisine bağlanın.
-              </p>
-            </div>
-            <div class="mt-6 pt-4 border-t border-white/5 text-[11px] font-mono text-[#FF2B4F]">
-              0 Saniye Yapılandırma
-            </div>
-          </div>
-
-          <!-- Pillar 2 -->
-          <div class="group relative rounded-2xl bg-white/[0.04] p-6 border border-white/10 transition-all duration-300 hover:border-[#FF2B4F]/40 hover:-translate-y-1 flex flex-col justify-between">
-            <div>
-              <div class="size-11 rounded-xl bg-[#FF2B4F]/10 border border-[#FF2B4F]/30 flex items-center justify-center text-[#FF2B4F] mb-5">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-5">
-                  <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-                  <path d="M3 3v5h5"></path>
-                  <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
-                  <path d="M16 21h5v-5"></path>
-                </svg>
-              </div>
-              <h3 class="font-display text-lg font-semibold text-white">Sıfır Beklemeli Senkronizasyon</h3>
-              <p class="mt-2.5 text-xs sm:text-sm text-white/60 leading-relaxed">
-                Sunucunun özel mini-oyun dokuları, özel zırh kaplamaları ve ses efektleri oyuna girmeden önce arka planda yerel önbelleğe alınır.
-              </p>
-            </div>
-            <div class="mt-6 pt-4 border-t border-white/5 text-[11px] font-mono text-[#22c55e]">
-              Kaynak Yükleme Donması Yok
-            </div>
-          </div>
-
-          <!-- Pillar 3 -->
-          <div class="group relative rounded-2xl bg-white/[0.04] p-6 border border-white/10 transition-all duration-300 hover:border-[#FF2B4F]/40 hover:-translate-y-1 flex flex-col justify-between">
-            <div>
-              <div class="size-11 rounded-xl bg-[#FF2B4F]/10 border border-[#FF2B4F]/30 flex items-center justify-center text-[#FF2B4F] mb-5">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-5">
-                  <path d="M12 20v-6M6 20V10M18 20V4"></path>
-                </svg>
-              </div>
-              <h3 class="font-display text-lg font-semibold text-white">Optimize Edilmiş Yerel Netcode</h3>
-              <p class="mt-2.5 text-xs sm:text-sm text-white/60 leading-relaxed">
-                Yerel soket katmanı paket kayıplarını (packet drop) ve gecikme sıçramalarını minimize ederek PvP ve rekabetçi anlarda kusursuz vuruş tespiti sunar.
-              </p>
-            </div>
-            <div class="mt-6 pt-4 border-t border-white/5 text-[11px] font-mono text-[#FF2B4F]">
-              8 - 15 ms Kristal Ping
-            </div>
-          </div>
-
-          <!-- Pillar 4 -->
-          <div class="group relative rounded-2xl bg-white/[0.04] p-6 border border-white/10 transition-all duration-300 hover:border-[#FF2B4F]/40 hover:-translate-y-1 flex flex-col justify-between">
-            <div>
-              <div class="size-11 rounded-xl bg-[#FF2B4F]/10 border border-[#FF2B4F]/30 flex items-center justify-center text-[#FF2B4F] mb-5">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-5">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="m4.93 4.93 14.14 14.14"></path>
-                </svg>
-              </div>
-              <h3 class="font-display text-lg font-semibold text-white">Evrensel Açık Uyumluluk</h3>
-              <p class="mt-2.5 text-xs sm:text-sm text-white/60 leading-relaxed">
-                CREW Client kapalı bir ekosistem değildir. Vanilla, Fabric ve Quilt desteğiyle dünyadaki tüm diğer Minecraft sunucularında özgürce oynayabilirsiniz.
-              </p>
-            </div>
-            <div class="mt-6 pt-4 border-t border-white/5 text-[11px] font-mono text-white/60">
-              %100 Standart Java Edition
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ======================================================================= -->
-    <!-- SECTION 2: OFFICIAL SERVER BANNER (#sunucu) -->
-    <!-- ======================================================================= -->
-    <section id="sunucu" aria-labelledby="server-title" class="scroll-mt-18 py-16">
-      <div class="mx-auto w-full max-w-6xl px-6 lg:px-10">
-        
-        <div class="relative overflow-hidden rounded-3xl bg-[radial-gradient(ellipse_at_80%_50%,rgba(255,43,79,0.22),transparent_60%),linear-gradient(110deg,#0e0914,#180c16_50%,#260d1b)] border border-[#FF2B4F]/30 p-8 sm:p-12 shadow-2xl">
-          
-          <div class="relative z-10 max-w-2xl">
-            <!-- Server Badge -->
-            <div class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white/80 border border-white/10 backdrop-blur-md">
-              <span id="server-status-dot" class="size-2 rounded-full bg-[#22c55e] animate-pulse"></span>
-              <span id="server-status-text">Sunucu Çevrimiçi</span>
-              <span class="text-white/30">·</span>
-              <span id="server-player-count" class="font-semibold text-white tabular-nums">Bağlantı kuruluyor...</span>
-            </div>
-
-            <!-- Server Title -->
-            <h2 id="server-title" class="mt-5 font-display text-[clamp(2.2rem,4vw,3.5rem)] leading-none font-bold tracking-tight text-white">
-              oyna.crewnetwork.space
-            </h2>
-
-            <!-- Server Description -->
-            <p class="mt-4 text-base sm:text-lg text-white/70 leading-relaxed">
-              Türkiye'nin en hızlı büyüyen Minecraft topluluk sunucusu. 
-              Düşük gecikme süresi, gelişmiş anti-cheat sistemi ve CREW Client ile 
-              optimize edilmiş bağlantı desteğiyle kesintisiz oynayın.
-            </p>
-
-            <!-- 1-Click Copy IP Box -->
-            <div class="mt-8 flex flex-wrap items-center gap-4">
-              <div class="flex items-center rounded-xl bg-black/40 border border-white/15 px-4 py-2.5 backdrop-blur-md">
-                <span class="font-mono text-sm sm:text-base font-semibold text-white select-all">oyna.crewnetwork.space</span>
-              </div>
-
-              <button type="button" 
-                      data-copy="oyna.crewnetwork.space" 
-                      class="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#FF2B4F] px-5 text-sm font-semibold text-white shadow-lg shadow-[#FF2B4F]/30 transition hover:bg-[#FF2B4F]/90 active:scale-95">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-4">
-                  <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
-                  <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-                </svg>
-                <span>Sunucu IP'sini Kopyala</span>
-              </button>
-            </div>
-
-            <!-- Server Metadata Pills -->
-            <div class="mt-6 flex flex-wrap items-center gap-3 text-xs text-white/50">
-              <span class="rounded-md bg-white/5 px-2.5 py-1 border border-white/5">Minecraft 1.21.x</span>
-              <span class="rounded-md bg-white/5 px-2.5 py-1 border border-white/5">Vanilla & Fabric Uyumlu</span>
-              <span class="rounded-md bg-white/5 px-2.5 py-1 border border-white/5">7/24 Kesintisiz</span>
-              <span class="rounded-md bg-white/5 px-2.5 py-1 border border-white/5">Düşük Ping (TR Lokasyon)</span>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ======================================================================= -->
-    <!-- SECTION 3: PERFORMANCE & VISUAL GALLERY (#performans) -->
-    <!-- ======================================================================= -->
-    <section id="performans" aria-labelledby="gallery-title" class="scroll-mt-18 py-20 border-t border-white/5">
-      <div class="mx-auto w-full max-w-6xl px-6 lg:px-10">
-        
-        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
-          <div>
-            <p class="text-xs font-semibold uppercase tracking-wider text-[#FF2B4F]">PERFORMANS & GÖRSELLİK</p>
-            <h2 id="gallery-title" class="mt-3 font-display text-[clamp(2rem,3.6vw,3rem)] leading-[1.08] font-semibold tracking-[-0.03em] text-white">
-              Sevdiğiniz Oyun, <span class="text-[#FF2B4F]">3 Kat Daha Akıcı.</span>
-            </h2>
-          </div>
-          <p class="max-w-md text-sm text-white/60 leading-relaxed">
-            Gelişmiş bellek yönetimi ve optimize edilmiş render hattı ile 
-            Minecraft dünyanızı en yüksek kare hızında keşfedin.
-          </p>
-        </div>
-
-        <!-- 4 Screenshots Grid -->
-        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:grid-rows-[auto_12rem_14rem]">
-          
-          <!-- Figure 1: Nether (Large) -->
-          <figure class="group relative aspect-video overflow-hidden rounded-2xl bg-white/[0.04] border border-white/10 lg:aspect-auto sm:col-span-2 lg:col-start-1 lg:row-span-2 lg:row-start-1">
-            <img alt="Nether dünyasında akıcı ve yüksek FPS render görseli" 
-                 loading="lazy" 
-                 class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" 
-                 src="_next/nether0cda.jpeg?url=%2Fmedia%2Fnether.webp&amp;w=1200&amp;q=75"/>
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-            <figcaption class="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs text-white">
-              <span class="font-medium">Nether Dünyası · Karmaşık parçacıklar ve lav gölleri</span>
-              <span class="rounded bg-black/60 px-2 py-0.5 font-mono text-[#FF2B4F]">340+ FPS</span>
-            </figcaption>
-          </figure>
-
-          <!-- Figure 2: Savanna Village -->
-          <figure class="group relative aspect-video overflow-hidden rounded-2xl bg-white/[0.04] border border-white/10 lg:aspect-auto lg:col-start-3 lg:row-start-1">
-            <img alt="Köy manzarası ve detaylı blok çizimleri" 
-                 loading="lazy" 
-                 class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" 
-                 src="_next/village-8002d9b.jpeg?url=%2Fmedia%2Fvillage-800.webp&amp;w=750&amp;q=75"/>
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-            <figcaption class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-white">
-              <span class="font-medium">Köy Manzarası</span>
-              <span class="rounded bg-black/60 px-2 py-0.5 font-mono text-[#22c55e]">380 FPS</span>
-            </figcaption>
-          </figure>
-
-          <!-- Figure 3: Night Sky -->
-          <figure class="group relative aspect-video overflow-hidden rounded-2xl bg-white/[0.04] border border-white/10 lg:aspect-auto lg:col-start-3 lg:row-start-2">
-            <img alt="Gece manzarası ve atmosferik aydınlatma" 
-                 loading="lazy" 
-                 class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" 
-                 src="_next/night-800e04f.jpeg?url=%2Fmedia%2Fnight-800.webp&amp;w=750&amp;q=75"/>
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-            <figcaption class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-white">
-              <span class="font-medium">Gece Aydınlatması</span>
-              <span class="rounded bg-black/60 px-2 py-0.5 font-mono text-[#22c55e]">395 FPS</span>
-            </figcaption>
-          </figure>
-
-          <!-- Figure 4: Underwater / Ocean -->
-          <figure class="group relative aspect-video overflow-hidden rounded-2xl bg-white/[0.04] border border-white/10 lg:aspect-auto sm:col-span-2 sm:aspect-[21/9] lg:col-start-1 lg:row-start-3">
-            <img alt="Sualtı okyanus resifleri ve akıcı su fiziği" 
-                 loading="lazy" 
-                 class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" 
-                 src="_next/underwater5b7b.jpeg?url=%2Fmedia%2Funderwater.webp&amp;w=1200&amp;q=75"/>
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-            <figcaption class="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs text-white">
-              <span class="font-medium">Okyanus Resifleri · Şeffaf su katmanları ve zengin biyomlar</span>
-              <span class="rounded bg-black/60 px-2 py-0.5 font-mono text-[#FF2B4F]">362 FPS</span>
-            </figcaption>
-          </figure>
-
-        </div>
-
-        <!-- Benchmark Banner -->
-        <div class="mt-12 rounded-2xl border border-white/10 bg-[#1A0D15] p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div>
-            <h3 class="text-lg font-semibold text-white">Resmi Donanım Kriter Testleri</h3>
-            <p class="mt-1 text-sm text-white/60">Giriş, orta ve üst seviye donanımlarda yapılan detaylı FPS ve bellek karşılaştırmaları.</p>
-          </div>
-          <a href="benchmarks.html" class="inline-flex h-11 items-center justify-center rounded-xl bg-white/10 px-6 text-sm font-semibold text-white transition hover:bg-white/15 shrink-0">
-            Kriter Testlerini İncele →
-          </a>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ======================================================================= -->
-    <!-- SECTION 4: DIRECT DOWNLOADS & SYSTEM REQUIREMENTS (#indir) -->
-    <!-- ======================================================================= -->
-    <section id="indir" aria-labelledby="download-title" class="scroll-mt-18 py-20 border-t border-white/5 bg-[#0C0810]">
-      <div class="mx-auto w-full max-w-6xl px-6 lg:px-10">
-        
-        <div class="text-center max-w-2xl mx-auto mb-16">
-          <p class="text-xs font-semibold uppercase tracking-wider text-[#FF2B4F]">RESMİ İNDİRME MERKEZİ</p>
-          <h2 id="download-title" class="mt-3 font-display text-[clamp(2.2rem,4vw,3.2rem)] font-bold tracking-tight text-white">
-            CREW Client'ı İndirin
-          </h2>
-          <p class="mt-4 text-base text-white/65">
-            Windows 10 ve Windows 11 (64-bit) için optimize edilmiş en güncel kararlı sürüm. 
-            İhtiyacınıza uygun olan sürümü seçin.
-          </p>
-        </div>
-
-        <!-- 2 Download Cards -->
-        <div class="grid gap-8 md:grid-cols-2">
-          
-          <!-- Card 1: Installer -->
-          <div class="relative rounded-3xl border-2 border-[#FF2B4F] bg-[#1A0D15] p-8 shadow-2xl shadow-[#FF2B4F]/10 flex flex-col justify-between">
-            <div class="absolute -top-3.5 right-8 rounded-full bg-[#FF2B4F] px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-white shadow-md">
-              Önerilen Sürüm
+        <!-- PRODUCT 2: CREW CLIENT (LAUNCHER) -->
+        <div class="crew-glass rounded-2xl p-8 sm:p-10 flex flex-col justify-between transition-all duration-300 relative group overflow-hidden">
+          <div class="space-y-6">
+            <div class="flex items-center justify-between">
+              <span class="px-3 py-1 rounded-md text-xs font-bold tracking-wide uppercase" style="background: var(--badge-bg); color: var(--accent); border: 1px solid var(--border);">
+                Yerel Rust Motoru v2.1.0
+              </span>
+              <span class="text-xs font-mono" style="color: var(--text-muted);">Windows 10/11 x64</span>
             </div>
 
             <div>
-              <div class="flex items-center gap-3">
-                <div class="size-12 rounded-2xl bg-[#FF2B4F]/15 flex items-center justify-center text-[#FF2B4F]">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-6">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
-                  </svg>
-                </div>
-                <div>
-                  <h3 class="text-xl font-bold text-white">Kurulum Sürümü (Setup .exe)</h3>
-                  <span class="text-xs text-white/50">Windows x64 Installer · Otomatik Güncelleme</span>
-                </div>
-              </div>
-
-              <p class="mt-5 text-sm text-white/70 leading-relaxed">
-                Masaüstü ve Başlat menüsü kısayollarını otomatik oluşturur. 
-                Yeni sürümler yayınlandığında sessiz arka plan güncellemelerini destekler.
+              <h3 class="text-2xl sm:text-3xl font-extrabold mb-3" style="color: var(--text-primary);">CREW Client</h3>
+              <p class="text-sm leading-relaxed" style="color: var(--text-secondary);">
+                Rust ve wgpu grafik kütüphanesiyle inşa edilmiş masaüstü Minecraft başlatıcısı. 3 kata kadar FPS artışı, anında başlatma ve resmi Microsoft OAuth2 entegrasyonu.
               </p>
-
-              <!-- File Details Table -->
-              <div class="mt-6 space-y-2 rounded-xl bg-black/40 p-4 border border-white/5 text-xs">
-                <div class="flex justify-between py-1 border-b border-white/5">
-                  <span class="text-white/50">Dosya:</span>
-                  <span class="font-mono text-white/90">CREW-Client-Setup-x64.exe</span>
-                </div>
-                <div class="flex justify-between py-1 border-b border-white/5">
-                  <span class="text-white/50">Sürüm:</span>
-                  <span class="font-medium text-white/90">v2.1.0 (Kararlı)</span>
-                </div>
-                <div class="flex justify-between py-1 border-b border-white/5">
-                  <span class="text-white/50">Boyut:</span>
-                  <span class="font-medium text-white/90">17.6 MB (18,472,484 bayt)</span>
-                </div>
-                <div class="flex justify-between py-1">
-                  <span class="text-white/50">İmza:</span>
-                  <span class="text-[#22c55e]">SHA-256 Doğrulandı</span>
-                </div>
-              </div>
-
-              <!-- SHA-256 Box -->
-              <div class="mt-4">
-                <label class="block text-[11px] font-semibold uppercase tracking-wider text-white/40 mb-1.5">SHA-256 Sağlama Toplamı</label>
-                <div class="flex items-center gap-2 rounded-lg bg-black/60 border border-white/10 px-3 py-2">
-                  <code class="text-[11px] font-mono text-white/60 truncate flex-1">c1ccbdf95ff596dbae132814e11b6286a8a267c9344e307f8a91ad005b7f13df</code>
-                  <button type="button" 
-                          data-copy="c1ccbdf95ff596dbae132814e11b6286a8a267c9344e307f8a91ad005b7f13df" 
-                          class="text-white/50 hover:text-white transition p-1" 
-                          title="Hash Kopyala">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-4">
-                      <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
-                      <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-                    </svg>
-                  </button>
-                </div>
-              </div>
             </div>
 
-            <!-- Download Button -->
-            <div class="mt-8">
-              <a href="https://github.com/CodingM-eng/CREW-Client/releases/download/v2.1.0/CREW-Client-Setup-x64.exe" 
-                 class="inline-flex h-12 w-full items-center justify-center gap-2.5 rounded-xl bg-[#FF2B4F] text-center text-[15px] font-semibold text-white shadow-lg shadow-[#FF2B4F]/30 transition hover:bg-[#FF2B4F]/90 active:scale-[0.99]">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-5">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
-                </svg>
-                <span>Setup .exe İndir (17.6 MB)</span>
+            <!-- Features List -->
+            <ul class="space-y-3 text-xs" style="color: var(--text-secondary);">
+              <li class="flex items-center gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+                <span><strong>wgpu Grafik Motoru:</strong> Vulkan ve DirectX 12 üzerinde sıfır gecikme</span>
+              </li>
+              <li class="flex items-center gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+                <span><strong>Fabric & Quilt Desteği:</strong> Dinamik sürüm keşfi ve kütüphane kurulumu</span>
+              </li>
+              <li class="flex items-center gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+                <span><strong>180s İzleme Watchdog:</strong> Takılmaları algılayan güvenli başlatma süreci</span>
+              </li>
+            </ul>
+
+            <!-- Release Quick Info Box -->
+            <div class="p-3.5 rounded-xl border flex items-center justify-between gap-3" style="background: var(--elevated); border-color: var(--border);">
+              <div>
+                <span class="text-[10px] block uppercase font-mono" style="color: var(--text-muted);">Son Kararlı Derleme</span>
+                <span class="font-mono text-sm font-bold" style="color: var(--text-primary);">CREW Client v2.1.0 (Setup & Portable)</span>
+              </div>
+              <a href="/client/indir/" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white shadow-sm" style="background: #FF2B4F;">
+                İndir
               </a>
             </div>
           </div>
 
-          <!-- Card 2: Portable -->
-          <div class="rounded-3xl border border-white/10 bg-[#1A0D15] p-8 shadow-xl flex flex-col justify-between">
-            <div>
-              <div class="flex items-center gap-3">
-                <div class="size-12 rounded-2xl bg-white/10 flex items-center justify-center text-white/80">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-6">
-                    <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v1"></path>
-                    <path d="M18 8h4a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-4"></path>
-                    <circle cx="8" cy="12" r="2"></circle>
-                  </svg>
-                </div>
-                <div>
-                  <h3 class="text-xl font-bold text-white">Taşınabilir Sürüm (Portable .exe)</h3>
-                  <span class="text-xs text-white/50">Kurulum Gerektirmez · USB Bellek Dostu</span>
-                </div>
-              </div>
-
-              <p class="mt-5 text-sm text-white/70 leading-relaxed">
-                Herhangi bir kurulum yapmadan doğrudan çift tıklayarak çalışır. 
-                Sistem kayıt defterine dokunmaz, USB bellek veya taşınabilir disklerden sorunsuz başlatılır.
-              </p>
-
-              <!-- File Details Table -->
-              <div class="mt-6 space-y-2 rounded-xl bg-black/40 p-4 border border-white/5 text-xs">
-                <div class="flex justify-between py-1 border-b border-white/5">
-                  <span class="text-white/50">Dosya:</span>
-                  <span class="font-mono text-white/90">CREW-Client.exe</span>
-                </div>
-                <div class="flex justify-between py-1 border-b border-white/5">
-                  <span class="text-white/50">Sürüm:</span>
-                  <span class="font-medium text-white/90">v2.1.0 (Kararlı)</span>
-                </div>
-                <div class="flex justify-between py-1 border-b border-white/5">
-                  <span class="text-white/50">Boyut:</span>
-                  <span class="font-medium text-white/90">65.5 MB (68,766,208 bayt)</span>
-                </div>
-                <div class="flex justify-between py-1">
-                  <span class="text-white/50">İmza:</span>
-                  <span class="text-[#22c55e]">SHA-256 Doğrulandı</span>
-                </div>
-              </div>
-
-              <!-- SHA-256 Box -->
-              <div class="mt-4">
-                <label class="block text-[11px] font-semibold uppercase tracking-wider text-white/40 mb-1.5">SHA-256 Sağlama Toplamı</label>
-                <div class="flex items-center gap-2 rounded-lg bg-black/60 border border-white/10 px-3 py-2">
-                  <code class="text-[11px] font-mono text-white/60 truncate flex-1">9ce2ebdd2d7e46b1e3fbcb5fae9ccfbf14f6b6ab9fbab79ab249053c5a349d0f</code>
-                  <button type="button" 
-                          data-copy="9ce2ebdd2d7e46b1e3fbcb5fae9ccfbf14f6b6ab9fbab79ab249053c5a349d0f" 
-                          class="text-white/50 hover:text-white transition p-1" 
-                          title="Hash Kopyala">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-4">
-                      <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
-                      <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Download Button -->
-            <div class="mt-8">
-              <a href="https://github.com/CodingM-eng/CREW-Client/releases/download/v2.1.0/CREW-Client.exe" 
-                 class="inline-flex h-12 w-full items-center justify-center gap-2.5 rounded-xl bg-white/10 text-center text-[15px] font-semibold text-white transition hover:bg-white/15 active:scale-[0.99]">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-5">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
-                </svg>
-                <span>Portable .exe İndir (65.5 MB)</span>
-              </a>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- System Requirements Table -->
-        <div class="mt-16 rounded-3xl border border-white/10 bg-[#1A0D15]/60 p-8 backdrop-blur-md">
-          <h3 class="text-xl font-bold text-white mb-6">Sistem Gereksinimleri</h3>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm text-white/70">
-              <thead>
-                <tr class="border-b border-white/10 text-xs uppercase tracking-wider text-white/40">
-                  <th class="pb-3 font-semibold">Bileşen</th>
-                  <th class="pb-3 font-semibold">Minimum Gereksinim</th>
-                  <th class="pb-3 font-semibold text-[#FF2B4F]">Önerilen Sistem</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-white/5">
-                <tr>
-                  <td class="py-3 font-medium text-white">İşletim Sistemi</td>
-                  <td class="py-3">Windows 10 64-bit (Sürüm 1809+)</td>
-                  <td class="py-3 text-white">Windows 11 64-bit</td>
-                </tr>
-                <tr>
-                  <td class="py-3 font-medium text-white">İşlemci (CPU)</td>
-                  <td class="py-3">Intel Core i3-3210 / AMD A8-7600</td>
-                  <td class="py-3 text-white">Intel Core i5-10400 / AMD Ryzen 5 3600 veya üzeri</td>
-                </tr>
-                <tr>
-                  <td class="py-3 font-medium text-white">Bellek (RAM)</td>
-                  <td class="py-3">4 GB RAM</td>
-                  <td class="py-3 text-white">8 GB veya 16 GB RAM</td>
-                </tr>
-                <tr>
-                  <td class="py-3 font-medium text-white">Ekran Kartı (GPU)</td>
-                  <td class="py-3">Intel HD Graphics 4000 / AMD Radeon R5</td>
-                  <td class="py-3 text-white">NVIDIA GeForce GTX 1060 / AMD Radeon RX 580</td>
-                </tr>
-                <tr>
-                  <td class="py-3 font-medium text-white">Depolama Alanı</td>
-                  <td class="py-3">2 GB boş sabit disk alanı</td>
-                  <td class="py-3 text-white">5 GB boş SSD alanı</td>
-                </tr>
-                <tr>
-                  <td class="py-3 font-medium text-white">Java Çalışma Ortamı</td>
-                  <td class="py-3" colspan="2">CREW Client tarafından otomatik indirilir ve yönetilir (Harici kurulum gerekmez)</td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="pt-8">
+            <a href="/client/" class="inline-flex items-center gap-2 text-sm font-bold text-accent hover:underline">
+              İstemci Özelliklerini Keşfet &rarr;
+            </a>
           </div>
         </div>
-
       </div>
     </section>
 
-    <!-- ======================================================================= -->
-    <!-- SECTION 5: FREQUENTLY ASKED QUESTIONS (#sss) -->
-    <!-- ======================================================================= -->
-    <section id="sss" aria-labelledby="faq-title" class="scroll-mt-18 py-20 border-t border-white/5">
-      <div class="mx-auto w-full max-w-4xl px-6 lg:px-10">
-        
-        <div class="text-center mb-14">
-          <p class="text-xs font-semibold uppercase tracking-wider text-[#FF2B4F]">YARDIM & DESTEK</p>
-          <h2 id="faq-title" class="mt-3 font-display text-[clamp(2rem,3.6vw,3rem)] font-bold text-white">
-            Sıkça Sorulan Sorular
-          </h2>
-          <p class="mt-3 text-sm text-white/60">CREW Client hakkında aklınıza gelebilecek tüm soruların yanıtları.</p>
-        </div>
-
-        <div class="space-y-4">
-          
-          <!-- FAQ 1 -->
-          <div class="faq-item rounded-2xl border border-white/10 bg-[#1A0D15]/70 backdrop-blur-sm transition">
-            <button type="button" class="faq-toggle w-full flex items-center justify-between p-6 text-left" aria-expanded="false">
-              <span class="text-base font-semibold text-white">CREW Client nedir ve klasik Minecraft başlatıcılarından ne farkı vardır?</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="faq-chevron size-5 text-white/60 transition-transform duration-300 shrink-0 ml-4">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            </button>
-            <div class="faq-answer px-6 pb-6 text-sm text-white/70 leading-relaxed border-t border-white/5 pt-4">
-              CREW Client, klasik hantal başlatıcıların aksine doğrudan Rust diliyle derlenmiş ultra hafif yerel bir başlatıcıdır. 
-              Sıfır milisaniye başlatıcı gecikmesi sunar, bellek sızıntılarını engeller ve dahili Fabric/Quilt desteği ile 
-              oyun içi kare hızlarını (FPS) 3 katına kadar artırır.
-            </div>
-          </div>
-
-          <!-- FAQ 2 -->
-          <div class="faq-item rounded-2xl border border-white/10 bg-[#1A0D15]/70 backdrop-blur-sm transition">
-            <button type="button" class="faq-toggle w-full flex items-center justify-between p-6 text-left" aria-expanded="false">
-              <span class="text-base font-semibold text-white">Microsoft hesabımla giriş yapmak güvenli mi?</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="faq-chevron size-5 text-white/60 transition-transform duration-300 shrink-0 ml-4">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            </button>
-            <div class="faq-answer px-6 pb-6 text-sm text-white/70 leading-relaxed border-t border-white/5 pt-4">
-              Evet, %100 güvenlidir. CREW Client, resmi Microsoft OAuth2 PKCE protokolünü uygular. Giriş işlemi 
-              doğrudan Microsoft'un resmi tarayıcı sayfasında tamamlanır. Şifreniz hiçbir zaman istemcimize veya sunucularımıza iletilmez. 
-              Oturum anahtarları ise Windows Credential Manager içinde donanım düzeyinde şifrelenir.
-            </div>
-          </div>
-
-          <!-- FAQ 3 -->
-          <div class="faq-item rounded-2xl border border-white/10 bg-[#1A0D15]/70 backdrop-blur-sm transition">
-            <button type="button" class="faq-toggle w-full flex items-center justify-between p-6 text-left" aria-expanded="false">
-              <span class="text-base font-semibold text-white">Korsan veya çevrimdışı (offline) hesapları destekliyor mu?</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="faq-chevron size-5 text-white/60 transition-transform duration-300 shrink-0 ml-4">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            </button>
-            <div class="faq-answer px-6 pb-6 text-sm text-white/70 leading-relaxed border-t border-white/5 pt-4">
-              CREW Client, yerel ağ ve çevrimdışı test profillerini destekler. Ancak resmi sunuculara (oyna.crewnetwork.space gibi) 
-              ve Microsoft kimlik doğrulaması gerektiren sunuculara erişmek için resmi Microsoft Minecraft: Java Edition lisansı gerekmektedir.
-            </div>
-          </div>
-
-          <!-- FAQ 4 -->
-          <div class="faq-item rounded-2xl border border-white/10 bg-[#1A0D15]/70 backdrop-blur-sm transition">
-            <button type="button" class="faq-toggle w-full flex items-center justify-between p-6 text-left" aria-expanded="false">
-              <span class="text-base font-semibold text-white">Fabric ve Quilt modlarını nasıl kurabilirim?</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="faq-chevron size-5 text-white/60 transition-transform duration-300 shrink-0 ml-4">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            </button>
-            <div class="faq-answer px-6 pb-6 text-sm text-white/70 leading-relaxed border-t border-white/5 pt-4">
-              CREW Client arayüzünde sürüm oluştururken "Fabric" veya "Quilt" seçeneğini tek tıkla işaretlemeniz yeterlidir. 
-              İstemci gerekli kütüphaneleri otomatik olarak indirir ve kurar. Mod dosyalarınızı doğrudan istemci içerisindeki 
-              "Mod Klasörünü Aç" düğmesine tıklayarak ekleyebilirsiniz.
-            </div>
-          </div>
-
-          <!-- FAQ 5 -->
-          <div class="faq-item rounded-2xl border border-white/10 bg-[#1A0D15]/70 backdrop-blur-sm transition">
-            <button type="button" class="faq-toggle w-full flex items-center justify-between p-6 text-left" aria-expanded="false">
-              <span class="text-base font-semibold text-white">Kurulum yapmadan çalıştırmak mümkün müdür?</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="faq-chevron size-5 text-white/60 transition-transform duration-300 shrink-0 ml-4">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            </button>
-            <div class="faq-answer px-6 pb-6 text-sm text-white/70 leading-relaxed border-t border-white/5 pt-4">
-              Evet. İndirme bölümünde yer alan "Taşınabilir Sürüm (Portable .exe)" dosyasını indirerek herhangi bir 
-              yükleme yapmadan doğrudan çift tıklayarak çalıştırabilirsiniz. Bu sürüm sistem kayıt defterini kirletmez ve 
-              USB belleğinizde rahatlıkla taşınabilir.
-            </div>
-          </div>
-
-          <!-- FAQ 6 -->
-          <div class="faq-item rounded-2xl border border-white/10 bg-[#1A0D15]/70 backdrop-blur-sm transition">
-            <button type="button" class="faq-toggle w-full flex items-center justify-between p-6 text-left" aria-expanded="false">
-              <span class="text-base font-semibold text-white">Yeni sürümler çıktığında güncellemeler nasıl yapılır?</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="faq-chevron size-5 text-white/60 transition-transform duration-300 shrink-0 ml-4">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg>
-            </button>
-            <div class="faq-answer px-6 pb-6 text-sm text-white/70 leading-relaxed border-t border-white/5 pt-4">
-              Kurulum (Setup) sürümünü kullanan kullanıcılar için güncellemeler arka planda otomatik olarak indirilir ve 
-              SHA-256 imzası doğrulanarak uygulanır. Taşınabilir sürüm kullanıcıları ise yeni bir sürüm çıktığında 
-              uygulama içinden tek tıkla yeni sürümü indirebilir.
-            </div>
-          </div>
-
-        </div>
-
+    <!-- ECOSYSTEM SYNERGY SECTION -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t" style="border-color: var(--border);">
+      <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+        <h2 class="text-xs font-bold uppercase tracking-widest text-accent">Birlikte Nasıl Çalışırlar?</h2>
+        <p class="text-3xl sm:text-4xl font-extrabold" style="color: var(--text-primary);">Kusursuz Entegrasyon & Açık Uyumluluk</p>
+        <p class="text-sm leading-relaxed" style="color: var(--text-secondary);">CREW Client'ı istediğiniz herhangi bir sunucuda kullanabilirsiniz; ancak CREW Network'e bağlandığınızda özel optimizasyonlar devreye girer.</p>
       </div>
-    </section>
 
-    <!-- ======================================================================= -->
-    <!-- SECTION 6: COMMUNITY & SOCIAL (#topluluk) -->
-    <!-- ======================================================================= -->
-    <section id="topluluk" aria-labelledby="community-title" class="scroll-mt-18 py-20 border-t border-white/5">
-      <div class="mx-auto w-full max-w-6xl px-6 lg:px-10">
-        
-        <div class="mb-12">
-          <p class="text-xs font-semibold uppercase tracking-wider text-[#FF2B4F]">TOPLULUK & İLETİŞİM</p>
-          <h2 id="community-title" class="mt-3 font-display text-[clamp(2rem,3.6vw,3rem)] font-bold text-white">
-            Açık Kaynak & Şeffaf Geliştirme
-          </h2>
-          <p class="mt-3 text-sm text-white/60 max-w-xl">
-            CREW Client ekosistemine katılın. Güncellemeleri YouTube'dan takip edin, 
-            GitHub üzerinde kodlara katkı sağlayın veya sunucumuzda oynayın.
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="p-6 rounded-2xl border transition-all" style="background: var(--surface); border-color: var(--border);">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background: var(--badge-bg); color: var(--accent);">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold mb-2" style="color: var(--text-primary);">1 Tıkla Doğrudan Bağlantı</h3>
+          <p class="text-xs leading-relaxed" style="color: var(--text-secondary);">
+            CREW Client arayüzündeki tek bir buton ile sunucu IP'si yazmadan, protokol uyuşmazlığı yaşamadan doğrudan CREW Network lobisine giriş yapın.
           </p>
         </div>
 
-        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          
-          <!-- YouTube Card -->
-          <a href="https://youtube.com/@CREWNW" target="_blank" rel="noopener noreferrer" 
-             class="group rounded-2xl border border-white/10 bg-[#1A0D15] p-6 transition duration-200 hover:-translate-y-1 hover:border-[#FF2B4F]/40 flex flex-col justify-between">
-            <div>
-              <div class="size-10 rounded-xl bg-[#FF0000]/15 flex items-center justify-center text-[#FF0000] mb-4">
-                <svg viewBox="0 0 24 24" fill="currentColor" class="size-5">
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                </svg>
-              </div>
-              <h3 class="text-base font-bold text-white group-hover:text-[#FF2B4F] transition">YouTube @CREWNW</h3>
-              <p class="mt-2 text-xs text-white/60 leading-relaxed">
-                Resmi YouTube kanalımızda güncellemeler, etkinlikler ve sunucu videolarını takip edin.
-              </p>
-            </div>
-            <span class="mt-5 text-xs font-semibold text-[#FF2B4F] flex items-center gap-1">Kanalı Aç →</span>
-          </a>
-
-          <!-- GitHub Card -->
-          <a href="https://github.com/CodingM-eng/CREW-Client" target="_blank" rel="noopener noreferrer" 
-             class="group rounded-2xl border border-white/10 bg-[#1A0D15] p-6 transition duration-200 hover:-translate-y-1 hover:border-white/30 flex flex-col justify-between">
-            <div>
-              <div class="size-10 rounded-xl bg-white/10 flex items-center justify-center text-white mb-4">
-                <svg viewBox="0 0 16 16" fill="currentColor" class="size-5">
-                  <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path>
-                </svg>
-              </div>
-              <h3 class="text-base font-bold text-white group-hover:text-white transition">GitHub Deposu</h3>
-              <p class="mt-2 text-xs text-white/60 leading-relaxed">
-                Açık kaynak kodlar, sürüm notları, hata bildirimleri ve katkıda bulunma rehberleri.
-              </p>
-            </div>
-            <span class="mt-5 text-xs font-semibold text-white/80 flex items-center gap-1">Depoyu İncele →</span>
-          </a>
-
-          <!-- Server Card -->
-          <a href="#sunucu" 
-             class="group rounded-2xl border border-white/10 bg-[#1A0D15] p-6 transition duration-200 hover:-translate-y-1 hover:border-[#22c55e]/40 flex flex-col justify-between">
-            <div>
-              <div class="size-10 rounded-xl bg-[#22c55e]/15 flex items-center justify-center text-[#22c55e] mb-4">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-5">
-                  <path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16"></path>
-                </svg>
-              </div>
-              <h3 class="text-base font-bold text-white group-hover:text-[#22c55e] transition">Minecraft Sunucusu</h3>
-              <p class="mt-2 text-xs text-white/60 leading-relaxed">
-                oyna.crewnetwork.space adresine katılın ve topluluğumuzla kesintisiz oynayın.
-              </p>
-            </div>
-            <span class="mt-5 text-xs font-semibold text-[#22c55e] flex items-center gap-1">Sunucuya Bağlan →</span>
-          </a>
-
-          <!-- Stats Card -->
-          <a href="stats.html" 
-             class="group rounded-2xl border border-white/10 bg-[#1A0D15] p-6 transition duration-200 hover:-translate-y-1 hover:border-[#FF2B4F]/40 flex flex-col justify-between">
-            <div>
-              <div class="size-10 rounded-xl bg-[#FF2B4F]/15 flex items-center justify-center text-[#FF2B4F] mb-4">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-5">
-                  <path d="M3 3v18h18"></path>
-                  <path d="m19 9-5 5-4-4-3 3"></path>
-                </svg>
-              </div>
-              <h3 class="text-base font-bold text-white group-hover:text-[#FF2B4F] transition">Canlı İstatistikler</h3>
-              <p class="mt-2 text-xs text-white/60 leading-relaxed">
-                GitHub Releases üzerinden gerçek indirme sayıları ve şeffaf ekosistem metrikleri.
-              </p>
-            </div>
-            <span class="mt-5 text-xs font-semibold text-[#FF2B4F] flex items-center gap-1">İstatistikleri Gör →</span>
-          </a>
-
+        <div class="p-6 rounded-2xl border transition-all" style="background: var(--surface); border-color: var(--border);">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background: var(--badge-bg); color: var(--accent);">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+          </div>
+          <h3 class="text-lg font-bold mb-2" style="color: var(--text-primary);">Önbellek & Kaynak Senkronizasyonu</h3>
+          <p class="text-xs leading-relaxed" style="color: var(--text-secondary);">
+            Sunucunun özel kaynak ve doku paketleri arka planda sessizce indirilir ve belleğe alınır; oyuna bağlanırken bekleme süresi ortadan kalkar.
+          </p>
         </div>
 
+        <div class="p-6 rounded-2xl border transition-all" style="background: var(--surface); border-color: var(--border);">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background: var(--badge-bg); color: var(--accent);">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          </div>
+          <h3 class="text-lg font-bold mb-2" style="color: var(--text-primary);">Düşük Jitter Yerel Netcode</h3>
+          <p class="text-xs leading-relaxed" style="color: var(--text-secondary);">
+            Rust soket katmanı, paket kaybı ve mikro gecikmeleri minimize eder. Rekabetçi PvP'de vuruşlarınız milisaniyelik hassasiyetle kaydedilir.
+          </p>
+        </div>
       </div>
     </section>
-
+    
   </main>
 
-  <!-- ========================================================================= -->
-  <!-- FOOTER -->
-  <!-- ========================================================================= -->
-  <footer class="mt-auto border-t border-white/10 bg-[#0C0810]">
-    <div class="mx-auto w-full max-w-6xl px-6 pt-12 pb-10 lg:px-10">
-      
-      <div class="grid gap-10 md:grid-cols-4 pb-10 border-b border-white/5">
-        
-        <!-- Brand Info -->
-        <div class="md:col-span-2">
-          <a class="flex items-center gap-2.5 text-white" href="index.html">
-            <svg viewBox="0 0 16 16" aria-hidden="true" class="size-7">
-              <path class="fill-[#FF2B4F]" d="M4 3h2v4H4zM10 3h2v4h-2z"></path>
-              <path class="fill-white/80" d="M4 8h2v4H4zM10 8h2v4h-2z"></path>
-              <path class="fill-[#FF2B4F]" d="M1 7h14v2H1z"></path>
-            </svg>
-            <span class="font-display text-lg font-semibold tracking-tight">CREW Client</span>
-          </a>
-          <p class="mt-3 text-sm text-white/60 max-w-sm leading-relaxed">
-            CREW Network tarafından geliştirilen yüksek performanslı, açık kaynaklı yeni nesil Minecraft başlatıcısı.
+  
+  <footer class="mt-auto border-t py-12 transition-colors duration-200" style="background: var(--surface); border-color: var(--border);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <!-- Brand Col -->
+        <div class="space-y-4">
+          <div class="flex items-center gap-3">
+            <img src="/assets/img/crew-logo-transparent.svg" alt="CREW" class="w-8 h-8" />
+            <span class="font-extrabold text-xl tracking-wider" style="color: var(--text-primary);">CREW</span>
+          </div>
+          <p class="text-xs leading-relaxed" style="color: var(--text-secondary);">
+            CREW Network ve CREW Client, modern oyuncular için geliştirilmiş yüksek performanslı Minecraft ekosistemidir.
           </p>
-          <div class="mt-4 flex items-center gap-3 text-white/50">
-            <a href="https://github.com/CodingM-eng/CREW-Client" target="_blank" rel="noopener noreferrer" class="hover:text-white transition" aria-label="GitHub">
-              <svg viewBox="0 0 16 16" fill="currentColor" class="size-5"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
-            </a>
-            <a href="https://youtube.com/@CREWNW" target="_blank" rel="noopener noreferrer" class="hover:text-[#FF0000] transition" aria-label="YouTube">
-              <svg viewBox="0 0 24 24" fill="currentColor" class="size-5"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-            </a>
+          <div class="text-xs flex items-center gap-2" style="color: var(--text-muted);">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Sunucu & İstemci Aktif
           </div>
         </div>
 
-        <!-- Links Column 1: Ürün -->
+        <!-- Ekosistem -->
         <div>
-          <h4 class="text-xs font-semibold uppercase tracking-wider text-white">Ürün & Performans</h4>
-          <ul class="mt-4 space-y-2.5 text-sm text-white/60">
-            <li><a href="#ozellikler" class="hover:text-white transition">Özellikler</a></li>
-            <li><a href="#performans" class="hover:text-white transition">Performans Testleri</a></li>
-            <li><a href="#indir" class="hover:text-white transition">İndir (Setup & Portable)</a></li>
-            <li><a href="releases.html" class="hover:text-white transition">Sürüm Notları (v2.1.0)</a></li>
-            <li><a href="benchmarks.html" class="hover:text-white transition">Kriter Kıyaslamaları</a></li>
+          <h4 class="text-sm font-semibold mb-3 uppercase tracking-wider" style="color: var(--text-primary);">Ekosistem</h4>
+          <ul class="space-y-2 text-xs" style="color: var(--text-secondary);">
+            <li><a href="/" class="hover:text-red-500 transition-colors">Ana Sayfa</a></li>
+            <li><a href="/sunucu/" class="hover:text-red-500 transition-colors">CREW Network (Sunucu)</a></li>
+            <li><a href="/client/" class="hover:text-red-500 transition-colors">CREW Client (Başlatıcı)</a></li>
+            <li><a href="/destek/" class="hover:text-red-500 transition-colors">Destek & Topluluk</a></li>
           </ul>
         </div>
 
-        <!-- Links Column 2: Destek & Yasal -->
+        <!-- İstemci & İndir -->
         <div>
-          <h4 class="text-xs font-semibold uppercase tracking-wider text-white">Destek & Bilgi</h4>
-          <ul class="mt-4 space-y-2.5 text-sm text-white/60">
-            <li><a href="#sss" class="hover:text-white transition">Sıkça Sorulan Sorular</a></li>
-            <li><a href="docs.html" class="hover:text-white transition">Kullanım Kılavuzu</a></li>
-            <li><a href="stats.html" class="hover:text-white transition">Canlı İstatistikler</a></li>
-            <li><a href="privacy.html" class="hover:text-white transition">Gizlilik Politikası</a></li>
-            <li><a href="https://github.com/CodingM-eng/CREW-Client/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="hover:text-white transition">MIT Lisansı</a></li>
+          <h4 class="text-sm font-semibold mb-3 uppercase tracking-wider" style="color: var(--text-primary);">İstemci</h4>
+          <ul class="space-y-2 text-xs" style="color: var(--text-secondary);">
+            <li><a href="/client/indir/" class="hover:text-red-500 transition-colors">İndirme Merkezi (v2.1.0)</a></li>
+            <li><a href="/client/surumler/" class="hover:text-red-500 transition-colors">Sürümler & Değişiklikler</a></li>
+            <li><a href="/client/belgeler/" class="hover:text-red-500 transition-colors">Kullanım Belgeleri</a></li>
+            <li><a href="/privacy.html" class="hover:text-red-500 transition-colors">Gizlilik Politikası</a></li>
           </ul>
         </div>
 
-      </div>
-
-      <!-- Legal Disclaimer -->
-      <div class="pt-8 text-xs text-white/45 space-y-2">
-        <p>
-          Minecraft, Mojang Synergies AB ve Microsoft Corporation'ın tescilli ticari markasıdır. 
-          CREW Client, Mojang veya Microsoft ile herhangi bir resmi ortaklığa sahip değildir, onaylanmamış veya desteklenmemiştir.
-        </p>
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2">
-          <p>© 2026 CREW Network. Tüm hakları saklıdır.</p>
-          <p>client.crewnetwork.space</p>
+        <!-- Topluluk & Bağlantılar -->
+        <div>
+          <h4 class="text-sm font-semibold mb-3 uppercase tracking-wider" style="color: var(--text-primary);">Topluluk</h4>
+          <ul class="space-y-2 text-xs" style="color: var(--text-secondary);">
+            <li><a href="https://youtube.com/@CREWNW" target="_blank" rel="noopener noreferrer" class="hover:text-red-500 transition-colors flex items-center gap-1.5"><svg class="w-3.5 h-3.5 fill-current text-red-500" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube (@CREWNW)</a></li>
+            <li><a href="https://github.com/CodingM-eng/CREW-Client" target="_blank" rel="noopener noreferrer" class="hover:text-red-500 transition-colors flex items-center gap-1.5"><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg> GitHub Kaynak Kodu</a></li>
+            <li><span class="inline-block px-2 py-0.5 rounded text-[10px] font-mono mt-1" style="background: var(--elevated); color: var(--accent);">Sunucu: oyna.crewnetwork.space</span></li>
+          </ul>
         </div>
       </div>
 
+      <div class="border-t pt-6 flex flex-col sm:flex-row items-center justify-between text-xs" style="border-color: var(--border); color: var(--text-muted);">
+        <p>&copy; 2026 CREW Network. Tüm hakları saklıdır. Minecraft, Mojang AB'nin tescilli ticari markasıdır.</p>
+        <p class="mt-2 sm:mt-0 font-medium">Rust Motoru v2.1.0 · Türkiye Lokasyonlu Sunucu</p>
+      </div>
     </div>
   </footer>
 
-  <!-- Toast Notification Container -->
-  <div id="crew-toast" role="status" aria-live="polite">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-5 text-[#22c55e]">
-      <path d="M20 6 9 17l-5-5"></path>
-    </svg>
-    <span id="crew-toast-msg">Panoya kopyalandı!</span>
-  </div>
-
-  <!-- ========================================================================= -->
-  <!-- COMPANION VANILLA JAVASCRIPT (ZERO DEPENDENCY) -->
-  <!-- ========================================================================= -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // -------------------------------------------------------------
-      // 0. Theme Switcher (Dark / Light Theme System)
-      // -------------------------------------------------------------
-      const themeBtn = document.getElementById('theme-toggle-btn');
-      const iconSun = document.getElementById('theme-icon-sun');
-      const iconMoon = document.getElementById('theme-icon-moon');
+    // Theme toggle & Mobile menu management
+    (function() {
+      const savedTheme = localStorage.getItem('crew-theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      document.documentElement.setAttribute('data-theme', savedTheme);
 
-      function applyTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('crew-theme', theme);
-        if (theme === 'light') {
-          if (iconSun) iconSun.classList.add('hidden');
-          if (iconMoon) iconMoon.classList.remove('hidden');
-        } else {
-          if (iconSun) iconSun.classList.remove('hidden');
-          if (iconMoon) iconMoon.classList.add('hidden');
+      function updateIcons() {
+        const theme = document.documentElement.getAttribute('data-theme');
+        const moon = document.getElementById('theme-moon');
+        const sun = document.getElementById('theme-sun');
+        if (moon && sun) {
+          if (theme === 'light') {
+            moon.classList.add('hidden');
+            sun.classList.remove('hidden');
+          } else {
+            moon.classList.remove('hidden');
+            sun.classList.add('hidden');
+          }
         }
       }
 
-      // Read saved theme or default to dark
-      const savedTheme = localStorage.getItem('crew-theme') || 'dark';
-      applyTheme(savedTheme);
-
-      if (themeBtn) {
-        themeBtn.addEventListener('click', () => {
-          const current = document.documentElement.getAttribute('data-theme') || 'dark';
-          const next = current === 'dark' ? 'light' : 'dark';
-          applyTheme(next);
-        });
-      }
-
-      // -------------------------------------------------------------
-      // 0.5 Hero Dual Product Tabs (Client vs Network)
-      // -------------------------------------------------------------
-      const tabClient = document.getElementById('hero-tab-client');
-      const tabNetwork = document.getElementById('hero-tab-network');
-      const contentClient = document.getElementById('hero-content-client');
-      const contentNetwork = document.getElementById('hero-content-network');
-
-      if (tabClient && tabNetwork && contentClient && contentNetwork) {
-        tabClient.addEventListener('click', () => {
-          tabClient.className = 'flex-1 py-2 px-3 rounded-lg text-xs font-semibold bg-[#FF2B4F] text-white shadow-md transition-all';
-          tabNetwork.className = 'flex-1 py-2 px-3 rounded-lg text-xs font-semibold text-white/70 hover:text-white transition-all';
-          contentClient.classList.remove('hidden');
-          contentClient.classList.add('block');
-          contentNetwork.classList.remove('block');
-          contentNetwork.classList.add('hidden');
-        });
-
-        tabNetwork.addEventListener('click', () => {
-          tabNetwork.className = 'flex-1 py-2 px-3 rounded-lg text-xs font-semibold bg-[#FF2B4F] text-white shadow-md transition-all';
-          tabClient.className = 'flex-1 py-2 px-3 rounded-lg text-xs font-semibold text-white/70 hover:text-white transition-all';
-          contentNetwork.classList.remove('hidden');
-          contentNetwork.classList.add('block');
-          contentClient.classList.remove('block');
-          contentClient.classList.add('hidden');
-        });
-      }
-
-      // -------------------------------------------------------------
-      // 1. Mobile Menu Toggle
-      // -------------------------------------------------------------
-      const mobileBtn = document.getElementById('mobile-menu-btn');
-      const mobileMenu = document.getElementById('mobile-menu');
-      const iconBars = document.getElementById('menu-icon-bars');
-      const iconClose = document.getElementById('menu-icon-close');
-
-      if (mobileBtn && mobileMenu) {
-        mobileBtn.addEventListener('click', () => {
-          const isExpanded = mobileBtn.getAttribute('aria-expanded') === 'true';
-          mobileBtn.setAttribute('aria-expanded', !isExpanded);
-          mobileMenu.classList.toggle('hidden');
-          if (iconBars) iconBars.classList.toggle('hidden');
-          if (iconClose) iconClose.classList.toggle('hidden');
-        });
-
-        // Close mobile menu when clicking any nav link
-        document.querySelectorAll('.mobile-nav-link').forEach(link => {
-          link.addEventListener('click', () => {
-            mobileBtn.setAttribute('aria-expanded', 'false');
-            mobileMenu.classList.add('hidden');
-            if (iconBars) iconBars.classList.remove('hidden');
-            if (iconClose) iconClose.classList.add('hidden');
+      document.addEventListener('DOMContentLoaded', () => {
+        updateIcons();
+        const btn = document.getElementById('theme-toggle');
+        if (btn) {
+          btn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'dark';
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('crew-theme', next);
+            updateIcons();
           });
-        });
-      }
-
-      // -------------------------------------------------------------
-      // 2. 1-Click Clipboard Copy with Toast Feedback
-      // -------------------------------------------------------------
-      const toast = document.getElementById('crew-toast');
-      const toastMsg = document.getElementById('crew-toast-msg');
-      let toastTimer = null;
-
-      function showToast(message) {
-        if (!toast || !toastMsg) return;
-        toastMsg.textContent = message;
-        toast.classList.add('show');
-        clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => {
-          toast.classList.remove('show');
-        }, 2600);
-      }
-
-      document.querySelectorAll('[data-copy]').forEach(el => {
-        el.addEventListener('click', async (e) => {
-          e.preventDefault();
-          const textToCopy = el.getAttribute('data-copy');
-          if (!textToCopy) return;
-
-          try {
-            if (navigator.clipboard && window.isSecureContext) {
-              await navigator.clipboard.writeText(textToCopy);
-            } else {
-              const ta = document.createElement('textarea');
-              ta.value = textToCopy;
-              ta.style.position = 'fixed';
-              ta.style.left = '-9999px';
-              document.body.appendChild(ta);
-              ta.select();
-              document.execCommand('copy');
-              document.body.removeChild(ta);
-            }
-            showToast('Kopyalandı: ' + textToCopy);
-          } catch (err) {
-            console.error('Kopyalama hatası:', err);
-            showToast('Kopyalanamadı!');
-          }
-        });
+        }
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileBtn && mobileMenu) {
+          mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+          });
+        }
       });
-
-      // -------------------------------------------------------------
-      // 3. Hero Benchmark Comparison Slider
-      // -------------------------------------------------------------
-      const fpsRange = document.getElementById('hero-fps-range');
-      const fpsVal = document.getElementById('slider-fps-val');
-      const fpsBar = document.getElementById('slider-fps-bar');
-      const fpsRatio = document.getElementById('hero-fps-ratio');
-
-      if (fpsRange && fpsVal && fpsBar && fpsRatio) {
-        fpsRange.addEventListener('input', (e) => {
-          const val = parseInt(e.target.value, 10);
-          fpsVal.textContent = val + ' FPS';
-          const pct = Math.min(100, Math.max(10, Math.round((val / 400) * 100)));
-          fpsBar.style.width = pct + '%';
-          const ratio = (360 / Math.max(1, val)).toFixed(1);
-          fpsRatio.textContent = ratio + '× Daha Hızlı';
-        });
-      }
-
-      // -------------------------------------------------------------
-      // 4. FAQ Accordion Toggle
-      // -------------------------------------------------------------
-      document.querySelectorAll('.faq-toggle').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const item = btn.closest('.faq-item');
-          if (!item) return;
-          const isActive = item.classList.contains('active');
-
-          // Close all other items
-          document.querySelectorAll('.faq-item').forEach(other => {
-            if (other !== item) {
-              other.classList.remove('active');
-              const otherBtn = other.querySelector('.faq-toggle');
-              if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
-            }
-          });
-
-          // Toggle current item
-          item.classList.toggle('active', !isActive);
-          btn.setAttribute('aria-expanded', !isActive);
-        });
-      });
-
-      // -------------------------------------------------------------
-      // 5. Starry Canvas Sparkle Background Effect
-      // -------------------------------------------------------------
-      const canvas = document.getElementById('hero-stars-canvas');
-      if (canvas) {
-        const ctx = canvas.getContext('2d');
-        let width = canvas.width = canvas.parentElement.offsetWidth || window.innerWidth;
-        let height = canvas.height = canvas.parentElement.offsetHeight || window.innerHeight;
-
-        window.addEventListener('resize', () => {
-          if (canvas.parentElement) {
-            width = canvas.width = canvas.parentElement.offsetWidth || window.innerWidth;
-            height = canvas.height = canvas.parentElement.offsetHeight || window.innerHeight;
-          }
-        });
-
-        const particles = [];
-        const count = Math.min(65, Math.floor((width * height) / 18000));
-
-        for (let i = 0; i < count; i++) {
-          particles.push({
-            x: Math.random() * width,
-            y: Math.random() * height,
-            size: Math.random() * 2 + 1,
-            speedY: Math.random() * 0.4 + 0.15,
-            speedX: (Math.random() - 0.5) * 0.2,
-            opacity: Math.random() * 0.6 + 0.2,
-            color: Math.random() > 0.4 ? 'rgba(255, 43, 79, ' : 'rgba(255, 255, 255, '
-          });
-        }
-
-        function animateStars() {
-          ctx.clearRect(0, 0, width, height);
-          for (let i = 0; i < particles.length; i++) {
-            const p = particles[i];
-            p.y -= p.speedY;
-            p.x += p.speedX;
-
-            if (p.y < 0) {
-              p.y = height;
-              p.x = Math.random() * width;
-            }
-            if (p.x < 0) p.x = width;
-            if (p.x > width) p.x = 0;
-
-            ctx.fillStyle = p.color + p.opacity + ')';
-            ctx.fillRect(Math.floor(p.x), Math.floor(p.y), p.size, p.size);
-          }
-          requestAnimationFrame(animateStars);
-        }
-        requestAnimationFrame(animateStars);
-      }
-
-      // -------------------------------------------------------------
-      // 6. Live Minecraft Server Status Polling (oyna.crewnetwork.space)
-      // -------------------------------------------------------------
-      async function pollServerStatus() {
-        const statusText = document.getElementById('server-status-text');
-        const playerCount = document.getElementById('server-player-count');
-        const statusDot = document.getElementById('server-status-dot');
-
-        try {
-          const res = await fetch('https://api.mcstatus.io/v2/status/java/oyna.crewnetwork.space', { cache: 'no-store' });
-          if (res.ok) {
-            const data = await res.json();
-            if (data.online) {
-              if (statusText) statusText.textContent = 'Sunucu Çevrimiçi';
-              if (statusDot) {
-                statusDot.classList.remove('bg-red-500');
-                statusDot.classList.add('bg-[#22c55e]');
-              }
-              const online = data.players ? data.players.online : 0;
-              const max = data.players ? data.players.max : 500;
-              if (playerCount) playerCount.textContent = `${online} / ${max} Oyuncu Aktif`;
-            } else {
-              if (statusText) statusText.textContent = 'Sunucu Bakımda';
-              if (statusDot) {
-                statusDot.classList.remove('bg-[#22c55e]');
-                statusDot.classList.add('bg-amber-500');
-              }
-              if (playerCount) playerCount.textContent = 'Bakım Modunda';
-            }
-          }
-        } catch (err) {
-          // If offline or CORS blocked, show default fallback status
-          if (playerCount) playerCount.textContent = 'Çevrimiçi';
-        }
-      }
-
-      pollServerStatus();
-      setInterval(pollServerStatus, 45000); // Poll every 45 seconds
-    });
+    })();
   </script>
+
 </body>
 </html>
