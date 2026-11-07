@@ -1161,6 +1161,10 @@ dependencies = [
  "chrono",
  "clap",
  "clap_complete",
+ "crew-core",
+ "crew-loader-fabric",
+ "crew-loader-quilt",
+ "crew-version-manager",
  "dirs",
  "flate2",
  "futures-lite",
@@ -1199,6 +1203,46 @@ dependencies = [
  "ureq",
  "winresource",
  "zip",
+]
+
+[[package]]
+name = "crew-core"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "sha1",
+ "sha2",
+ "ureq",
+]
+
+[[package]]
+name = "crew-loader-fabric"
+version = "0.1.0"
+dependencies = [
+ "crew-core",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "crew-loader-quilt"
+version = "0.1.0"
+dependencies = [
+ "crew-core",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "crew-version-manager"
+version = "0.1.0"
+dependencies = [
+ "crew-core",
+ "crew-loader-fabric",
+ "crew-loader-quilt",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

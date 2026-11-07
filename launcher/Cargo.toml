@@ -37,6 +37,10 @@ dirs = "5"
 sys-locale = "0.3"
 clap = { version = "4", features = ["derive"] }
 clap_complete = "4"
+crew-core = { path = "../crates/crew-core" }
+crew-loader-fabric = { path = "../crates/crew-loader-fabric" }
+crew-loader-quilt = { path = "../crates/crew-loader-quilt" }
+crew-version-manager = { path = "../crates/crew-version-manager" }
 horizon-theme = { path = "../crates/horizon-theme" }
 horizon-core = { path = "../crates/horizon-core" }
 horizon-prepare = { path = "../crates/horizon-prepare" }

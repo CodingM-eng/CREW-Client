@@ -135,15 +135,7 @@ pub fn read(path: &Path) -> Result<Value, String> {
 
 /// A library's name without its version: `group:artifact[:classifier]`.
 fn library_key(library: &Value) -> String {
-    let mut parts = library["name"].as_str().unwrap_or_default().split(':');
-    let (group, artifact) = (
-        parts.next().unwrap_or_default(),
-        parts.next().unwrap_or_default(),
-    );
-    match parts.nth(1) {
-        Some(classifier) => format!("{group}:{artifact}:{classifier}"),
-        None => format!("{group}:{artifact}"),
-    }
+    crew_version_manager::library_key(library)
 }
 
 /// A version with what it `inheritsFrom` (a loader's profile on the game's version) merged in, as

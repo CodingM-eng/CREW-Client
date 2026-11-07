@@ -46,17 +46,17 @@ impl Kind {
     /// Its metadata service.
     fn meta(self) -> &'static str {
         match self {
-            Kind::Fabric => "https://meta.fabricmc.net/v2",
-            Kind::Quilt => "https://meta.quiltmc.org/v3",
+            Kind::Fabric => crew_loader_fabric::meta::FABRIC_META_URL,
+            Kind::Quilt => crew_loader_quilt::meta::QUILT_META_BASE_URL,
         }
     }
 
     /// The id its profile has: `fabric-loader-0.16.9-1.21.4`.
     pub fn profile_id(self, version: &str, minecraft: &str) -> String {
-        format!(
-            "{}-loader-{version}-{minecraft}",
-            self.name().to_lowercase()
-        )
+        match self {
+            Kind::Fabric => crew_loader_fabric::meta::profile_id(version, minecraft),
+            Kind::Quilt => crew_loader_quilt::meta::quilt_profile_id(version, minecraft),
+        }
     }
 }
 
@@ -152,21 +152,7 @@ pub fn pick(kind: Kind, listed: &[Listed], wanted: Option<&str>) -> Result<Strin
 
 /// A library's file in a Maven repository: `group:artifact:version[:classifier][@extension]`.
 pub fn maven_path(name: &str) -> Result<String, String> {
-    let (coordinates, extension) = name.split_once('@').unwrap_or((name, "jar"));
-    let parts: Vec<&str> = coordinates.split(':').collect();
-    let (group, artifact, version, classifier) = match parts[..] {
-        [g, a, v] => (g, a, v, None),
-        [g, a, v, c] => (g, a, v, Some(c)),
-        _ => return Err(format!("Bad library name {name:?}")),
-    };
-    let file = match classifier {
-        Some(c) => format!("{artifact}-{version}-{c}.{extension}"),
-        None => format!("{artifact}-{version}.{extension}"),
-    };
-    Ok(format!(
-        "{}/{artifact}/{version}/{file}",
-        group.replace('.', "/")
-    ))
+    crew_core::maven::maven_path(name).map_err(|e| format!("Bad library name {name:?}: {e}"))
 }
 
 /// Downloads `loader`'s profile for `minecraft` and its libraries into the game folder `dir`, and
@@ -179,6 +165,10 @@ pub fn install(
     fetch: Fetch,
     log: &dyn Fn(String),
 ) -> Result<String, String> {
+    match loader.kind {
+        Kind::Fabric => crew_loader_fabric::check_compatibility(minecraft).map_err(|e| e.to_string())?,
+        Kind::Quilt => crew_loader_quilt::validate_quilt_compatibility(minecraft).map_err(|e| e.to_string())?,
+    }
     let name = loader.kind.name();
     let url = format!(
         "{}/versions/loader/{minecraft}/{}/profile/json",
